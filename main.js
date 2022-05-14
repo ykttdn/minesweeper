@@ -17,16 +17,15 @@ let isCellOpen = gen2DArray(height, width, false);
 let hasGameStarted = false;
 
 const board = document.getElementsByClassName('board')[0];
+const cell = gen2DArray(height, width, undefined);
+const df = document.createDocumentFragment();
 
-for (let i = 0; i < height; i++) {
-  let row = document.createElement('div');
-  row.className = 'row';
-  board.appendChild(row);
-  for (let j = 0; j < width; j++) {
-    const cell = document.createElement('div');
-    cell.className = 'cell cell--unopen';
+for (let i = 0; i < cell.length; i++) {
+  for (let j = 0; j < cell[i].length; j++) {
+    cell[i][j] = document.createElement('div');
+    cell[i][j].className = 'cell cell--unopen';
 
-    cell.addEventListener('click', function initMines() {
+    cell[i][j].addEventListener('click', function initMines() {
       if (!hasGameStarted) {
         hasGameStarted = true;
         for (let k = 0; k < mines; k++) {
@@ -69,15 +68,24 @@ for (let i = 0; i < height; i++) {
       }
     });
 
-    cell.addEventListener('click', function(){
+    cell[i][j].addEventListener('click', function(){
       if (!isCellOpen[i][j]) {
         isCellOpen[i][j] = true;
         this.className = 'cell cell--open'
       }
     });
-    row.appendChild(cell);
   }
 }
+
+for (let i = 0; i < cell.length; i++) {
+  const row = document.createElement('div');
+  row.className ='row';
+  for (let j = 0; j < cell[i].length; j++) {
+    row.appendChild(cell[i][j]);
+  }
+  df.appendChild(row);
+}
+board.appendChild(df);
 
 // 0 以上 val 未満の整数乱数を返す
 function rand(val) {
