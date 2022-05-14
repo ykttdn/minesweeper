@@ -68,10 +68,10 @@ for (let i = 0; i < cell.length; i++) {
       }
     });
 
-    cell[i][j].addEventListener('click', function(){
+    cell[i][j].addEventListener('click', function openCell() {
       if (!isCellOpen[i][j]) {
         isCellOpen[i][j] = true;
-        this.className = 'cell cell--open'
+        cell[i][j].className = 'cell cell--open'
       }
     });
   }
