@@ -1,0 +1,49 @@
+@charset "utf-8";
+
+.wrapper {
+  padding: 0 4px;
+}
+
+.level-selection select {
+  border: 1px solid #000;
+}
+
+.top-area {
+  display: flex;
+  justify-content: space-between;
+}
+
+.remains,
+.timer {
+  border: 1px solid #000;
+}
+
+.reset-btn {
+  border: 1px solid #000;
+}
+
+.board {
+  border: 1px solid #000;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  aspect-ratio: 1;
+  width: 30px;
+  height: 30px;
+  background: #ccc;
+}
+
+.cell--unopen {
+  border-top: 4px solid #fff;
+  border-right: 4px solid #888;
+  border-bottom: 4px solid #888;
+  border-left: 4px solid #fff;
+}
+
+.cell--open {
+  border: 1px solid #888;
+}
