@@ -74,6 +74,36 @@ for (let i = 0; i < cell.length; i++) {
         cell[i][j].className = 'cell cell--open';
         if (isMineHidden[i][j]) {
           cell[i][j].className = 'cell cell--exploded'
+        } else {
+          let cnt = 0;
+          if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
+            cnt++;
+          }
+          if (i-1 >= 0 && j >= 0 && isMineHidden[i-1][j]) {
+            cnt++;
+          }
+          if (i-1 >= 0 && j+1 < width && isMineHidden[i-1][j+1]) {
+            cnt++;
+          }
+          if (i >= 0 && j-1 >= 0 && isMineHidden[i][j-1]) {
+            cnt++;
+          }
+          if (i >= 0 && j+1 < width && isMineHidden[i][j+1]) {
+            cnt++;
+          }
+          if (i+1 < height && j-1 >= 0 && isMineHidden[i+1][j-1]) {
+            cnt++;
+          }
+          if (i+1 < height && j >= 0 && isMineHidden[i+1][j]) {
+            cnt++;
+          }
+          if (i+1 < height && j+1 < width && isMineHidden[i+1][j+1]) {
+            cnt++;
+          }
+
+          if (cnt > 0) {
+            cell[i][j].textContent = cnt;
+          }
         }
       }
     });
