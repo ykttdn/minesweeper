@@ -126,5 +126,46 @@ function searchMines(i, j) {
 
   if (cnt > 0) {
     cell[i][j].textContent = cnt;
+  } else {
+    if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
+      isCellOpen[i-1][j-1] = true;
+      cell[i-1][j-1].className = 'cell cell--open';
+      searchMines(i-1, j-1);
+    }
+    if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j]) {
+      isCellOpen[i-1][j] = true;
+      cell[i-1][j].className = 'cell cell--open';
+      searchMines(i-1, j);
+    }
+    if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1]) {
+      isCellOpen[i-1][j+1] = true;
+      cell[i-1][j+1].className = 'cell cell--open';
+      searchMines(i-1, j+1);
+    }
+    if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1]) {
+      isCellOpen[i][j-1] = true;
+      cell[i][j-1].className = 'cell cell--open';
+      searchMines(i, j-1);
+    }
+    if (i >= 0 && j+1 < width && !isCellOpen[i][j+1]) {
+      isCellOpen[i][j+1] = true;
+      cell[i][j+1].className = 'cell cell--open';
+      searchMines(i, j+1);
+    }
+    if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1]) {
+      isCellOpen[i+1][j-1] = true;
+      cell[i+1][j-1].className = 'cell cell--open';
+      searchMines(i+1, j-1);
+    }
+    if (i+1 < height && j >= 0 && !isCellOpen[i+1][j]) {
+      isCellOpen[i+1][j] = true;
+      cell[i+1][j].className = 'cell cell--open';
+      searchMines(i+1, j);
+    }
+    if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
+      isCellOpen[i+1][j+1] = true;
+      cell[i+1][j+1].className = 'cell cell--open';
+      searchMines(i+1, j+1);
+    }
   }
 }
