@@ -75,35 +75,7 @@ for (let i = 0; i < cell.length; i++) {
         if (isMineHidden[i][j]) {
           cell[i][j].className = 'cell cell--exploded'
         } else {
-          let cnt = 0;
-          if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
-            cnt++;
-          }
-          if (i-1 >= 0 && j >= 0 && isMineHidden[i-1][j]) {
-            cnt++;
-          }
-          if (i-1 >= 0 && j+1 < width && isMineHidden[i-1][j+1]) {
-            cnt++;
-          }
-          if (i >= 0 && j-1 >= 0 && isMineHidden[i][j-1]) {
-            cnt++;
-          }
-          if (i >= 0 && j+1 < width && isMineHidden[i][j+1]) {
-            cnt++;
-          }
-          if (i+1 < height && j-1 >= 0 && isMineHidden[i+1][j-1]) {
-            cnt++;
-          }
-          if (i+1 < height && j >= 0 && isMineHidden[i+1][j]) {
-            cnt++;
-          }
-          if (i+1 < height && j+1 < width && isMineHidden[i+1][j+1]) {
-            cnt++;
-          }
-
-          if (cnt > 0) {
-            cell[i][j].textContent = cnt;
-          }
+          searchMines(i, j);
         }
       }
     });
@@ -123,4 +95,36 @@ board.appendChild(df);
 // 0 以上 val 未満の整数乱数を返す
 function rand(val) {
   return Math.floor(Math.random()*val);
+}
+
+function searchMines(i, j) {
+  let cnt = 0;
+  if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
+    cnt++;
+  }
+  if (i-1 >= 0 && j >= 0 && isMineHidden[i-1][j]) {
+    cnt++;
+  }
+  if (i-1 >= 0 && j+1 < width && isMineHidden[i-1][j+1]) {
+    cnt++;
+  }
+  if (i >= 0 && j-1 >= 0 && isMineHidden[i][j-1]) {
+    cnt++;
+  }
+  if (i >= 0 && j+1 < width && isMineHidden[i][j+1]) {
+    cnt++;
+  }
+  if (i+1 < height && j-1 >= 0 && isMineHidden[i+1][j-1]) {
+    cnt++;
+  }
+  if (i+1 < height && j >= 0 && isMineHidden[i+1][j]) {
+    cnt++;
+  }
+  if (i+1 < height && j+1 < width && isMineHidden[i+1][j+1]) {
+    cnt++;
+  }
+
+  if (cnt > 0) {
+    cell[i][j].textContent = cnt;
+  }
 }
