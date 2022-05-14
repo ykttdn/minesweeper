@@ -72,6 +72,9 @@ for (let i = 0; i < cell.length; i++) {
       if (!isCellOpen[i][j]) {
         isCellOpen[i][j] = true;
         cell[i][j].className = 'cell cell--open';
+        if (isMineHidden[i][j]) {
+          cell[i][j].className = 'cell cell--exploded'
+        }
       }
     });
   }
