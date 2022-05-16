@@ -68,10 +68,14 @@ for (let i = 0; i < cell.length; i++) {
       }
     });
 
-    cell[i][j].addEventListener('click', function(){
+    cell[i][j].addEventListener('click', function openCell() {
       if (!isCellOpen[i][j]) {
-        isCellOpen[i][j] = true;
-        this.className = 'cell cell--open'
+        openSafeCell(i,j);
+        if (isMineHidden[i][j]) {
+          cell[i][j].className = 'cell cell--exploded'
+        } else {
+          searchMines(i, j);
+        }
       }
     });
   }
@@ -90,4 +94,74 @@ board.appendChild(df);
 // 0 以上 val 未満の整数乱数を返す
 function rand(val) {
   return Math.floor(Math.random()*val);
+}
+
+function searchMines(i, j) {
+  let cnt = 0;
+  if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
+    cnt++;
+  }
+  if (i-1 >= 0 && j >= 0 && isMineHidden[i-1][j]) {
+    cnt++;
+  }
+  if (i-1 >= 0 && j+1 < width && isMineHidden[i-1][j+1]) {
+    cnt++;
+  }
+  if (i >= 0 && j-1 >= 0 && isMineHidden[i][j-1]) {
+    cnt++;
+  }
+  if (i >= 0 && j+1 < width && isMineHidden[i][j+1]) {
+    cnt++;
+  }
+  if (i+1 < height && j-1 >= 0 && isMineHidden[i+1][j-1]) {
+    cnt++;
+  }
+  if (i+1 < height && j >= 0 && isMineHidden[i+1][j]) {
+    cnt++;
+  }
+  if (i+1 < height && j+1 < width && isMineHidden[i+1][j+1]) {
+    cnt++;
+  }
+
+  if (cnt > 0) {
+    cell[i][j].textContent = cnt;
+  } else {
+    if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
+      openSafeCell(i-1, j-1);
+      searchMines(i-1, j-1);
+    }
+    if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j]) {
+      openSafeCell(i-1, j);
+      searchMines(i-1, j);
+    }
+    if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1]) {
+      openSafeCell(i-1, j+1);
+      searchMines(i-1, j+1);
+    }
+    if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1]) {
+      openSafeCell(i, j-1);
+      searchMines(i, j-1);
+    }
+    if (i >= 0 && j+1 < width && !isCellOpen[i][j+1]) {
+      openSafeCell(i, j+1);
+      searchMines(i, j+1);
+    }
+    if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1]) {
+      openSafeCell(i+1, j-1);
+      searchMines(i+1, j-1);
+    }
+    if (i+1 < height && j >= 0 && !isCellOpen[i+1][j]) {
+      openSafeCell(i+1, j);
+      searchMines(i+1, j);
+    }
+    if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
+      openSafeCell(i+1, j+1);
+      searchMines(i+1, j+1);
+    }
+  }
+}
+
+function openSafeCell(i, j) {
+  isCellOpen[i][j] = true;
+  cell[i][j].className = 'cell cell--open';
 }
