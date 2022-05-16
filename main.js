@@ -176,7 +176,7 @@ function toggleFlag(i, j) {
   if (!isCellOpen[i][j]) {
     if (!isMarkedWithFlag[i][j]) {
       isMarkedWithFlag[i][j] = true;
-      cell[i][j].className = 'cell cell--flagged';
+      cell[i][j].className = 'cell cell--unopen cell--flagged';
     } else {
       isMarkedWithFlag[i][j] = false;
       cell[i][j].className = 'cell cell--unopen'
