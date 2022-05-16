@@ -169,3 +169,8 @@ function searchMines(i, j) {
     }
   }
 }
+
+function openSafeCell(i, j) {
+  isCellOpen[i][j] = true;
+  cell[i][j].className = 'cell cell--open';
+}
