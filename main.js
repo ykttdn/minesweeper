@@ -71,68 +71,116 @@ for (let i = 0; i < cell.length; i++) {
         }
     
         if (mineCount === flagCount) { // NaN === 0 ... false
-          if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1] && !isMarkedWithFlag[i-1][j-1]) {
-            if (isMineHidden[i-1][j-1]) {
-              cell[i-1][j-1].className = 'cell cell--exploded';
+          if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
+            if (!isMarkedWithFlag[i-1][j-1]) {
+              if (isMineHidden[i-1][j-1]) {
+                cell[i-1][j-1].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i-1, j-1);
+                searchMines(i-1, j-1);
+              }
             } else {
-              openSafeCell(i-1, j-1);
-              searchMines(i-1, j-1);
+              if (!isMineHidden[i-1][j-1]) {
+                cell[i-1][j-1].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
-          if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j] && !isMarkedWithFlag[i-1][j]) {
-            if (isMineHidden[i-1][j]) {
-              cell[i-1][j].className = 'cell cell--exploded';
+          if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j]) {
+            if (!isMarkedWithFlag[i-1][j]) {
+              if (isMineHidden[i-1][j]) {
+                cell[i-1][j].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i-1, j);
+                searchMines(i-1, j);
+              }
             } else {
-              openSafeCell(i-1, j);
-              searchMines(i-1, j);
+              if (!isMineHidden[i-1][j]) {
+                cell[i-1][j].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
-          if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1] && !isMarkedWithFlag[i-1][j+1]) {
-            if (isMineHidden[i-1][j+1]) {
-              cell[i-1][j+1].className = 'cell cell--exploded';
+          if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1]) {
+            if (!isMarkedWithFlag[i-1][j+1]) {
+              if (isMineHidden[i-1][j+1]) {
+                cell[i-1][j+1].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i-1, j+1);
+                searchMines(i-1, j+1);
+              }
             } else {
-              openSafeCell(i-1, j+1);
-              searchMines(i-1, j+1);
+              if (!isMineHidden[i-1][j+1]) {
+                cell[i-1][j+1].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
-          if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1] && !isMarkedWithFlag[i][j-1]) {
-            if (isMineHidden[i][j-1]) {
-              cell[i][j-1].className = 'cell cell--exploded';
+          if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1]) {
+            if (!isMarkedWithFlag[i][j-1]) {
+              if (isMineHidden[i][j-1]) {
+                cell[i][j-1].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i, j-1);
+                searchMines(i, j-1);
+              }
             } else {
-              openSafeCell(i, j-1);
-              searchMines(i, j-1);
+              if (!isMineHidden[i][j-1]) {
+                cell[i][j-1].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
-          if (i >= 0 && j+1 < width && !isCellOpen[i][j+1] && !isMarkedWithFlag[i][j+1]) {
-            if (isMineHidden[i][j+1]) {
-              cell[i][j+1].className = 'cell cell--exploded';
+          if (i >= 0 && j+1 < width && !isCellOpen[i][j+1]) {
+            if (!isMarkedWithFlag[i][j+1]) {
+              if (isMineHidden[i][j+1]) {
+                cell[i-1][j+1].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i, j+1);
+                searchMines(i, j+1);
+              }
             } else {
-              openSafeCell(i, j+1);
-              searchMines(i, j+1);
+              if (!isMineHidden[i][j+1]) {
+                cell[i][j+1].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
-          if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1] && !isMarkedWithFlag[i+1][j-1]) {
-            if (isMineHidden[i+1][j-1]) {
-              cell[i+1][j-1].className = 'cell cell--exploded';
+          if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1]) {
+            if (!isMarkedWithFlag[i+1][j-1]) {
+              if (isMineHidden[i-1][j-1]) {
+                cell[i+1][j-1].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i+1, j-1);
+                searchMines(i+1, j-1);
+              }
             } else {
-              openSafeCell(i+1, j-1);
-              searchMines(i+1, j-1);
+              if (!isMineHidden[i+1][j-1]) {
+                cell[i+1][j-1].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
-          if (i+1 < height && j >= 0 && !isCellOpen[i+1][j] && !isMarkedWithFlag[i+1][j]) {
-            if (isMineHidden[i+1][j]) {
-              cell[i+1][j].className = 'cell cell--exploded';
+          if (i+1 < height && j >= 0 && !isCellOpen[i+1][j]) {
+            if (!isMarkedWithFlag[i+1][j]) {
+              if (isMineHidden[i+1][j]) {
+                cell[i+1][j].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i+1, j);
+                searchMines(i+1, j);
+              }
             } else {
-              openSafeCell(i+1, j);
-              searchMines(i+1, j);
+              if (!isMineHidden[i+1][j]) {
+                cell[i+1][j].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
-          if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1] && !isMarkedWithFlag[i+1][j+1]) {
-            if (isMineHidden[i+1][j+1]) {
-              cell[i+1][j+1].className = 'cell cell--exploded';
+          if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
+            if (!isMarkedWithFlag[i+1][j+1]) {
+              if (isMineHidden[i+1][j+1]) {
+                cell[i+1][j+1].className = 'cell cell--exploded';
+              } else {
+                openSafeCell(i+1, j+1);
+                searchMines(i+1, j+1);
+              }
             } else {
-              openSafeCell(i+1, j+1);
-              searchMines(i+1, j+1);
+              if (!isMineHidden[i+1][j+1]) {
+                cell[i+1][j+1].className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              }
             }
           }
         }
