@@ -80,10 +80,10 @@ for (let i = 0; i < cell.length; i++) {
       }
     });
 
-    cell[i][j].oncontextmenu = () => {
+    cell[i][j].addEventListener('contextmenu', function(event) {
+      event.preventDefault();
       toggleFlag(i, j);
-      return false;
-    }
+    });
   }
 }
 
