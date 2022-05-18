@@ -13,6 +13,7 @@ function gen2DArray(m, n, val) {
 
 let isMineHidden = gen2DArray(height, width, false);
 let isCellOpen = gen2DArray(height, width, false);
+let isMarkedWithFlag = gen2DArray(height, width, false);
 
 let hasGameStarted = false;
 
@@ -69,7 +70,7 @@ for (let i = 0; i < cell.length; i++) {
     });
 
     cell[i][j].addEventListener('click', function openCell() {
-      if (!isCellOpen[i][j]) {
+      if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
         openSafeCell(i,j);
         if (isMineHidden[i][j]) {
           cell[i][j].className = 'cell cell--exploded'
@@ -77,6 +78,11 @@ for (let i = 0; i < cell.length; i++) {
           searchMines(i, j);
         }
       }
+    });
+
+    cell[i][j].addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+      toggleFlag(i, j);
     });
   }
 }
@@ -164,4 +170,16 @@ function searchMines(i, j) {
 function openSafeCell(i, j) {
   isCellOpen[i][j] = true;
   cell[i][j].className = 'cell cell--open';
+}
+
+function toggleFlag(i, j) {
+  if (!isCellOpen[i][j]) {
+    if (!isMarkedWithFlag[i][j]) {
+      isMarkedWithFlag[i][j] = true;
+      cell[i][j].className = 'cell cell--unopen cell--flagged';
+    } else {
+      isMarkedWithFlag[i][j] = false;
+      cell[i][j].className = 'cell cell--unopen'
+    }
+  }
 }
