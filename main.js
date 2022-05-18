@@ -26,48 +26,7 @@ for (let i = 0; i < cell.length; i++) {
     cell[i][j] = document.createElement('div');
     cell[i][j].className = 'cell cell--unopen';
 
-    cell[i][j].addEventListener('click', function initMines() {
-      if (!hasGameStarted) {
-        hasGameStarted = true;
-        for (let k = 0; k < mines; k++) {
-          while (true) {
-            const row = rand(height);
-            const col = rand(width);
-            if (!isMineHidden[row][col] && !(i === row && j === col)) {
-              // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
-              isMineHidden[row][col] = true;
-              break;
-            }
-          }
-
-          /*
-          let row = rand(height);
-          let col = rand(width);
-          if (!isMineHidden[row][col] && !(i === row && j === col)) {
-            // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
-            isMineHidden[row][col] = true;
-          } else {
-            // (row, col)成分に爆弾が埋められている，または，(row,col)成分が最初に開いたcellのとき
-            // (row, col)成分の右隣のcellに移動し続け，そこに爆弾がなければ埋める
-            while (true) {
-              col++;
-              if (col === width) {
-                col = 0;
-                row++;
-                if (row === height) {
-                  row = 0;
-                }
-              }
-              if (!isMineHidden[row][col] && !(i === row && j === col)) {
-                isMineHidden[row][col] = 1;
-                break;
-              }
-            }
-          }
-          */
-        }
-      }
-    });
+    cell[i][j].addEventListener('click', initMines(i, j));
 
     cell[i][j].addEventListener('click', function openCell() {
       if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
@@ -100,6 +59,49 @@ board.appendChild(df);
 // 0 以上 val 未満の整数乱数を返す
 function rand(val) {
   return Math.floor(Math.random()*val);
+}
+
+function initMines(i, j) {
+  if (!hasGameStarted) {
+    hasGameStarted = true;
+    for (let k = 0; k < mines; k++) {
+      while (true) {
+        const row = rand(height);
+        const col = rand(width);
+        if (!isMineHidden[row][col] && !(i === row && j === col)) {
+          // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
+          isMineHidden[row][col] = true;
+          break;
+        }
+      }
+
+      /*
+      let row = rand(height);
+      let col = rand(width);
+      if (!isMineHidden[row][col] && !(i === row && j === col)) {
+        // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
+        isMineHidden[row][col] = true;
+      } else {
+        // (row, col)成分に爆弾が埋められている，または，(row,col)成分が最初に開いたcellのとき
+        // (row, col)成分の右隣のcellに移動し続け，そこに爆弾がなければ埋める
+        while (true) {
+          col++;
+          if (col === width) {
+            col = 0;
+            row++;
+            if (row === height) {
+              row = 0;
+            }
+          }
+          if (!isMineHidden[row][col] && !(i === row && j === col)) {
+            isMineHidden[row][col] = 1;
+            break;
+          }
+        }
+      }
+      */
+    }
+  }
 }
 
 function searchMines(i, j) {
