@@ -30,10 +30,10 @@ for (let i = 0; i < cell.length; i++) {
 
     cell[i][j].addEventListener('click', function openCell() {
       if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
-        openSafeCell(i,j);
         if (isMineHidden[i][j]) {
           cell[i][j].className = 'cell cell--exploded'
         } else {
+          openSafeCell(i, j);
           searchMines(i, j);
         }
       }
