@@ -288,35 +288,27 @@ function searchMines2(i, j) {
   let cnt = 0;
   if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
     cnt++;
-    console.log(i-1,j-1);
   }
   if (i-1 >= 0 && j >= 0 && isMineHidden[i-1][j]) {
     cnt++;
-    console.log(i-1,j);
   }
   if (i-1 >= 0 && j+1 < width && isMineHidden[i-1][j+1]) {
     cnt++;
-    console.log(i-1,j+1);
   }
   if (i >= 0 && j-1 >= 0 && isMineHidden[i][j-1]) {
     cnt++;
-    console.log(i,j-1);
   }
   if (i >= 0 && j+1 < width && isMineHidden[i][j+1]) {
     cnt++;
-    console.log(i,j+1);
   }
   if (i+1 < height && j-1 >= 0 && isMineHidden[i+1][j-1]) {
     cnt++;
-    console.log(i+1,j-1);
   }
   if (i+1 < height && j >= 0 && isMineHidden[i+1][j]) {
     cnt++;
-    console.log(i+1,j);
   }
   if (i+1 < height && j+1 < width && isMineHidden[i+1][j+1]) {
     cnt++;
-    console.log(i+1,j+1);
   }
 
   if (cnt > 0) {
