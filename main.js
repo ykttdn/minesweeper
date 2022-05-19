@@ -269,7 +269,7 @@ function openCell2(e) {
       cell.className = 'cell cell--exploded'
     } else {
       openSafeCell2(i, j);
-      // searchMines(i, j);
+      searchMines2(i, j);
     }
   }
 }
@@ -278,4 +278,78 @@ function openSafeCell2(i, j) {
   const cell = document.getElementById(`cell-${i}-${j}`);
   isCellOpen[i][j] = true;
   cell.className = 'cell cell--open';
+}
+
+function searchMines2(i, j) {
+  let cnt = 0;
+  if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
+    cnt++;
+    console.log(i-1,j-1);
+  }
+  if (i-1 >= 0 && j >= 0 && isMineHidden[i-1][j]) {
+    cnt++;
+    console.log(i-1,j);
+  }
+  if (i-1 >= 0 && j+1 < width && isMineHidden[i-1][j+1]) {
+    cnt++;
+    console.log(i-1,j+1);
+  }
+  if (i >= 0 && j-1 >= 0 && isMineHidden[i][j-1]) {
+    cnt++;
+    console.log(i,j-1);
+  }
+  if (i >= 0 && j+1 < width && isMineHidden[i][j+1]) {
+    cnt++;
+    console.log(i,j+1);
+  }
+  if (i+1 < height && j-1 >= 0 && isMineHidden[i+1][j-1]) {
+    cnt++;
+    console.log(i+1,j-1);
+  }
+  if (i+1 < height && j >= 0 && isMineHidden[i+1][j]) {
+    cnt++;
+    console.log(i+1,j);
+  }
+  if (i+1 < height && j+1 < width && isMineHidden[i+1][j+1]) {
+    cnt++;
+    console.log(i+1,j+1);
+  }
+
+  if (cnt > 0) {
+    const cell = document.getElementById(`cell-${i}-${j}`);
+    cell.textContent = cnt;
+  } else {
+    if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
+      openSafeCell2(i-1, j-1);
+      searchMines2(i-1, j-1);
+    }
+    if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j]) {
+      openSafeCell2(i-1, j);
+      searchMines2(i-1, j);
+    }
+    if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1]) {
+      openSafeCell2(i-1, j+1);
+      searchMines2(i-1, j+1);
+    }
+    if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1]) {
+      openSafeCell2(i, j-1);
+      searchMines2(i, j-1);
+    }
+    if (i >= 0 && j+1 < width && !isCellOpen[i][j+1]) {
+      openSafeCell2(i, j+1);
+      searchMines2(i, j+1);
+    }
+    if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1]) {
+      openSafeCell2(i+1, j-1);
+      searchMines2(i+1, j-1);
+    }
+    if (i+1 < height && j >= 0 && !isCellOpen[i+1][j]) {
+      openSafeCell2(i+1, j);
+      searchMines2(i+1, j);
+    }
+    if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
+      openSafeCell2(i+1, j+1);
+      searchMines2(i+1, j+1);
+    }
+  }
 }
