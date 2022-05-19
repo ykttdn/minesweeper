@@ -197,8 +197,11 @@ for (let i = 0; i < height; i++) {
 
     const cellID = `cell-${i}-${j}`;
     cell.id = cellID;
-    
+
     cell.className = 'cell cell--unopen';
+
+    cell.dataset.col = i;
+    cell.dataset.row = j;
 
     row.appendChild(cell);
   }
