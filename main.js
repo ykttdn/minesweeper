@@ -26,7 +26,7 @@ for (let i = 0; i < cell.length; i++) {
     cell[i][j] = document.createElement('div');
     cell[i][j].className = 'cell cell--unopen';
 
-    cell[i][j].addEventListener('click', initMines(i, j));
+    // cell[i][j].addEventListener('click', initMines(i, j));
 
     cell[i][j].addEventListener('click', function openCell() {
       if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
