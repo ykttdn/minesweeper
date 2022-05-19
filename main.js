@@ -194,7 +194,12 @@ for (let i = 0; i < height; i++) {
   row.className ='row';
   for (let j = 0; j < width; j++) {
     const cell = document.createElement('div');
+
+    const cellID = `cell-${i}-${j}`;
+    cell.id = cellID;
+    
     cell.className = 'cell cell--unopen';
+
     row.appendChild(cell);
   }
   df2.appendChild(row);
