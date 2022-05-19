@@ -203,8 +203,57 @@ for (let i = 0; i < height; i++) {
     cell.dataset.col = i;
     cell.dataset.row = j;
 
+    cell.addEventListener('click', initMines2);
+
     row.appendChild(cell);
   }
   df2.appendChild(row);
 }
 board2.appendChild(df2);
+
+function initMines2(e) {
+  const cell = e.target;
+  const i = cell.dataset.col;
+  const j = cell.dataset.row;
+
+  if (!hasGameStarted) {
+    hasGameStarted = true;
+    for (let k = 0; k < mines; k++) {
+      while (true) {
+        const row = rand(height);
+        const col = rand(width);
+        if (!isMineHidden[row][col] && !(i === row && j === col)) {
+          // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
+          isMineHidden[row][col] = true;
+          break;
+        }
+      }
+
+      /*
+      let row = rand(height);
+      let col = rand(width);
+      if (!isMineHidden[row][col] && !(i === row && j === col)) {
+        // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
+        isMineHidden[row][col] = true;
+      } else {
+        // (row, col)成分に爆弾が埋められている，または，(row,col)成分が最初に開いたcellのとき
+        // (row, col)成分の右隣のcellに移動し続け，そこに爆弾がなければ埋める
+        while (true) {
+          col++;
+          if (col === width) {
+            col = 0;
+            row++;
+            if (row === height) {
+              row = 0;
+            }
+          }
+          if (!isMineHidden[row][col] && !(i === row && j === col)) {
+            isMineHidden[row][col] = 1;
+            break;
+          }
+        }
+      }
+      */
+    }
+  }
+}
