@@ -205,6 +205,7 @@ for (let i = 0; i < height; i++) {
 
     cell.addEventListener('click', initMines2);
     cell.addEventListener('click', openCell2);
+    cell.addEventListener('contextmenu', toggleFlag2);
 
     row.appendChild(cell);
   }
@@ -346,6 +347,23 @@ function searchMines2(i, j) {
     if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
       openSafeCell2(i+1, j+1);
       searchMines2(i+1, j+1);
+    }
+  }
+}
+
+function toggleFlag2(e) {
+  e.preventDefault();
+
+  const cell = e.target;
+  const i = strToNum(cell.dataset.col);
+  const j = strToNum(cell.dataset.row);
+  if (!isCellOpen[i][j]) {
+    if (!isMarkedWithFlag[i][j]) {
+      isMarkedWithFlag[i][j] = true;
+      cell.className = 'cell cell--unopen cell--flagged';
+    } else {
+      isMarkedWithFlag[i][j] = false;
+      cell.className = 'cell cell--unopen'
     }
   }
 }
