@@ -185,3 +185,18 @@ function toggleFlag(i, j) {
     }
   }
 }
+
+const board2 = document.getElementsByClassName('board')[1];
+const df2 = document.createDocumentFragment();
+
+for (let i = 0; i < height; i++) {
+  const row = document.createElement('div');
+  row.className ='row';
+  for (let j = 0; j < width; j++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell cell--unopen';
+    row.appendChild(cell);
+  }
+  df2.appendChild(row);
+}
+board2.appendChild(df2);
