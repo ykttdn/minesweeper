@@ -204,6 +204,7 @@ for (let i = 0; i < height; i++) {
     cell.dataset.row = j;
 
     cell.addEventListener('click', initMines2);
+    cell.addEventListener('click', openCell2);
 
     row.appendChild(cell);
   }
@@ -256,4 +257,25 @@ function initMines2(e) {
       */
     }
   }
+}
+
+function openCell2(e) {
+  const cell = e.target;
+  const i = cell.dataset.col;
+  const j = cell.dataset.row;
+
+  if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
+    if (isMineHidden[i][j]) {
+      cell.className = 'cell cell--exploded'
+    } else {
+      openSafeCell2(i, j);
+      // searchMines(i, j);
+    }
+  }
+}
+
+function openSafeCell2(i, j) {
+  const cell = document.getElementById(`cell-${i}-${j}`);
+  isCellOpen[i][j] = true;
+  cell.className = 'cell cell--open';
 }
