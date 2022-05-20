@@ -213,14 +213,14 @@ for (let i = 0; i < height; i++) {
 }
 board2.appendChild(df2);
 
-function strToNum(str) {
+function strToInt(str) {
   return parseInt(str, 10);
 }
 
 function initMines2(e) {
   const cell = e.target;
-  const i = strToNum(cell.dataset.col);
-  const j = strToNum(cell.dataset.row);
+  const i = strToInt(cell.dataset.col);
+  const j = strToInt(cell.dataset.row);
 
   if (!hasGameStarted) {
     hasGameStarted = true;
@@ -266,8 +266,8 @@ function initMines2(e) {
 
 function openCell2(e) {
   const cell = e.target;
-  const i = strToNum(cell.dataset.col);
-  const j = strToNum(cell.dataset.row);
+  const i = strToInt(cell.dataset.col);
+  const j = strToInt(cell.dataset.row);
 
   if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
     if (isMineHidden[i][j]) {
@@ -355,8 +355,8 @@ function toggleFlag2(e) {
   e.preventDefault();
 
   const cell = e.target;
-  const i = strToNum(cell.dataset.col);
-  const j = strToNum(cell.dataset.row);
+  const i = strToInt(cell.dataset.col);
+  const j = strToInt(cell.dataset.row);
   if (!isCellOpen[i][j]) {
     if (!isMarkedWithFlag[i][j]) {
       isMarkedWithFlag[i][j] = true;
