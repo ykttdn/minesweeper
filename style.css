@@ -62,3 +62,7 @@
   font-weight: 900;
   color: #f00;
 }
+
+.cell--flagged-wrongly {
+  background-color: #ffaaaa;
+}

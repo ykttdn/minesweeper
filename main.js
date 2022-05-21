@@ -7,6 +7,7 @@ let isCellOpen = gen2DArray(height, width, false);
 let isMarkedWithFlag = gen2DArray(height, width, false);
 
 let hasGameStarted = false;
+let hasOpenedMinedCell = false;
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -25,8 +26,7 @@ for (let i = 0; i < height; i++) {
     cell.dataset.col = i;
     cell.dataset.row = j;
 
-    cell.addEventListener('click', initMines);
-    cell.addEventListener('click', openCell);
+    cell.addEventListener('click', touchCell);
     cell.addEventListener('contextmenu', toggleFlag);
 
     row.appendChild(cell);
@@ -42,6 +42,23 @@ function gen2DArray(m, n, val) {
     table[i] = new Array(n).fill(val);
   }
   return table;
+}
+
+function touchCell(e) {
+  if (!hasGameStarted) {
+    initMines(e);
+    openCell(e);
+  } else {
+    const cell = e.target;
+    const i = strToInt(cell.dataset.col);
+    const j = strToInt(cell.dataset.row);
+
+    if (!isCellOpen[i][j]) {
+      openCell(e);
+    } else {
+      exeChording(e);
+    }
+  }
 }
 
 function initMines(e) {
@@ -103,6 +120,7 @@ function openCell(e) {
 
   if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
     if (isMineHidden[i][j]) {
+      hasOpenedMinedCell = true;
       cell.className = 'cell cell--exploded'
     } else {
       openSafeCell(i, j);
@@ -151,7 +169,7 @@ function searchMines(i, j) {
   if (cnt > 0) {
     const cell = document.getElementById(`cell-${i}-${j}`);
     cell.textContent = cnt;
-  } else {
+  } else if (!hasOpenedMinedCell) {
     if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
       openSafeCell(i-1, j-1);
       searchMines(i-1, j-1);
@@ -200,6 +218,185 @@ function toggleFlag(e) {
     } else {
       isMarkedWithFlag[i][j] = false;
       cell.className = 'cell cell--unopen'
+    }
+  }
+}
+
+function exeChording(e) {
+  const cell = e.target;
+  const i = strToInt(cell.dataset.col);
+  const j = strToInt(cell.dataset.row);
+
+  if (isCellOpen[i][j]) {
+    const mineCount = strToInt(cell.textContent);
+
+    let flagCount = 0;
+    if (i-1 >= 0 && j-1 >= 0 && isMarkedWithFlag[i-1][j-1]) {
+      flagCount++;
+    }
+    if (i-1 >= 0 && j >= 0 && isMarkedWithFlag[i-1][j]) {
+      flagCount++;
+    }
+    if (i-1 >= 0 && j+1 < width && isMarkedWithFlag[i-1][j+1]) {
+      flagCount++;
+    }
+    if (i >= 0 && j-1 >= 0 && isMarkedWithFlag[i][j-1]) {
+      flagCount++;
+    }
+    if (i >= 0 && j+1 < width && isMarkedWithFlag[i][j+1]) {
+      flagCount++;
+    }
+    if (i+1 < height && j-1 >= 0 && isMarkedWithFlag[i+1][j-1]) {
+      flagCount++;
+    }
+    if (i+1 < height && j >= 0 && isMarkedWithFlag[i+1][j]) {
+      flagCount++;
+    }
+    if (i+1 < height && j+1 < width && isMarkedWithFlag[i+1][j+1]) {
+      flagCount++;
+    }
+
+    if (mineCount === flagCount) {
+      let canExeChording = false;
+      if (i-1 >= 0 && j-1 >= 0 && isMarkedWithFlag[i-1][j-1] && !isMineHidden[i-1][j-1]) {
+      } else if (i-1 >= 0 && j >= 0 && isMarkedWithFlag[i-1][j] && !isMineHidden[i-1][j]) {
+      } else if (i-1 >= 0 && j+1 < width && isMarkedWithFlag[i-1][j+1] && !isMineHidden[i-1][j+1]) {
+      } else if (i >= 0 && j-1 >= 0 && isMarkedWithFlag[i][j-1] && !isMineHidden[i][j-1]) {
+      } else if (i >= 0 && j+1 < width && isMarkedWithFlag[i][j+1] && !isMineHidden[i][j+1]) {
+      } else if (i+1 < height && j-1 >= 0 && isMarkedWithFlag[i+1][j-1] && !isMineHidden[i+1][j-1]) {
+      } else if (i+1 < height && j >= 0 && isMarkedWithFlag[i+1][j] && !isMineHidden[i+1][j]) {
+      } else if (i+1 < height && j+1 < width && isMarkedWithFlag[i+1][j+1] && !isMineHidden[i+1][j+1]) {
+      } else {
+        canExeChording = true;
+      }
+
+      if (canExeChording) {
+        if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1] && !isMarkedWithFlag[i-1][j-1]) {
+          openSafeCell(i-1, j-1);
+          searchMines(i-1, j-1);
+        }
+        if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j] && !isMarkedWithFlag[i-1][j]) {
+          openSafeCell(i-1, j);
+          searchMines(i-1, j);
+        }
+        if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1] && !isMarkedWithFlag[i-1][j+1]) {
+          openSafeCell(i-1, j+1);
+          searchMines(i-1, j+1);
+        }
+        if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1] && !isMarkedWithFlag[i][j-1]) {
+          openSafeCell(i, j-1);
+          searchMines(i, j-1);
+        }
+        if (i >= 0 && j+1 < width && !isCellOpen[i][j+1] && !isMarkedWithFlag[i][j+1]) {
+          openSafeCell(i, j+1);
+          searchMines(i, j+1);
+        }
+        if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1] && !isMarkedWithFlag[i+1][j-1]) {
+          openSafeCell(i+1, j-1);
+          searchMines(i+1, j-1);
+        }
+        if (i+1 < height && j >= 0 && !isCellOpen[i+1][j] && !isMarkedWithFlag[i+1][j]) {
+          openSafeCell(i+1, j);
+          searchMines(i+1, j);
+        }
+        if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1] && !isMarkedWithFlag[i+1][j+1]) {
+          openSafeCell(i+1, j+1);
+          searchMines(i+1, j+1);
+        }
+      } else {
+        hasOpenedMinedCell = true;
+        if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
+          const c = document.getElementById(`cell-${i-1}-${j-1}`);
+          if (isMarkedWithFlag[i-1][j-1] && !isMineHidden[i-1][j-1]) {
+            // cell-${i-1}-${j-1}に爆弾がないのにflagが立てられているとき
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i-1][j-1] && isMineHidden[i-1][j-1]) {
+            // cell-${i-1}-${j-1}に爆弾があるのにflagが立っていないとき
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i-1][j-1]) {
+            // cell-${i-1}-${j-1}に爆弾がなくてflagも立っていないとき
+            openSafeCell(i-1, j-1);
+            searchMines(i-1, j-1);
+          }
+        }
+        if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j]) {
+          const c = document.getElementById(`cell-${i-1}-${j}`);
+          if (isMarkedWithFlag[i-1][j] && !isMineHidden[i-1][j]) {
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i-1][j] && isMineHidden[i-1][j]) {
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i-1][j]) {
+            openSafeCell(i-1, j);
+            searchMines(i-1, j);
+          }
+        }
+        if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1]) {
+          const c = document.getElementById(`cell-${i-1}-${j+1}`);
+          if (isMarkedWithFlag[i-1][j+1] && !isMineHidden[i-1][j+1]) {
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i-1][j+1] && isMineHidden[i-1][j+1]) {
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i-1][j+1]) {
+            openSafeCell(i-1, j+1);
+            searchMines(i-1, j+1);
+          }
+        }
+        if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1]) {
+          const c = document.getElementById(`cell-${i}-${j-1}`);
+          if (isMarkedWithFlag[i][j-1] && !isMineHidden[i][j-1]) {
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i][j-1] && isMineHidden[i][j-1]) {
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i][j-1]) {
+            openSafeCell(i, j-1);
+            searchMines(i, j-1);
+          }
+        }
+        if (i >= 0 && j+1 < width && !isCellOpen[i][j+1]) {
+          const c = document.getElementById(`cell-${i}-${j+1}`);
+          if (isMarkedWithFlag[i][j+1] && !isMineHidden[i][j+1]) {
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i][j+1] && isMineHidden[i][j+1]) {
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i][j+1]) {
+            openSafeCell(i, j+1);
+            searchMines(i, j+1);
+          }
+        }
+        if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1]) {
+          const c = document.getElementById(`cell-${i+1}-${j-1}`);
+          if (isMarkedWithFlag[i+1][j-1] && !isMineHidden[i+1][j-1]) {
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i+1][j-1] && isMineHidden[i+1][j-1]) {
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i+1][j-1]) {
+            openSafeCell(i+1, j-1);
+            searchMines(i+1, j-1);
+          }
+        }
+        if (i+1 < height && j >= 0 && !isCellOpen[i+1][j]) {
+          const c = document.getElementById(`cell-${i+1}-${j}`);
+          if (isMarkedWithFlag[i+1][j] && !isMineHidden[i+1][j]) {
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i+1][j] && isMineHidden[i+1][j]) {
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i+1][j]) {
+            openSafeCell(i+1, j);
+            searchMines(i+1, j);
+          }
+        }
+        if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
+          const c = document.getElementById(`cell-${i+1}-${j+1}`);
+          if (isMarkedWithFlag[i+1][j+1] && !isMineHidden[i+1][j+1]) {
+            c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+          } else if (!isMarkedWithFlag[i+1][j+1] && isMineHidden[i+1][j+1]) {
+            c.className = 'cell cell--exploded';
+          } else if (!isMarkedWithFlag[i+1][j+1]) {
+            openSafeCell(i+1, j+1);
+            searchMines(i+1, j+1);
+          }
+        }
+      }
     }
   }
 }
