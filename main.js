@@ -212,5 +212,6 @@ function exeChording(e) {
   const j = strToInt(cell.dataset.row);
 
   if (isCellOpen[i][j]) {
+    const mineCount = strToInt(cell.textContent);
   }
 }
