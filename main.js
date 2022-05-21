@@ -452,10 +452,6 @@ function stopTimer() {
 }
 
 function resetGame(e) {
-  while (board.firstChild) {
-    board.removeChild(board.firstChild);
-  }
-
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
@@ -468,6 +464,14 @@ function resetGame(e) {
   remains.textContent = remainingMines;
   timer.textContent = 0;
   stopTimer();
+
+  initBoard();
+}
+
+function initBoard() {
+  while (board.firstChild) {
+    board.removeChild(board.firstChild);
+  }
 
   for (let i = 0; i < height; i++) {
     const row = document.createElement('div');
