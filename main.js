@@ -58,6 +58,16 @@ function touchCell(e) {
     } else {
       exeChording(e);
     }
+
+    if (hasOpenedMinedCell) {
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          const cell = document.getElementById(`cell-${i}-${j}`);
+          cell.removeEventListener('click', touchCell);
+          cell.removeEventListener('contextmenu', toggleFlag);
+        }
+      }
+    }
   }
 }
 
