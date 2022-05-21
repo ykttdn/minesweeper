@@ -8,9 +8,29 @@ const minesEasy = 10;
 const minesNormal = 40;
 const minesHard = 99;
 
-const height = 9;
-const width = 9;
-const mines = Math.min(10, Math.floor(height*width*0.3));
+let height = heightEasy;
+let width = widthEasy;
+let mines = minesEasy;
+
+const selector = document.getElementsByTagName('select')[0];
+selector.addEventListener('change', function (e) {
+  const level = e.target.value;
+  if (level === 'easy') {
+    height = heightEasy;
+    width = widthEasy;
+    mines = minesEasy;
+  } else if (level === 'normal') {
+    height = heightNormal;
+    width = widthNormal;
+    mines = minesNormal;
+  } else {
+    height = heightHard;
+    width = widthHard;
+    mines = minesHard;
+  }
+
+  resetGame();
+});
 
 let isMineHidden = gen2DArray(height, width, false);
 let isCellOpen = gen2DArray(height, width, false);
