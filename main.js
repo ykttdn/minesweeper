@@ -451,4 +451,7 @@ function stopTimer() {
 }
 
 function resetGame(e) {
+  while (board.firstChild) {
+    board.removeChild(board.firstChild);
+  }
 }
