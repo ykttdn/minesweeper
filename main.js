@@ -240,5 +240,34 @@ function exeChording(e) {
     if (i+1 < height && j+1 < width && isMarkedWithFlag[i+1][j+1]) {
       flagCount++;
     }
+
+    let canExeChording = true;
+    if (mineCount === flagCount) {
+      if (i-1 >= 0 && j-1 >= 0 && isMarkedWithFlag[i-1][j-1] && !isMineHidden[i-1][j-1]) {
+        canExeChording = false;
+      }
+      if (i-1 >= 0 && j >= 0 && isMarkedWithFlag[i-1][j] && !isMineHidden[i-1][j]) {
+        canExeChording = false;
+      }
+      if (i-1 >= 0 && j+1 < width && isMarkedWithFlag[i-1][j+1] && !isMineHidden[i-1][j+1]) {
+        canExeChording = false;
+      }
+      if (i >= 0 && j-1 >= 0 && isMarkedWithFlag[i][j-1] && !isMineHidden[i][j-1]) {
+        canExeChording = false;
+      }
+      if (i >= 0 && j+1 < width && isMarkedWithFlag[i][j+1] && !isMineHidden[i][j+1]) {
+        canExeChording = false;
+      }
+      if (i+1 < height && j-1 >= 0 && isMarkedWithFlag[i+1][j-1] && !isMineHidden[i+1][j-1]) {
+        canExeChording = false;
+      }
+      if (i+1 < height && j >= 0 && isMarkedWithFlag[i+1][j] && !isMineHidden[i+1][j]) {
+        canExeChording = false;
+      }
+      if (i+1 < height && j+1 < width && isMarkedWithFlag[i+1][j+1] && !isMineHidden[i+1][j+1]) {
+        canExeChording = false;
+      }
+      console.log(canExeChording);
+    }
   }
 }
