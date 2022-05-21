@@ -2,25 +2,11 @@ const height = 9;
 const width = 9;
 const mines = Math.min(10, Math.floor(height*width*0.3));
 
-// m 行 n 列の2次元配列を生成
-function gen2DArray(m, n, val) {
-  let table = new Array(m);
-  for (let i = 0; i < table.length; i++) {
-    table[i] = new Array(n).fill(val);
-  }
-  return table;
-}
-
 let isMineHidden = gen2DArray(height, width, false);
 let isCellOpen = gen2DArray(height, width, false);
 let isMarkedWithFlag = gen2DArray(height, width, false);
 
 let hasGameStarted = false;
-
-// 0 以上 val 未満の整数乱数を返す
-function rand(val) {
-  return Math.floor(Math.random()*val);
-}
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -49,8 +35,13 @@ for (let i = 0; i < height; i++) {
 }
 board.appendChild(df);
 
-function strToInt(str) {
-  return parseInt(str, 10);
+// m 行 n 列の2次元配列を生成
+function gen2DArray(m, n, val) {
+  let table = new Array(m);
+  for (let i = 0; i < table.length; i++) {
+    table[i] = new Array(n).fill(val);
+  }
+  return table;
 }
 
 function initMines(e) {
@@ -100,6 +91,11 @@ function initMines(e) {
   }
 }
 
+// 0 以上 val 未満の整数乱数を返す
+function rand(val) {
+  return Math.floor(Math.random()*val);
+}
+
 function openCell(e) {
   const cell = e.target;
   const i = strToInt(cell.dataset.col);
@@ -113,6 +109,10 @@ function openCell(e) {
       searchMines(i, j);
     }
   }
+}
+
+function strToInt(str) {
+  return parseInt(str, 10);
 }
 
 function openSafeCell(i, j) {
