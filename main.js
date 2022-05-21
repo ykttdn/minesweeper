@@ -466,6 +466,7 @@ function resetGame(e) {
   remainingMines = mines;
   remains.textContent = remainingMines;
   timer.textContent = 0;
+  intervalId = null;
 
   for (let i = 0; i < height; i++) {
     const row = document.createElement('div');
