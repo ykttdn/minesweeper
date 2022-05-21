@@ -10,6 +10,10 @@ let hasGameStarted = false;
 let hasOpenedMinedCell = false;
 let hasOpenedAllSafeCells = false;
 let safeCellCount = height*width-mines;
+let remainingMines = mines;
+
+const remains = document.getElementsByClassName('remains')[0];
+remains.textContent = remainingMines;
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -233,9 +237,15 @@ function toggleFlag(e) {
     if (!isMarkedWithFlag[i][j]) {
       isMarkedWithFlag[i][j] = true;
       cell.className = 'cell cell--unopen cell--flagged';
+
+      remainingMines--;
+      remains.textContent = remainingMines;
     } else {
       isMarkedWithFlag[i][j] = false;
-      cell.className = 'cell cell--unopen'
+      cell.className = 'cell cell--unopen';
+
+      remainingMines++;
+      remains.textContent = remainingMines;
     }
   }
 }
