@@ -22,7 +22,7 @@ function rand(val) {
   return Math.floor(Math.random()*val);
 }
 
-const board2 = document.getElementsByClassName('board')[1];
+const board2 = document.getElementsByClassName('board')[0];
 const df2 = document.createDocumentFragment();
 
 for (let i = 0; i < height; i++) {
