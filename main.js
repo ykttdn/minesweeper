@@ -1,3 +1,13 @@
+const heightEasy = 9;
+const heightNormal = 16;
+const heightHard = 16;
+const widthEasy = 9;
+const widthNormal = 16;
+const widthHard = 30;
+const minesEasy = 10;
+const minesNormal = 40;
+const minesHard = 99;
+
 const height = 9;
 const width = 9;
 const mines = Math.min(10, Math.floor(height*width*0.3));
