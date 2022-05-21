@@ -26,9 +26,7 @@ for (let i = 0; i < height; i++) {
     cell.dataset.col = i;
     cell.dataset.row = j;
 
-    cell.addEventListener('click', initMines);
-    cell.addEventListener('click', openCell);
-    cell.addEventListener('click', exeChording);
+    cell.addEventListener('click', touchCell);
     cell.addEventListener('contextmenu', toggleFlag);
 
     row.appendChild(cell);
@@ -44,6 +42,23 @@ function gen2DArray(m, n, val) {
     table[i] = new Array(n).fill(val);
   }
   return table;
+}
+
+function touchCell(e) {
+  if (!hasGameStarted) {
+    initMines(e);
+    openCell(e);
+  } else {
+    const cell = e.target;
+    const i = strToInt(cell.dataset.col);
+    const j = strToInt(cell.dataset.row);
+
+    if (!isCellOpen[i][j]) {
+      openCell(e);
+    } else {
+      exeChording(e);
+    }
+  }
 }
 
 function initMines(e) {
