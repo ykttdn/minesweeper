@@ -448,6 +448,7 @@ function advanceTimer() {
 
 function stopTimer() {
   clearInterval(intervalId);
+  intervalId = null;
 }
 
 function resetGame(e) {
@@ -466,7 +467,7 @@ function resetGame(e) {
   remainingMines = mines;
   remains.textContent = remainingMines;
   timer.textContent = 0;
-  intervalId = null;
+  stopTimer();
 
   for (let i = 0; i < height; i++) {
     const row = document.createElement('div');
