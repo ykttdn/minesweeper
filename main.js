@@ -105,6 +105,7 @@ function openCell(e) {
 
   if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
     if (isMineHidden[i][j]) {
+      hasOpenedMinedCell = true;
       cell.className = 'cell cell--exploded'
     } else {
       openSafeCell(i, j);
