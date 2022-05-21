@@ -29,7 +29,7 @@ selector.addEventListener('change', function (e) {
     mines = minesHard;
   }
 
-  resetGame();
+  intiGame();
 });
 
 let isMineHidden = gen2DArray(height, width, false);
@@ -49,7 +49,7 @@ const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
 
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
-resetBtn.addEventListener('click', resetGame);
+resetBtn.addEventListener('click', intiGame);
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -481,7 +481,7 @@ function stopTimer() {
   intervalId = null;
 }
 
-function resetGame(e) {
+function intiGame(e) {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
