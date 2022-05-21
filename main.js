@@ -15,6 +15,9 @@ let remainingMines = mines;
 const remains = document.getElementsByClassName('remains')[0];
 remains.textContent = remainingMines;
 
+const timer = document.getElementsByClassName('timer')[0];
+let intervalId;
+
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
 
@@ -54,6 +57,10 @@ function touchCell(e) {
   if (!hasGameStarted) {
     initMines(e);
     openCell(e);
+
+    if (!intervalId) {
+      intervalId = setInterval(advanceTimer, 1000);
+    }
   } else {
     const cell = e.target;
     const i = strToInt(cell.dataset.col);
@@ -70,6 +77,7 @@ function touchCell(e) {
     }
 
     if (hasOpenedMinedCell || hasOpenedAllSafeCells) {
+      stopTimer();
       for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
           const cell = document.getElementById(`cell-${i}-${j}`);
@@ -427,4 +435,14 @@ function exeChording(e) {
       }
     }
   }
+}
+
+function advanceTimer() {
+  let now = strToInt(timer.textContent);
+  now++;
+  timer.textContent = now;
+}
+
+function stopTimer() {
+  clearInterval(intervalId);
 }
