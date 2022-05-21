@@ -8,6 +8,8 @@ let isMarkedWithFlag = gen2DArray(height, width, false);
 
 let hasGameStarted = false;
 let hasOpenedMinedCell = false;
+let hasOpenedAllSafeCells = false;
+let safeCellCount = height*width-mines;
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -57,6 +59,20 @@ function touchCell(e) {
       openCell(e);
     } else {
       exeChording(e);
+    }
+
+    if (safeCellCount === 0) {
+      hasOpenedAllSafeCells = true;
+    }
+
+    if (hasOpenedMinedCell || hasOpenedAllSafeCells) {
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          const cell = document.getElementById(`cell-${i}-${j}`);
+          cell.removeEventListener('click', touchCell);
+          cell.removeEventListener('contextmenu', toggleFlag);
+        }
+      }
     }
   }
 }
@@ -137,6 +153,8 @@ function openSafeCell(i, j) {
   const cell = document.getElementById(`cell-${i}-${j}`);
   isCellOpen[i][j] = true;
   cell.className = 'cell cell--open';
+
+  safeCellCount--;
 }
 
 function searchMines(i, j) {
