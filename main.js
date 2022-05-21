@@ -454,4 +454,27 @@ function resetGame(e) {
   while (board.firstChild) {
     board.removeChild(board.firstChild);
   }
+
+  for (let i = 0; i < height; i++) {
+    const row = document.createElement('div');
+    row.className ='row';
+    for (let j = 0; j < width; j++) {
+      const cell = document.createElement('div');
+  
+      const cellID = `cell-${i}-${j}`;
+      cell.id = cellID;
+  
+      cell.className = 'cell cell--unopen';
+  
+      cell.dataset.col = i;
+      cell.dataset.row = j;
+  
+      cell.addEventListener('click', touchCell);
+      cell.addEventListener('contextmenu', toggleFlag);
+  
+      row.appendChild(cell);
+    }
+    df.appendChild(row);
+  }
+  board.appendChild(df);
 }
