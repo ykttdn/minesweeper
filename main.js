@@ -28,6 +28,7 @@ for (let i = 0; i < height; i++) {
 
     cell.addEventListener('click', initMines);
     cell.addEventListener('click', openCell);
+    cell.addEventListener('click', exeChording);
     cell.addEventListener('contextmenu', toggleFlag);
 
     row.appendChild(cell);
@@ -202,5 +203,14 @@ function toggleFlag(e) {
       isMarkedWithFlag[i][j] = false;
       cell.className = 'cell cell--unopen'
     }
+  }
+}
+
+function exeChording(e) {
+  const cell = e.target;
+  const i = strToInt(cell.dataset.col);
+  const j = strToInt(cell.dataset.row);
+
+  if (isCellOpen[i][j]) {
   }
 }
