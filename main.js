@@ -1,6 +1,36 @@
-const height = 9;
-const width = 9;
-const mines = Math.min(10, Math.floor(height*width*0.3));
+const heightEasy = 9;
+const heightNormal = 16;
+const heightHard = 16;
+const widthEasy = 9;
+const widthNormal = 16;
+const widthHard = 30;
+const minesEasy = 10;
+const minesNormal = 40;
+const minesHard = 99;
+
+let height = heightEasy;
+let width = widthEasy;
+let mines = minesEasy;
+
+const selector = document.getElementsByTagName('select')[0];
+selector.addEventListener('change', function (e) {
+  const level = e.target.value;
+  if (level === 'easy') {
+    height = heightEasy;
+    width = widthEasy;
+    mines = minesEasy;
+  } else if (level === 'normal') {
+    height = heightNormal;
+    width = widthNormal;
+    mines = minesNormal;
+  } else {
+    height = heightHard;
+    width = widthHard;
+    mines = minesHard;
+  }
+
+  intiGame();
+});
 
 let isMineHidden = gen2DArray(height, width, false);
 let isCellOpen = gen2DArray(height, width, false);
@@ -19,7 +49,7 @@ const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
 
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
-resetBtn.addEventListener('click', resetGame);
+resetBtn.addEventListener('click', intiGame);
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -451,7 +481,7 @@ function stopTimer() {
   intervalId = null;
 }
 
-function resetGame(e) {
+function intiGame(e) {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
