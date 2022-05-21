@@ -18,6 +18,9 @@ remains.textContent = remainingMines;
 const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
 
+const resetBtn = document.getElementsByClassName('reset-btn')[0];
+resetBtn.addEventListener('click', resetGame);
+
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
 
@@ -445,4 +448,7 @@ function advanceTimer() {
 
 function stopTimer() {
   clearInterval(intervalId);
+}
+
+function resetGame(e) {
 }
