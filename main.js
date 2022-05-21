@@ -7,6 +7,7 @@ let isCellOpen = gen2DArray(height, width, false);
 let isMarkedWithFlag = gen2DArray(height, width, false);
 
 let hasGameStarted = false;
+let hasOpenedMinedCell = false;
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
