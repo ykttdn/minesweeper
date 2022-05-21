@@ -22,8 +22,8 @@ function rand(val) {
   return Math.floor(Math.random()*val);
 }
 
-const board2 = document.getElementsByClassName('board')[0];
-const df2 = document.createDocumentFragment();
+const board = document.getElementsByClassName('board')[0];
+const df = document.createDocumentFragment();
 
 for (let i = 0; i < height; i++) {
   const row = document.createElement('div');
@@ -39,21 +39,21 @@ for (let i = 0; i < height; i++) {
     cell.dataset.col = i;
     cell.dataset.row = j;
 
-    cell.addEventListener('click', initMines2);
-    cell.addEventListener('click', openCell2);
-    cell.addEventListener('contextmenu', toggleFlag2);
+    cell.addEventListener('click', initMines);
+    cell.addEventListener('click', openCell);
+    cell.addEventListener('contextmenu', toggleFlag);
 
     row.appendChild(cell);
   }
-  df2.appendChild(row);
+  df.appendChild(row);
 }
-board2.appendChild(df2);
+board.appendChild(df);
 
 function strToInt(str) {
   return parseInt(str, 10);
 }
 
-function initMines2(e) {
+function initMines(e) {
   const cell = e.target;
   const i = strToInt(cell.dataset.col);
   const j = strToInt(cell.dataset.row);
@@ -100,7 +100,7 @@ function initMines2(e) {
   }
 }
 
-function openCell2(e) {
+function openCell(e) {
   const cell = e.target;
   const i = strToInt(cell.dataset.col);
   const j = strToInt(cell.dataset.row);
@@ -109,19 +109,19 @@ function openCell2(e) {
     if (isMineHidden[i][j]) {
       cell.className = 'cell cell--exploded'
     } else {
-      openSafeCell2(i, j);
-      searchMines2(i, j);
+      openSafeCell(i, j);
+      searchMines(i, j);
     }
   }
 }
 
-function openSafeCell2(i, j) {
+function openSafeCell(i, j) {
   const cell = document.getElementById(`cell-${i}-${j}`);
   isCellOpen[i][j] = true;
   cell.className = 'cell cell--open';
 }
 
-function searchMines2(i, j) {
+function searchMines(i, j) {
   let cnt = 0;
   if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
     cnt++;
@@ -153,41 +153,41 @@ function searchMines2(i, j) {
     cell.textContent = cnt;
   } else {
     if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
-      openSafeCell2(i-1, j-1);
-      searchMines2(i-1, j-1);
+      openSafeCell(i-1, j-1);
+      searchMines(i-1, j-1);
     }
     if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j]) {
-      openSafeCell2(i-1, j);
-      searchMines2(i-1, j);
+      openSafeCell(i-1, j);
+      searchMines(i-1, j);
     }
     if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1]) {
-      openSafeCell2(i-1, j+1);
-      searchMines2(i-1, j+1);
+      openSafeCell(i-1, j+1);
+      searchMines(i-1, j+1);
     }
     if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1]) {
-      openSafeCell2(i, j-1);
-      searchMines2(i, j-1);
+      openSafeCell(i, j-1);
+      searchMines(i, j-1);
     }
     if (i >= 0 && j+1 < width && !isCellOpen[i][j+1]) {
-      openSafeCell2(i, j+1);
-      searchMines2(i, j+1);
+      openSafeCell(i, j+1);
+      searchMines(i, j+1);
     }
     if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1]) {
-      openSafeCell2(i+1, j-1);
-      searchMines2(i+1, j-1);
+      openSafeCell(i+1, j-1);
+      searchMines(i+1, j-1);
     }
     if (i+1 < height && j >= 0 && !isCellOpen[i+1][j]) {
-      openSafeCell2(i+1, j);
-      searchMines2(i+1, j);
+      openSafeCell(i+1, j);
+      searchMines(i+1, j);
     }
     if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
-      openSafeCell2(i+1, j+1);
-      searchMines2(i+1, j+1);
+      openSafeCell(i+1, j+1);
+      searchMines(i+1, j+1);
     }
   }
 }
 
-function toggleFlag2(e) {
+function toggleFlag(e) {
   e.preventDefault();
 
   const cell = e.target;
