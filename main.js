@@ -455,6 +455,18 @@ function resetGame(e) {
     board.removeChild(board.firstChild);
   }
 
+  isMineHidden = gen2DArray(height, width, false);
+  isCellOpen = gen2DArray(height, width, false);
+  isMarkedWithFlag = gen2DArray(height, width, false);
+
+  hasGameStarted = false;
+  hasOpenedMinedCell = false;
+  hasOpenedAllSafeCells = false;
+  safeCellCount = height*width-mines;
+  remainingMines = mines;
+  remains.textContent = remainingMines;
+  timer.textContent = 0;
+
   for (let i = 0; i < height; i++) {
     const row = document.createElement('div');
     row.className ='row';
