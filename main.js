@@ -48,7 +48,12 @@ remains.textContent = remainingMines;
 const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
 
+const faceNormal = '<i class="fa-solid fa-face-smile"></i>';
+const faceSuccess = '<i class="fa-solid fa-face-laugh-squint"></i>';
+const faceFailure = '<i class="fa-solid fa-face-dizzy"></i>';
+
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
+resetBtn.innerHTML = faceNormal;
 resetBtn.addEventListener('click', intiGame);
 
 const board = document.getElementsByClassName('board')[0];
@@ -117,6 +122,12 @@ function touchCell(e) {
           cell.removeEventListener('click', touchCell);
           cell.removeEventListener('contextmenu', toggleFlag);
         }
+      }
+
+      if (hasOpenedMinedCell) {
+        resetBtn.innerHTML = faceFailure;
+      } else {
+        resetBtn.innerHTML = faceSuccess;
       }
     }
   }
@@ -492,6 +503,7 @@ function intiGame(e) {
   safeCellCount = height*width-mines;
   remainingMines = mines;
   remains.textContent = remainingMines;
+  resetBtn.innerHTML = faceNormal;
   timer.textContent = 0;
   stopTimer();
 
