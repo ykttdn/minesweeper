@@ -243,6 +243,7 @@ function searchMines(i, j) {
   if (cnt > 0) {
     const cell = document.getElementById(`cell-${i}-${j}`);
     cell.textContent = cnt;
+    cell.classList.add(`cnt-${cnt}`);
   } else if (!hasOpenedMinedCell) {
     if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
       openSafeCell(i-1, j-1);

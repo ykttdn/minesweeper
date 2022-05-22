@@ -42,7 +42,15 @@
   width: 30px;
   height: 30px;
   background: #ccc;
+  cursor: default;
   text-align: center;
+  font-family: 'Philosopher', sans-serif;
+  font-family: 'Roboto Mono', monospace;
+
+  /* https://developer.mozilla.org/ja/docs/Web/CSS/user-select#examples */
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .cell--unopen {
@@ -78,4 +86,29 @@
 
 .cell--flagged-wrongly {
   background-color: #ffaaaa;
+}
+
+.cnt-1 {
+  color: #30f;
+}
+.cnt-2 {
+  color: #080;
+}
+.cnt-3 {
+  color: #f00;
+}
+.cnt-4 {
+  color: #108;
+}
+.cnt-5 {
+  color: #800;
+}
+.cnt-6 {
+  color: #088;
+}
+.cnt-7 {
+  color: #000;
+}
+.cnt-8 {
+  color: #777;
 }
