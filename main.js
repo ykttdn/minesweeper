@@ -59,28 +59,7 @@ resetBtn.addEventListener('click', initGame);
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
 
-for (let i = 0; i < height; i++) {
-  const row = document.createElement('div');
-  row.className ='row';
-  for (let j = 0; j < width; j++) {
-    const cell = document.createElement('div');
-
-    const cellID = `cell-${i}-${j}`;
-    cell.id = cellID;
-
-    cell.className = 'cell cell--unopen';
-
-    cell.dataset.col = i;
-    cell.dataset.row = j;
-
-    cell.addEventListener('click', touchCell);
-    cell.addEventListener('contextmenu', toggleFlag);
-
-    row.appendChild(cell);
-  }
-  df.appendChild(row);
-}
-board.appendChild(df);
+initBoard();
 
 // m 行 n 列の2次元配列を生成
 function gen2DArray(m, n, val) {
