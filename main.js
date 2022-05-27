@@ -29,7 +29,7 @@ selector.addEventListener('change', function (e) {
     mines = minesHard;
   }
 
-  intiGame();
+  initGame();
 });
 
 let isMineHidden = gen2DArray(height, width, false);
@@ -54,7 +54,7 @@ const faceFailure = '<i class="fa-solid fa-face-dizzy"></i>';
 
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
 resetBtn.innerHTML = faceNormal;
-resetBtn.addEventListener('click', intiGame);
+resetBtn.addEventListener('click', initGame);
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -493,7 +493,7 @@ function stopTimer() {
   intervalId = null;
 }
 
-function intiGame(e) {
+function initGame(e) {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
