@@ -107,6 +107,7 @@ function touchCell(e) {
         resetBtn.innerHTML = faceFailure;
       } else {
         resetBtn.innerHTML = faceSuccess;
+        remains.textContent = 0;
       }
     }
   }
