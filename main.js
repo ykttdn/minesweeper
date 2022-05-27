@@ -108,6 +108,14 @@ function touchCell(e) {
       } else {
         resetBtn.innerHTML = faceSuccess;
         remains.textContent = 0;
+        for (let i = 0; i < height; i++) {
+          for (let j = 0; j < width; j++) {
+            if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
+              const cell = document.getElementById(`cell-${i}-${j}`);
+              cell.className = 'cell cell--unopen cell--flagged'
+            }
+          }
+        }
       }
     }
   }
