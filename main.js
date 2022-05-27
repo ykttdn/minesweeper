@@ -29,7 +29,7 @@ selector.addEventListener('change', function (e) {
     mines = minesHard;
   }
 
-  intiGame();
+  initGame();
 });
 
 let isMineHidden = gen2DArray(height, width, false);
@@ -54,33 +54,12 @@ const faceFailure = '<i class="fa-solid fa-face-dizzy"></i>';
 
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
 resetBtn.innerHTML = faceNormal;
-resetBtn.addEventListener('click', intiGame);
+resetBtn.addEventListener('click', initGame);
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
 
-for (let i = 0; i < height; i++) {
-  const row = document.createElement('div');
-  row.className ='row';
-  for (let j = 0; j < width; j++) {
-    const cell = document.createElement('div');
-
-    const cellID = `cell-${i}-${j}`;
-    cell.id = cellID;
-
-    cell.className = 'cell cell--unopen';
-
-    cell.dataset.col = i;
-    cell.dataset.row = j;
-
-    cell.addEventListener('click', touchCell);
-    cell.addEventListener('contextmenu', toggleFlag);
-
-    row.appendChild(cell);
-  }
-  df.appendChild(row);
-}
-board.appendChild(df);
+initBoard();
 
 // m 行 n 列の2次元配列を生成
 function gen2DArray(m, n, val) {
@@ -493,7 +472,7 @@ function stopTimer() {
   intervalId = null;
 }
 
-function intiGame(e) {
+function initGame(e) {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
