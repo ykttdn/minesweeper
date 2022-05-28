@@ -113,6 +113,17 @@ function touchCell(e) {
 
       if (hasOpenedMinedCell) {
         resetBtn.innerHTML = faceFailure;
+        for (let i = 0; i < height; i++) {
+          for (let j = 0; j < width; j++) {
+            if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
+              const cell = document.getElementById(`cell-${i}-${j}`);
+              cell.className = 'cell cell--unopen cell--mined';
+            } else if (!isCellOpen[i][j] && !isMineHidden[i][j] && isMarkedWithFlag[i][j]) {
+              const cell = document.getElementById(`cell-${i}-${j}`);
+              cell.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+            }
+          }
+        }
       } else {
         resetBtn.innerHTML = faceSuccess;
         remains.textContent = 0;
@@ -188,6 +199,7 @@ function openCell(e) {
 
   if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
     if (isMineHidden[i][j]) {
+      isCellOpen[i][j] = true;
       hasOpenedMinedCell = true;
       cell.className = 'cell cell--exploded'
     } else {
