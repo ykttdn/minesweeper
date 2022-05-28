@@ -30,7 +30,11 @@
 }
 
 .board {
-  border: 1px solid #000;
+  border-top: 4px solid #888;
+  border-right: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  border-left: 4px solid #888;
+  width: fit-content;
 }
 
 .row {
