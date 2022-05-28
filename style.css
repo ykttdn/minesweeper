@@ -112,3 +112,32 @@
 .cnt-8 {
   color: #777;
 }
+
+.switch {
+  border: 1px solid #000;
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 30px;
+  justify-content: center;
+  width: 60px;
+}
+.switch::before {
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 100%;
+  content: '';
+  display: block;
+  height: 24px;
+  margin-left: 3px;
+  transition: all 0.2s;
+  width: 24px;
+}
+
+.switch--on {
+  background-color: #0f0;
+}
+.switch--on::before {
+  margin-left: 31px;
+}
