@@ -11,6 +11,11 @@
 .top-area {
   display: flex;
   justify-content: space-between;
+  border-top: 4px solid #888;
+  border-right: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  border-left: 4px solid #888;
+  background-color: #ccc;
 }
 
 .remains,
