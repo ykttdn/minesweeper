@@ -61,6 +61,11 @@ const df = document.createDocumentFragment();
 
 initBoard();
 
+const switchBtn = document.getElementsByClassName('switch')[0];
+switchBtn.addEventListener('click', function (e) {
+  switchBtn.classList.toggle('switch--on');
+})
+
 // m 行 n 列の2次元配列を生成
 function gen2DArray(m, n, val) {
   let table = new Array(m);
