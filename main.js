@@ -493,7 +493,15 @@ function exeChording(e) {
 function advanceTimer() {
   let now = strToInt(timer.textContent);
   now++;
-  timer.textContent = now;
+  if (now < 10) {
+    timer.textContent = `00${now}`;
+  } else if (now < 100) {
+    timer.textContent = `0${now}`;
+  } else if (now < 1000) {
+    timer.textContent = `${now}`;
+  } else {
+    stopTimer();
+  }
 }
 
 function stopTimer() {
@@ -513,7 +521,7 @@ function initGame(e) {
   remainingMines = mines;
   remains.textContent = remainingMines;
   resetBtn.innerHTML = faceNormal;
-  timer.textContent = 0;
+  timer.textContent = '000';
   stopTimer();
 
   initBoard();
