@@ -16,11 +16,25 @@
   border-bottom: 4px solid #fff;
   border-left: 4px solid #888;
   background-color: #ccc;
+  align-items: center;
+  font-size: 24px;
+  max-width: 278px;
 }
 
 .remains,
 .timer {
   border: 1px solid #000;
+  font-family: 'Philosopher', sans-serif;
+  font-family: 'Roboto Mono', monospace;
+  background-color: #000;
+  color: #f00;
+  display: inline-block;
+  vertical-align: middle;
+  border-top: 2px solid #888;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #888;
+  margin: 2px;
 }
 
 .reset-btn {
@@ -30,7 +44,6 @@
 .fa-face-smile,
 .fa-face-laugh-squint,
 .fa-face-dizzy {
-  font-size: 32px;
   color: #fc0;
 }
 
