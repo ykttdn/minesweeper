@@ -62,9 +62,10 @@ const df = document.createDocumentFragment();
 initBoard();
 
 const switchBtn = document.getElementsByClassName('switch')[0];
+let isFlagModeOn = false;
 switchBtn.addEventListener('click', function (e) {
-  switchBtn.classList.toggle('switch--on');
-})
+  isFlagModeOn = switchBtn.classList.toggle('switch--on');
+});
 
 // m 行 n 列の2次元配列を生成
 function gen2DArray(m, n, val) {
@@ -76,7 +77,7 @@ function gen2DArray(m, n, val) {
 }
 
 function touchCell(e) {
-  if (!hasGameStarted) {
+  if (!hasGameStarted && !isFlagModeOn) {
     initMines(e);
     openCell(e);
 
@@ -88,7 +89,9 @@ function touchCell(e) {
     const i = strToInt(cell.dataset.col);
     const j = strToInt(cell.dataset.row);
 
-    if (!isCellOpen[i][j]) {
+    if (isFlagModeOn && !isCellOpen[i][j]) {
+      toggleFlag(e);
+    } else if (!isCellOpen[i][j]) {
       openCell(e);
     } else {
       exeChording(e);
