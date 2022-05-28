@@ -88,6 +88,10 @@
   background-color: #ffaaaa;
 }
 
+.cell--mined {
+  background-color: #0f0;
+}
+
 .cnt-1 {
   color: #30f;
 }
