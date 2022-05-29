@@ -155,7 +155,6 @@
 }
 
 .switch {
-  border: 1px solid #000;
   border-radius: 15px;
   cursor: pointer;
   display: flex;
@@ -163,11 +162,11 @@
   height: 30px;
   justify-content: center;
   width: 60px;
-  margin: 0 auto;
+  margin: 4px auto 0px auto;
+  background-color: #ddd;
 }
 .switch::before {
   background-color: #fff;
-  border: 1px solid #000;
   border-radius: 100%;
   content: '';
   display: block;
@@ -181,5 +180,5 @@
   background-color: #0f0;
 }
 .switch--on::before {
-  margin-left: 31px;
+  margin-left: 32px;
 }
