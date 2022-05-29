@@ -10,7 +10,7 @@
 
 .play-area {
   max-width: fit-content;
-  margin: 0 auto;
+  margin: 0px auto;
   border-top: 4px solid #fff;
   border-right: 4px solid #888;
   border-bottom: 4px solid #888;
