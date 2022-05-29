@@ -29,7 +29,7 @@ body {
 
 .play-area {
   max-width: fit-content;
-  margin: 0px auto;
+  margin: 8px auto 0px auto;
   border-top: 4px solid #fff;
   border-right: 4px solid #888;
   border-bottom: 4px solid #888;
@@ -207,6 +207,6 @@ body {
 
 .bottom-area {
   display: flex;
-  margin: 4px auto 0px auto;
+  margin: 8px auto 0px auto;
   max-width: fit-content;
 }
