@@ -8,6 +8,11 @@
   border: 1px solid #000;
 }
 
+.play-area {
+  max-width: fit-content;
+  margin: 0 auto;
+}
+
 .top-area {
   display: flex;
   justify-content: space-between;
@@ -18,7 +23,6 @@
   background-color: #ccc;
   align-items: center;
   font-size: 24px;
-  max-width: 278px;
 }
 
 .remains,
@@ -52,7 +56,8 @@
   border-right: 4px solid #fff;
   border-bottom: 4px solid #fff;
   border-left: 4px solid #888;
-  width: fit-content;
+  max-width: 100%;
+  overflow: auto;
 }
 
 .row {
@@ -151,6 +156,7 @@
   height: 30px;
   justify-content: center;
   width: 60px;
+  margin: 0 auto;
 }
 .switch::before {
   background-color: #fff;
