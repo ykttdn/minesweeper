@@ -1,36 +1,86 @@
 @charset "utf-8";
 
+body {
+  font-family: 'Philosopher', sans-serif;
+  font-family: 'Roboto Mono', monospace;
+}
+
 .wrapper {
-  padding: 0 4px;
+  padding: 0 8px;
 }
 
 .level-selection select {
-  border: 1px solid #000;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  box-shadow: 0px 0px 2px #bbb;
+  cursor: pointer;
+  padding-right: 20px;
+  padding-left: 2px;
+}
+
+.level-selection::after {
+  content: '\f107';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: relative;
+  right: 26px;
+  pointer-events: none;
+}
+
+.play-area {
+  max-width: fit-content;
+  margin: 8px auto 0px auto;
+  border-top: 4px solid #fff;
+  border-right: 4px solid #888;
+  border-bottom: 4px solid #888;
+  border-left: 4px solid #fff;
+  background-color: #ccc;
 }
 
 .top-area {
   display: flex;
   justify-content: space-between;
+  border-top: 4px solid #888;
+  border-right: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  border-left: 4px solid #888;
+  background-color: #ccc;
+  align-items: center;
+  font-size: 24px;
+  margin: 4px 4px 0px 4px;
 }
 
 .remains,
 .timer {
   border: 1px solid #000;
-}
-
-.reset-btn {
-  border: 1px solid #000;
+  font-family: 'Philosopher', sans-serif;
+  font-family: 'Roboto Mono', monospace;
+  background-color: #000;
+  color: #f00;
+  display: inline-block;
+  vertical-align: middle;
+  border-top: 2px solid #888;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  border-left: 2px solid #888;
+  margin: 2px;
 }
 
 .fa-face-smile,
 .fa-face-laugh-squint,
 .fa-face-dizzy {
-  font-size: 32px;
   color: #fc0;
+  background-image: radial-gradient(#000 0%, #ccc 75%);
 }
 
 .board {
-  border: 1px solid #000;
+  border-top: 4px solid #888;
+  border-right: 4px solid #fff;
+  border-bottom: 4px solid #fff;
+  border-left: 4px solid #888;
+  max-width: 100%;
+  overflow: auto;
+  margin: 4px 4px 4px 4px;
 }
 
 .row {
@@ -121,7 +171,7 @@
 }
 
 .switch {
-  border: 1px solid #000;
+  border: 2px #ccc solid;
   border-radius: 15px;
   cursor: pointer;
   display: flex;
@@ -129,15 +179,15 @@
   height: 30px;
   justify-content: center;
   width: 60px;
+  background-color: #ddd;
 }
 .switch::before {
   background-color: #fff;
-  border: 1px solid #000;
   border-radius: 100%;
   content: '';
   display: block;
   height: 24px;
-  margin-left: 3px;
+  margin-left: 1px;
   transition: all 0.2s;
   width: 24px;
 }
@@ -147,4 +197,23 @@
 }
 .switch--on::before {
   margin-left: 31px;
+}
+
+.flag-icon {
+  color: #f00;
+  margin-top: 6px;
+  margin-left: 8px;
+}
+
+.bottom-area {
+  display: flex;
+  margin: 8px auto 0px auto;
+  max-width: fit-content;
+}
+
+@media screen and (min-width: 768px), print {
+  .wrapper {
+    max-width: 1000px;
+    margin: 0px auto;
+  }
 }

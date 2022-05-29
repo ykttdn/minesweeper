@@ -43,7 +43,12 @@ let safeCellCount = height*width-mines;
 let remainingMines = mines;
 
 const remains = document.getElementsByClassName('remains')[0];
-remains.textContent = remainingMines;
+if (remainingMines < 10) {
+  remains.textContent = `00${remainingMines}`;
+} else if (remainingMines < 100) {
+  remains.textContent = `0${remainingMines}`;
+}
+
 
 const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
@@ -126,7 +131,7 @@ function touchCell(e) {
         }
       } else {
         resetBtn.innerHTML = faceSuccess;
-        remains.textContent = 0;
+        remains.textContent = '000';
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
@@ -300,13 +305,21 @@ function toggleFlag(e) {
       cell.className = 'cell cell--unopen cell--flagged';
 
       remainingMines--;
-      remains.textContent = remainingMines;
+      if (remainingMines < 10) {
+        remains.textContent = `00${remainingMines}`;
+      } else if (remainingMines < 100) {
+        remains.textContent = `0${remainingMines}`;
+      }
     } else {
       isMarkedWithFlag[i][j] = false;
       cell.className = 'cell cell--unopen';
 
       remainingMines++;
-      remains.textContent = remainingMines;
+      if (remainingMines < 10) {
+        remains.textContent = `00${remainingMines}`;
+      } else if (remainingMines < 100) {
+        remains.textContent = `0${remainingMines}`;
+      }
     }
   }
 }
@@ -493,7 +506,15 @@ function exeChording(e) {
 function advanceTimer() {
   let now = strToInt(timer.textContent);
   now++;
-  timer.textContent = now;
+  if (now < 10) {
+    timer.textContent = `00${now}`;
+  } else if (now < 100) {
+    timer.textContent = `0${now}`;
+  } else if (now < 1000) {
+    timer.textContent = `${now}`;
+  } else {
+    stopTimer();
+  }
 }
 
 function stopTimer() {
@@ -511,9 +532,13 @@ function initGame(e) {
   hasOpenedAllSafeCells = false;
   safeCellCount = height*width-mines;
   remainingMines = mines;
-  remains.textContent = remainingMines;
+  if (remainingMines < 10) {
+    remains.textContent = `00${remainingMines}`;
+  } else if (remainingMines < 100) {
+    remains.textContent = `0${remainingMines}`;
+  }
   resetBtn.innerHTML = faceNormal;
-  timer.textContent = 0;
+  timer.textContent = '000';
   stopTimer();
 
   initBoard();

@@ -20,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Philosopher:wght@700&family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <header>
+    <header class="wrapper">
       <h1>Minesweeper</h1>
     </header>
 
@@ -34,17 +34,22 @@
         </select>
       </div>
 
-      <div class="top-area">
-        <div class="remains"></div>
-  
-        <div class="reset-btn"></div>
-  
-        <div class="timer">0</div>
+      <div class="play-area">
+        <div class="top-area">
+          <div class="remains"></div>
+    
+          <div class="reset-btn"></div>
+    
+          <div class="timer">000</div>
+        </div>
+
+        <div class="board"></div>
       </div>
 
-      <div class="board"></div>
-
-      <div class="switch"></div>
+      <div class="bottom-area">
+        <div class="switch"></div>
+        <i class="fa-solid fa-flag flag-icon"></i>
+      </div>
     </main>
 
     <script src="main.js"></script>
