@@ -152,6 +152,7 @@
 }
 
 .switch {
+  border: 2px #ccc solid;
   border-radius: 15px;
   cursor: pointer;
   display: flex;
@@ -159,7 +160,6 @@
   height: 30px;
   justify-content: center;
   width: 60px;
-  /* margin: 4px auto 0px auto; */
   background-color: #ddd;
 }
 .switch::before {
@@ -168,7 +168,7 @@
   content: '';
   display: block;
   height: 24px;
-  margin-left: 3px;
+  margin-left: 1px;
   transition: all 0.2s;
   width: 24px;
 }
@@ -177,7 +177,7 @@
   background-color: #0f0;
 }
 .switch--on::before {
-  margin-left: 32px;
+  margin-left: 31px;
 }
 
 .flag-icon {
