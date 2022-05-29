@@ -96,6 +96,9 @@ function touchCell(e) {
 
     if (isFlagModeOn && !isCellOpen[i][j]) {
       toggleFlag(e);
+      if (!intervalId) {
+        intervalId = setInterval(advanceTimer, 1000);
+      }
     } else if (!isCellOpen[i][j]) {
       openCell(e);
     } else {
