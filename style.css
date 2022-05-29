@@ -47,14 +47,11 @@
   margin: 2px;
 }
 
-.reset-btn {
-  border: 1px solid #000;
-}
-
 .fa-face-smile,
 .fa-face-laugh-squint,
 .fa-face-dizzy {
   color: #fc0;
+  background-image: radial-gradient(#000 0%, #ccc 75%);
 }
 
 .board {
