@@ -210,3 +210,10 @@ body {
   margin: 8px auto 0px auto;
   max-width: fit-content;
 }
+
+@media screen and (min-width: 768px), print {
+  .wrapper {
+    max-width: 1000px;
+    margin: 0px auto;
+  }
+}
