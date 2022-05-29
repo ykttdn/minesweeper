@@ -1,5 +1,10 @@
 @charset "utf-8";
 
+body {
+  font-family: 'Philosopher', sans-serif;
+  font-family: 'Roboto Mono', monospace;
+}
+
 .wrapper {
   padding: 0 8px;
 }
