@@ -229,6 +229,13 @@ function openSafeCell(i, j) {
   safeCellCount--;
 }
 
+// col 行 row 列のマスの周囲8個のマスの行・列を返す
+function getNeighborCellsIndex(col, row) {
+  return [[col-1, row-1], [col, row-1], [col+1, row-1],
+          [col-1, row],                 [col+1, row],
+          [col-1, row+1], [col, row+1], [col+1, row+1]];
+}
+
 function searchMines(i, j) {
   let cnt = 0;
   if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
