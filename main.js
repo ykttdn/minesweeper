@@ -300,29 +300,12 @@ function exeChording(e) {
     const mineCount = strToInt(cell.textContent);
 
     let flagCount = 0;
-    if (i-1 >= 0 && j-1 >= 0 && isMarkedWithFlag[i-1][j-1]) {
-      flagCount++;
-    }
-    if (i-1 >= 0 && j >= 0 && isMarkedWithFlag[i-1][j]) {
-      flagCount++;
-    }
-    if (i-1 >= 0 && j+1 < width && isMarkedWithFlag[i-1][j+1]) {
-      flagCount++;
-    }
-    if (i >= 0 && j-1 >= 0 && isMarkedWithFlag[i][j-1]) {
-      flagCount++;
-    }
-    if (i >= 0 && j+1 < width && isMarkedWithFlag[i][j+1]) {
-      flagCount++;
-    }
-    if (i+1 < height && j-1 >= 0 && isMarkedWithFlag[i+1][j-1]) {
-      flagCount++;
-    }
-    if (i+1 < height && j >= 0 && isMarkedWithFlag[i+1][j]) {
-      flagCount++;
-    }
-    if (i+1 < height && j+1 < width && isMarkedWithFlag[i+1][j+1]) {
-      flagCount++;
+    const neighborCells = getNeighborCellsIndex(i, j);
+
+    for (const [col, row] of neighborCells) {
+      if (0 <= col && col < height && 0 <= row && row < width && isMarkedWithFlag[col][row]) {
+        flagCount++;
+      }
     }
 
     if (mineCount === flagCount) {
