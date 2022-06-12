@@ -238,29 +238,12 @@ function getNeighborCellsIndex(col, row) {
 
 function searchMines(i, j) {
   let cnt = 0;
-  if (i-1 >= 0 && j-1 >= 0 && isMineHidden[i-1][j-1]) {
-    cnt++;
-  }
-  if (i-1 >= 0 && j >= 0 && isMineHidden[i-1][j]) {
-    cnt++;
-  }
-  if (i-1 >= 0 && j+1 < width && isMineHidden[i-1][j+1]) {
-    cnt++;
-  }
-  if (i >= 0 && j-1 >= 0 && isMineHidden[i][j-1]) {
-    cnt++;
-  }
-  if (i >= 0 && j+1 < width && isMineHidden[i][j+1]) {
-    cnt++;
-  }
-  if (i+1 < height && j-1 >= 0 && isMineHidden[i+1][j-1]) {
-    cnt++;
-  }
-  if (i+1 < height && j >= 0 && isMineHidden[i+1][j]) {
-    cnt++;
-  }
-  if (i+1 < height && j+1 < width && isMineHidden[i+1][j+1]) {
-    cnt++;
+  const neighborCells = getNeighborCellsIndex(i, j);
+
+  for (const [col, row] of neighborCells) {
+    if (0 <= col && col < height && 0 <= row && row < width && isMineHidden[col][row]) {
+      cnt++;
+    }
   }
 
   if (cnt > 0) {
