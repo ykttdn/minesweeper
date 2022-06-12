@@ -309,17 +309,11 @@ function exeChording(e) {
     }
 
     if (mineCount === flagCount) {
-      let canExeChording = false;
-      if (i-1 >= 0 && j-1 >= 0 && isMarkedWithFlag[i-1][j-1] && !isMineHidden[i-1][j-1]) {
-      } else if (i-1 >= 0 && j >= 0 && isMarkedWithFlag[i-1][j] && !isMineHidden[i-1][j]) {
-      } else if (i-1 >= 0 && j+1 < width && isMarkedWithFlag[i-1][j+1] && !isMineHidden[i-1][j+1]) {
-      } else if (i >= 0 && j-1 >= 0 && isMarkedWithFlag[i][j-1] && !isMineHidden[i][j-1]) {
-      } else if (i >= 0 && j+1 < width && isMarkedWithFlag[i][j+1] && !isMineHidden[i][j+1]) {
-      } else if (i+1 < height && j-1 >= 0 && isMarkedWithFlag[i+1][j-1] && !isMineHidden[i+1][j-1]) {
-      } else if (i+1 < height && j >= 0 && isMarkedWithFlag[i+1][j] && !isMineHidden[i+1][j]) {
-      } else if (i+1 < height && j+1 < width && isMarkedWithFlag[i+1][j+1] && !isMineHidden[i+1][j+1]) {
-      } else {
-        canExeChording = true;
+      let canExeChording = true;
+      for (const [col, row] of neighborCells) {
+        if (0 <= col && col < height && 0 <= row && row < width && isMarkedWithFlag[col][row] && !isMineHidden[col][row]) {
+          canExeChording = false;
+        }
       }
 
       if (canExeChording) {
