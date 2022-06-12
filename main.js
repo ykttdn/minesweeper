@@ -251,37 +251,11 @@ function searchMines(i, j) {
     cell.textContent = cnt;
     cell.classList.add(`cnt-${cnt}`);
   } else if (!hasOpenedMinedCell) {
-    if (i-1 >= 0 && j-1 >= 0 && !isCellOpen[i-1][j-1]) {
-      openSafeCell(i-1, j-1);
-      searchMines(i-1, j-1);
-    }
-    if (i-1 >= 0 && j >= 0 && !isCellOpen[i-1][j]) {
-      openSafeCell(i-1, j);
-      searchMines(i-1, j);
-    }
-    if (i-1 >= 0 && j+1 < width && !isCellOpen[i-1][j+1]) {
-      openSafeCell(i-1, j+1);
-      searchMines(i-1, j+1);
-    }
-    if (i >= 0 && j-1 >= 0 && !isCellOpen[i][j-1]) {
-      openSafeCell(i, j-1);
-      searchMines(i, j-1);
-    }
-    if (i >= 0 && j+1 < width && !isCellOpen[i][j+1]) {
-      openSafeCell(i, j+1);
-      searchMines(i, j+1);
-    }
-    if (i+1 < height && j-1 >= 0 && !isCellOpen[i+1][j-1]) {
-      openSafeCell(i+1, j-1);
-      searchMines(i+1, j-1);
-    }
-    if (i+1 < height && j >= 0 && !isCellOpen[i+1][j]) {
-      openSafeCell(i+1, j);
-      searchMines(i+1, j);
-    }
-    if (i+1 < height && j+1 < width && !isCellOpen[i+1][j+1]) {
-      openSafeCell(i+1, j+1);
-      searchMines(i+1, j+1);
+    for (const [col, row] of neighborCells) {
+      if (0 <= col && col < height && 0 <= row && row < width && !isCellOpen[col][row]) {
+        openSafeCell(col, row);
+        searchMines(col, row);
+      }
     }
   }
 }
