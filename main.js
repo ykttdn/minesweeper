@@ -53,12 +53,12 @@ if (remainingMines < 10) {
 const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
 
-const faceNormal = '<i class="fa-solid fa-face-smile"></i>';
-const faceSuccess = '<i class="fa-solid fa-face-laugh-squint"></i>';
-const faceFailure = '<i class="fa-solid fa-face-dizzy"></i>';
+const faceNormal = twemoji.convert.fromCodePoint('1F642');
+const faceSuccess = twemoji.convert.fromCodePoint('1F60E');
+const faceFailure = twemoji.convert.fromCodePoint('1F635');
 
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
-resetBtn.innerHTML = faceNormal;
+resetBtn.textContent = faceNormal;
 resetBtn.addEventListener('click', initGame);
 
 const board = document.getElementsByClassName('board')[0];
