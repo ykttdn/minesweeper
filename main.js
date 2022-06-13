@@ -236,12 +236,15 @@ function getNeighborCellsIndex(col, row) {
           [col-1, row+1], [col, row+1], [col+1, row+1]];
 }
 
+// col 行 row 列の cell が board に含まれているかを判定
+const checkIfCellIsInsideBoard = (col, row) => 0 <= col && col < height && 0 <= row && row < width;
+
 function searchMines(i, j) {
   let cnt = 0;
   const neighborCells = getNeighborCellsIndex(i, j);
 
   for (const [col, row] of neighborCells) {
-    if (0 <= col && col < height && 0 <= row && row < width && isMineHidden[col][row]) {
+    if (checkIfCellIsInsideBoard(col, row) && isMineHidden[col][row]) {
       cnt++;
     }
   }
@@ -252,7 +255,7 @@ function searchMines(i, j) {
     cell.classList.add(`cnt-${cnt}`);
   } else if (!hasOpenedMinedCell) {
     for (const [col, row] of neighborCells) {
-      if (0 <= col && col < height && 0 <= row && row < width && !isCellOpen[col][row]) {
+      if (checkIfCellIsInsideBoard(col, row) && !isCellOpen[col][row]) {
         openSafeCell(col, row);
         searchMines(col, row);
       }
@@ -303,7 +306,7 @@ function exeChording(e) {
     const neighborCells = getNeighborCellsIndex(i, j);
 
     for (const [col, row] of neighborCells) {
-      if (0 <= col && col < height && 0 <= row && row < width && isMarkedWithFlag[col][row]) {
+      if (checkIfCellIsInsideBoard(col, row) && isMarkedWithFlag[col][row]) {
         flagCount++;
       }
     }
@@ -311,14 +314,14 @@ function exeChording(e) {
     if (mineCount === flagCount) {
       let canExeChording = true;
       for (const [col, row] of neighborCells) {
-        if (0 <= col && col < height && 0 <= row && row < width && isMarkedWithFlag[col][row] && !isMineHidden[col][row]) {
+        if (checkIfCellIsInsideBoard(col, row) && isMarkedWithFlag[col][row] && !isMineHidden[col][row]) {
           canExeChording = false;
         }
       }
 
       if (canExeChording) {
         for (const [col, row] of neighborCells) {
-          if (0 <= col && col < height && 0 <= row && row < width && !isCellOpen[col][row] && !isMarkedWithFlag[col][row]) {
+          if (checkIfCellIsInsideBoard(col, row) && !isCellOpen[col][row] && !isMarkedWithFlag[col][row]) {
             openSafeCell(col, row);
             searchMines(col, row);
           }
@@ -327,7 +330,7 @@ function exeChording(e) {
         hasOpenedMinedCell = true;
         for (const [col, row] of neighborCells) {
           const c = document.getElementById(`cell-${col}-${row}`);
-          if (0 <= col && col < height && 0 <= row && row < width && !isCellOpen[col][row]) {
+          if (checkIfCellIsInsideBoard(col, row) && !isCellOpen[col][row]) {
             if (isMarkedWithFlag[col][row] && !isMineHidden[col][row]) {
               // cell-${col}-${row}に爆弾がないのにflagが立てられているとき
               c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
