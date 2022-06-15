@@ -66,13 +66,6 @@ body {
   margin: 2px;
 }
 
-.fa-face-smile,
-.fa-face-laugh-squint,
-.fa-face-dizzy {
-  color: #fc0;
-  background-image: radial-gradient(#000 0%, #ccc 75%);
-}
-
 .board {
   border-top: 4px solid #888;
   border-right: 4px solid #fff;
