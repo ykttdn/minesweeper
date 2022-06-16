@@ -132,10 +132,10 @@ function touchCell(e) {
           for (let j = 0; j < width; j++) {
             if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopen cell--mined';
+              cell.className = 'cell cell--unopened cell--mined';
             } else if (!isCellOpen[i][j] && !isMineHidden[i][j] && isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              cell.className = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
             }
           }
         }
@@ -146,7 +146,7 @@ function touchCell(e) {
           for (let j = 0; j < width; j++) {
             if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopen cell--flagged'
+              cell.className = 'cell cell--unopened cell--flagged'
             }
           }
         }
@@ -231,7 +231,7 @@ function strToInt(str) {
 function openSafeCell(i, j) {
   const cell = document.getElementById(`cell-${i}-${j}`);
   isCellOpen[i][j] = true;
-  cell.className = 'cell cell--open';
+  cell.className = 'cell cell--opened';
 
   safeCellCount--;
 }
@@ -279,7 +279,7 @@ function toggleFlag(e) {
   if (!isCellOpen[i][j]) {
     if (!isMarkedWithFlag[i][j]) {
       isMarkedWithFlag[i][j] = true;
-      cell.className = 'cell cell--unopen cell--flagged';
+      cell.className = 'cell cell--unopened cell--flagged';
 
       remainingMines--;
       if (remainingMines < 10) {
@@ -289,7 +289,7 @@ function toggleFlag(e) {
       }
     } else {
       isMarkedWithFlag[i][j] = false;
-      cell.className = 'cell cell--unopen';
+      cell.className = 'cell cell--unopened';
 
       remainingMines++;
       if (remainingMines < 10) {
@@ -340,7 +340,7 @@ function exeChording(e) {
           if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
             if (isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
               // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
-              c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              c.className = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
             } else if (!isMarkedWithFlag[row][col] && isMineHidden[row][col]) {
               // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
               c.className = 'cell cell--exploded';
@@ -411,7 +411,7 @@ function initBoard() {
       const cellID = `cell-${i}-${j}`;
       cell.id = cellID;
   
-      cell.className = 'cell cell--unopen';
+      cell.className = 'cell cell--unopened';
   
       cell.dataset.row = i;
       cell.dataset.col = j;
