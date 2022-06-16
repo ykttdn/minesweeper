@@ -66,11 +66,15 @@ body {
   margin: 2px;
 }
 
-.fa-face-smile,
-.fa-face-laugh-squint,
-.fa-face-dizzy {
-  color: #fc0;
-  background-image: radial-gradient(#000 0%, #ccc 75%);
+.reset-btn {
+  width: 36px;
+  height: 36px;
+  border-top: 4px solid #fff;
+  border-right: 4px solid #888;
+  border-bottom: 4px solid #888;
+  border-left: 4px solid #fff;
+  padding: 1px;
+  cursor: pointer;
 }
 
 .board {
