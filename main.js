@@ -1,32 +1,32 @@
-const heightEasy = 9;
-const heightNormal = 16;
-const heightHard = 16;
-const widthEasy = 9;
-const widthNormal = 16;
-const widthHard = 30;
-const minesEasy = 10;
-const minesNormal = 40;
-const minesHard = 99;
+const HEIGHT_EASY = 9;
+const HEIGHT_NORMAL = 16;
+const HEIGHT_HARD = 16;
+const WIDTH_EASY = 9;
+const WIDTH_NORMAL = 16;
+const WIDTH_HARD = 30;
+const MINES_EASY = 10;
+const MINES_NORMAL = 40;
+const MINES_HARD = 99;
 
-let height = heightEasy;
-let width = widthEasy;
-let mines = minesEasy;
+let height = HEIGHT_EASY;
+let width = WIDTH_EASY;
+let mines = MINES_EASY;
 
 const selector = document.getElementsByTagName('select')[0];
 selector.addEventListener('change', function (e) {
   const level = e.target.value;
   if (level === 'easy') {
-    height = heightEasy;
-    width = widthEasy;
-    mines = minesEasy;
+    height = HEIGHT_EASY;
+    width = WIDTH_EASY;
+    mines = MINES_EASY;
   } else if (level === 'normal') {
-    height = heightNormal;
-    width = widthNormal;
-    mines = minesNormal;
+    height = HEIGHT_NORMAL;
+    width = WIDTH_NORMAL;
+    mines = MINES_NORMAL;
   } else {
-    height = heightHard;
-    width = widthHard;
-    mines = minesHard;
+    height = HEIGHT_HARD;
+    width = WIDTH_HARD;
+    mines = MINES_HARD;
   }
 
   initGame();
@@ -53,9 +53,9 @@ if (remainingMines < 10) {
 const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
 
-const faceNormal = twemoji.convert.fromCodePoint('1F642');
-const faceSuccess = twemoji.convert.fromCodePoint('1F60E');
-const faceFailure = twemoji.convert.fromCodePoint('1F635');
+const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
+const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
+const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
 
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
 resetBtn.addEventListener('click', initGame);
@@ -66,7 +66,7 @@ const changeFaceOfResetButton = (face) => {
     ext: '.svg'
   });
 }
-changeFaceOfResetButton(faceNormal);
+changeFaceOfResetButton(FACE_NORMAL);
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -127,7 +127,7 @@ function touchCell(e) {
       }
 
       if (hasOpenedMinedCell) {
-        changeFaceOfResetButton(faceFailure);
+        changeFaceOfResetButton(FACE_FAILURE);
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
@@ -140,7 +140,7 @@ function touchCell(e) {
           }
         }
       } else {
-        changeFaceOfResetButton(faceSuccess);
+        changeFaceOfResetButton(FACE_SUCCESS);
         remains.textContent = '000';
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
@@ -390,7 +390,7 @@ function initGame(e) {
   } else if (remainingMines < 100) {
     remains.textContent = `0${remainingMines}`;
   }
-  changeFaceOfResetButton(faceNormal);
+  changeFaceOfResetButton(FACE_NORMAL);
   timer.textContent = '000';
   stopTimer();
 
