@@ -58,8 +58,15 @@ const faceSuccess = twemoji.convert.fromCodePoint('1F60E');
 const faceFailure = twemoji.convert.fromCodePoint('1F635');
 
 const resetBtn = document.getElementsByClassName('reset-btn')[0];
-resetBtn.textContent = faceNormal;
 resetBtn.addEventListener('click', initGame);
+const changeFaceOfResetButton = (face) => {
+  resetBtn.textContent = face;
+  twemoji.parse(resetBtn, {
+    folder: 'svg',
+    ext: '.svg'
+  });
+}
+changeFaceOfResetButton(faceNormal);
 
 const board = document.getElementsByClassName('board')[0];
 const df = document.createDocumentFragment();
@@ -120,7 +127,7 @@ function touchCell(e) {
       }
 
       if (hasOpenedMinedCell) {
-        resetBtn.innerHTML = faceFailure;
+        changeFaceOfResetButton(faceFailure);
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
@@ -133,7 +140,7 @@ function touchCell(e) {
           }
         }
       } else {
-        resetBtn.innerHTML = faceSuccess;
+        changeFaceOfResetButton(faceSuccess);
         remains.textContent = '000';
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
@@ -383,7 +390,7 @@ function initGame(e) {
   } else if (remainingMines < 100) {
     remains.textContent = `0${remainingMines}`;
   }
-  resetBtn.innerHTML = faceNormal;
+  changeFaceOfResetButton(faceNormal);
   timer.textContent = '000';
   stopTimer();
 
