@@ -66,6 +66,17 @@ body {
   margin: 2px;
 }
 
+.reset-btn {
+  width: 36px;
+  height: 36px;
+  border-top: 4px solid #fff;
+  border-right: 4px solid #888;
+  border-bottom: 4px solid #888;
+  border-left: 4px solid #fff;
+  padding: 1px;
+  cursor: pointer;
+}
+
 .board {
   border-top: 4px solid #888;
   border-right: 4px solid #fff;
