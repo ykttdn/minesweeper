@@ -29,7 +29,7 @@ selector.addEventListener('change', function (e) {
     mines = MINES_HARD;
   }
 
-  initGame();
+  initializeGame();
 });
 
 let isMineHidden = gen2DArray(height, width, false);
@@ -57,11 +57,11 @@ const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
 const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
 const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
 
-const resetBtn = document.getElementsByClassName('reset-btn')[0];
-resetBtn.addEventListener('click', initGame);
+const resetButton = document.getElementsByClassName('reset-button')[0];
+resetButton.addEventListener('click', initializeGame);
 const changeFaceOfResetButton = (face) => {
-  resetBtn.textContent = face;
-  twemoji.parse(resetBtn, {
+  resetButton.textContent = face;
+  twemoji.parse(resetButton, {
     folder: 'svg',
     ext: '.svg'
   });
@@ -69,14 +69,14 @@ const changeFaceOfResetButton = (face) => {
 changeFaceOfResetButton(FACE_NORMAL);
 
 const board = document.getElementsByClassName('board')[0];
-const df = document.createDocumentFragment();
+const documentFragment = document.createDocumentFragment();
 
-initBoard();
+initializeBoard();
 
-const switchBtn = document.getElementsByClassName('switch')[0];
+const switchButton = document.getElementsByClassName('switch')[0];
 let isFlagModeOn = false;
-switchBtn.addEventListener('click', function (e) {
-  isFlagModeOn = switchBtn.classList.toggle('switch--on');
+switchButton.addEventListener('click', function (e) {
+  isFlagModeOn = switchButton.classList.toggle('switch--on');
 });
 
 // m 行 n 列の2次元配列を生成
@@ -90,7 +90,7 @@ function gen2DArray(m, n, val) {
 
 function touchCell(e) {
   if (!hasGameStarted && !isFlagModeOn) {
-    initMines(e);
+    initializeMines(e);
     openCell(e);
 
     if (!intervalId) {
@@ -155,7 +155,7 @@ function touchCell(e) {
   }
 }
 
-function initMines(e) {
+function initializeMines(e) {
   const cell = e.target;
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
@@ -164,8 +164,8 @@ function initMines(e) {
     hasGameStarted = true;
     for (let k = 0; k < mines; k++) {
       while (true) {
-        const row = rand(height);
-        const col = rand(width);
+        const row = random(height);
+        const col = random(width);
         if (!isMineHidden[row][col] && !(i === row && j === col)) {
           // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
           isMineHidden[row][col] = true;
@@ -174,8 +174,8 @@ function initMines(e) {
       }
 
       /*
-      let row = rand(height);
-      let col = rand(width);
+      let row = random(height);
+      let col = random(width);
       if (!isMineHidden[row][col] && !(i === row && j === col)) {
         // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
         isMineHidden[row][col] = true;
@@ -203,7 +203,7 @@ function initMines(e) {
 }
 
 // 0 以上 val 未満の整数乱数を返す
-function rand(val) {
+function random(val) {
   return Math.floor(Math.random()*val);
 }
 
@@ -375,7 +375,7 @@ function stopTimer() {
   intervalId = null;
 }
 
-function initGame(e) {
+function initializeGame(e) {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
@@ -394,10 +394,10 @@ function initGame(e) {
   timer.textContent = '000';
   stopTimer();
 
-  initBoard();
+  initializeBoard();
 }
 
-function initBoard() {
+function initializeBoard() {
   while (board.firstChild) {
     board.removeChild(board.firstChild);
   }
@@ -421,7 +421,7 @@ function initBoard() {
   
       row.appendChild(cell);
     }
-    df.appendChild(row);
+    documentFragment.appendChild(row);
   }
-  board.appendChild(df);
+  board.appendChild(documentFragment);
 }
