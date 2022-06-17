@@ -218,6 +218,61 @@ const toggleFlag = (e) => {
   }
 }
 
+const exeChording = (e) => {
+  const cell = e.target;
+  const i = strToInt(cell.dataset.row);
+  const j = strToInt(cell.dataset.col);
+
+  if (isCellOpen[i][j]) {
+    const mineCount = strToInt(cell.textContent);
+
+    let flagCount = 0;
+    const neighborCells = getNeighborCellsIndex(i, j);
+
+    for (const [row, col] of neighborCells) {
+      if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col]) {
+        flagCount++;
+      }
+    }
+
+    if (mineCount === flagCount) {
+      let canExeChording = true;
+      for (const [row, col] of neighborCells) {
+        if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
+          canExeChording = false;
+        }
+      }
+
+      if (canExeChording) {
+        for (const [row, col] of neighborCells) {
+          if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col] && !isMarkedWithFlag[row][col]) {
+            openSafeCell(row, col);
+            searchMines(row, col);
+          }
+        }
+      } else {
+        hasOpenedMinedCell = true;
+        for (const [row, col] of neighborCells) {
+          const c = document.getElementById(`cell-${row}-${col}`);
+          if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
+            if (isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
+              // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
+              c.className = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
+            } else if (!isMarkedWithFlag[row][col] && isMineHidden[row][col]) {
+              // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
+              c.className = 'cell cell--exploded';
+            } else if (!isMarkedWithFlag[row][col]) {
+              // cell-${row}-${col}に爆弾がなくてflagも立っていないとき
+              openSafeCell(row, col);
+              searchMines(row, col);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 const initializeBoard = () => {
   while (board.firstChild) {
     board.removeChild(board.firstChild);
@@ -314,61 +369,6 @@ function touchCell(e) {
             if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
               cell.className = 'cell cell--unopened cell--flagged'
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-function exeChording(e) {
-  const cell = e.target;
-  const i = strToInt(cell.dataset.row);
-  const j = strToInt(cell.dataset.col);
-
-  if (isCellOpen[i][j]) {
-    const mineCount = strToInt(cell.textContent);
-
-    let flagCount = 0;
-    const neighborCells = getNeighborCellsIndex(i, j);
-
-    for (const [row, col] of neighborCells) {
-      if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col]) {
-        flagCount++;
-      }
-    }
-
-    if (mineCount === flagCount) {
-      let canExeChording = true;
-      for (const [row, col] of neighborCells) {
-        if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
-          canExeChording = false;
-        }
-      }
-
-      if (canExeChording) {
-        for (const [row, col] of neighborCells) {
-          if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col] && !isMarkedWithFlag[row][col]) {
-            openSafeCell(row, col);
-            searchMines(row, col);
-          }
-        }
-      } else {
-        hasOpenedMinedCell = true;
-        for (const [row, col] of neighborCells) {
-          const c = document.getElementById(`cell-${row}-${col}`);
-          if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
-            if (isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
-              // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
-              c.className = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
-            } else if (!isMarkedWithFlag[row][col] && isMineHidden[row][col]) {
-              // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
-              c.className = 'cell cell--exploded';
-            } else if (!isMarkedWithFlag[row][col]) {
-              // cell-${row}-${col}に爆弾がなくてflagも立っていないとき
-              openSafeCell(row, col);
-              searchMines(row, col);
             }
           }
         }
