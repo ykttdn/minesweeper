@@ -183,18 +183,17 @@ function touchCell(e) {
 
 function initializeMines(e) {
   const cell = e.target;
-  const i = strToInt(cell.dataset.row);
-  const j = strToInt(cell.dataset.col);
+  const rowOfCellTouchedFirst = strToInt(cell.dataset.row);
+  const columnOfCellTouchedFirst = strToInt(cell.dataset.col);
 
   if (!hasGameStarted) {
     hasGameStarted = true;
     for (let k = 0; k < mines; k++) {
       while (true) {
-        const row = random(height);
-        const col = random(width);
-        if (!isMineHidden[row][col] && !(i === row && j === col)) {
-          // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
-          isMineHidden[row][col] = true;
+        const rowPickedRandomly = random(height);
+        const columnPickedRandomly = random(width);
+        if (!isMineHidden[rowPickedRandomly][columnPickedRandomly] && !(rowOfCellTouchedFirst === rowPickedRandomly && columnOfCellTouchedFirst === columnPickedRandomly)) {
+          isMineHidden[rowPickedRandomly][columnPickedRandomly] = true;
           break;
         }
       }
