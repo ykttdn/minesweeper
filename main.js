@@ -77,6 +77,35 @@ changeFaceOfResetButton(FACE_NORMAL);
 const board = document.getElementsByClassName('board')[0];
 const documentFragment = document.createDocumentFragment();
 
+const initializeBoard = () => {
+  while (board.firstChild) {
+    board.removeChild(board.firstChild);
+  }
+
+  for (let i = 0; i < height; i++) {
+    const row = document.createElement('div');
+    row.className ='row';
+    for (let j = 0; j < width; j++) {
+      const cell = document.createElement('div');
+  
+      const cellID = `cell-${i}-${j}`;
+      cell.id = cellID;
+  
+      cell.className = 'cell cell--unopened';
+  
+      cell.dataset.row = i;
+      cell.dataset.col = j;
+  
+      cell.addEventListener('click', touchCell);
+      cell.addEventListener('contextmenu', toggleFlag);
+  
+      row.appendChild(cell);
+    }
+    documentFragment.appendChild(row);
+  }
+  board.appendChild(documentFragment);
+}
+
 initializeBoard();
 
 const switchButton = document.getElementsByClassName('switch')[0];
@@ -373,35 +402,6 @@ function initializeGame(e) {
   stopTimer();
 
   initializeBoard();
-}
-
-function initializeBoard() {
-  while (board.firstChild) {
-    board.removeChild(board.firstChild);
-  }
-
-  for (let i = 0; i < height; i++) {
-    const row = document.createElement('div');
-    row.className ='row';
-    for (let j = 0; j < width; j++) {
-      const cell = document.createElement('div');
-  
-      const cellID = `cell-${i}-${j}`;
-      cell.id = cellID;
-  
-      cell.className = 'cell cell--unopened';
-  
-      cell.dataset.row = i;
-      cell.dataset.col = j;
-  
-      cell.addEventListener('click', touchCell);
-      cell.addEventListener('contextmenu', toggleFlag);
-  
-      row.appendChild(cell);
-    }
-    documentFragment.appendChild(row);
-  }
-  board.appendChild(documentFragment);
 }
 
 const selector = document.getElementsByTagName('select')[0];
