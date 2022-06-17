@@ -187,6 +187,37 @@ const openCell = (e) => {
   }
 }
 
+const toggleFlag = (e) => {
+  e.preventDefault();
+
+  const cell = e.target;
+  const i = strToInt(cell.dataset.row);
+  const j = strToInt(cell.dataset.col);
+  if (!isCellOpen[i][j]) {
+    if (!isMarkedWithFlag[i][j]) {
+      isMarkedWithFlag[i][j] = true;
+      cell.className = 'cell cell--unopened cell--flagged';
+
+      remainingMines--;
+      if (remainingMines < 10) {
+        remains.textContent = `00${remainingMines}`;
+      } else if (remainingMines < 100) {
+        remains.textContent = `0${remainingMines}`;
+      }
+    } else {
+      isMarkedWithFlag[i][j] = false;
+      cell.className = 'cell cell--unopened';
+
+      remainingMines++;
+      if (remainingMines < 10) {
+        remains.textContent = `00${remainingMines}`;
+      } else if (remainingMines < 100) {
+        remains.textContent = `0${remainingMines}`;
+      }
+    }
+  }
+}
+
 const initializeBoard = () => {
   while (board.firstChild) {
     board.removeChild(board.firstChild);
@@ -286,37 +317,6 @@ function touchCell(e) {
             }
           }
         }
-      }
-    }
-  }
-}
-
-function toggleFlag(e) {
-  e.preventDefault();
-
-  const cell = e.target;
-  const i = strToInt(cell.dataset.row);
-  const j = strToInt(cell.dataset.col);
-  if (!isCellOpen[i][j]) {
-    if (!isMarkedWithFlag[i][j]) {
-      isMarkedWithFlag[i][j] = true;
-      cell.className = 'cell cell--unopened cell--flagged';
-
-      remainingMines--;
-      if (remainingMines < 10) {
-        remains.textContent = `00${remainingMines}`;
-      } else if (remainingMines < 100) {
-        remains.textContent = `0${remainingMines}`;
-      }
-    } else {
-      isMarkedWithFlag[i][j] = false;
-      cell.className = 'cell cell--unopened';
-
-      remainingMines++;
-      if (remainingMines < 10) {
-        remains.textContent = `00${remainingMines}`;
-      } else if (remainingMines < 100) {
-        remains.textContent = `0${remainingMines}`;
       }
     }
   }
