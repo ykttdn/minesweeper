@@ -273,44 +273,7 @@ const exeChording = (e) => {
   }
 }
 
-const initializeBoard = () => {
-  while (board.firstChild) {
-    board.removeChild(board.firstChild);
-  }
-
-  for (let i = 0; i < height; i++) {
-    const row = document.createElement('div');
-    row.className ='row';
-    for (let j = 0; j < width; j++) {
-      const cell = document.createElement('div');
-  
-      const cellID = `cell-${i}-${j}`;
-      cell.id = cellID;
-  
-      cell.className = 'cell cell--unopened';
-  
-      cell.dataset.row = i;
-      cell.dataset.col = j;
-  
-      cell.addEventListener('click', touchCell);
-      cell.addEventListener('contextmenu', toggleFlag);
-  
-      row.appendChild(cell);
-    }
-    documentFragment.appendChild(row);
-  }
-  board.appendChild(documentFragment);
-}
-
-initializeBoard();
-
-const switchButton = document.getElementsByClassName('switch')[0];
-let isFlagModeOn = false;
-switchButton.addEventListener('click', () => {
-  isFlagModeOn = switchButton.classList.toggle('switch--on');
-});
-
-function touchCell(e) {
+const touchCell = (e) => {
   if (!hasGameStarted && !isFlagModeOn) {
     initializeMines(e);
     openCell(e);
@@ -376,6 +339,43 @@ function touchCell(e) {
     }
   }
 }
+
+const initializeBoard = () => {
+  while (board.firstChild) {
+    board.removeChild(board.firstChild);
+  }
+
+  for (let i = 0; i < height; i++) {
+    const row = document.createElement('div');
+    row.className ='row';
+    for (let j = 0; j < width; j++) {
+      const cell = document.createElement('div');
+  
+      const cellID = `cell-${i}-${j}`;
+      cell.id = cellID;
+  
+      cell.className = 'cell cell--unopened';
+  
+      cell.dataset.row = i;
+      cell.dataset.col = j;
+  
+      cell.addEventListener('click', touchCell);
+      cell.addEventListener('contextmenu', toggleFlag);
+  
+      row.appendChild(cell);
+    }
+    documentFragment.appendChild(row);
+  }
+  board.appendChild(documentFragment);
+}
+
+initializeBoard();
+
+const switchButton = document.getElementsByClassName('switch')[0];
+let isFlagModeOn = false;
+switchButton.addEventListener('click', () => {
+  isFlagModeOn = switchButton.classList.toggle('switch--on');
+});
 
 function initializeGame(e) {
   isMineHidden = gen2DArray(height, width, false);
