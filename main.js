@@ -208,7 +208,7 @@ const openCell = e => {
     if (isMineHidden[i][j]) {
       isCellOpen[i][j] = true;
       hasOpenedMinedCell = true;
-      cell.className = EXPLODED_CELL
+      cell.className = EXPLODED_CELL;
     } else {
       openSafeCell(i, j);
       searchMines(i, j);
