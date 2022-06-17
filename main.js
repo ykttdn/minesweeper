@@ -1,36 +1,25 @@
-const heightEasy = 9;
-const heightNormal = 16;
-const heightHard = 16;
-const widthEasy = 9;
-const widthNormal = 16;
-const widthHard = 30;
-const minesEasy = 10;
-const minesNormal = 40;
-const minesHard = 99;
+const HEIGHT_EASY = 9;
+const HEIGHT_NORMAL = 16;
+const HEIGHT_HARD = 16;
+const WIDTH_EASY = 9;
+const WIDTH_NORMAL = 16;
+const WIDTH_HARD = 30;
+const MINES_EASY = 10;
+const MINES_NORMAL = 40;
+const MINES_HARD = 99;
 
-let height = heightEasy;
-let width = widthEasy;
-let mines = minesEasy;
+let height = HEIGHT_EASY;
+let width = WIDTH_EASY;
+let mines = MINES_EASY;
 
-const selector = document.getElementsByTagName('select')[0];
-selector.addEventListener('change', function (e) {
-  const level = e.target.value;
-  if (level === 'easy') {
-    height = heightEasy;
-    width = widthEasy;
-    mines = minesEasy;
-  } else if (level === 'normal') {
-    height = heightNormal;
-    width = widthNormal;
-    mines = minesNormal;
-  } else {
-    height = heightHard;
-    width = widthHard;
-    mines = minesHard;
+// m 行 n 列の2次元配列を生成
+const gen2DArray = (m, n, val) => {
+  let table = new Array(m);
+  for (let i = 0; i < table.length; i++) {
+    table[i] = new Array(n).fill(val);
   }
-
-  initGame();
-});
+  return table;
+}
 
 let isMineHidden = gen2DArray(height, width, false);
 let isCellOpen = gen2DArray(height, width, false);
@@ -52,130 +41,96 @@ if (remainingMines < 10) {
 
 const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
+const advanceTimer = () => {
+  let now = strToInt(timer.textContent);
+  now++;
+  if (now < 10) {
+    timer.textContent = `00${now}`;
+  } else if (now < 100) {
+    timer.textContent = `0${now}`;
+  } else if (now < 1000) {
+    timer.textContent = `${now}`;
+  } else {
+    stopTimer();
+  }
+}
+const stopTimer = () => {
+  clearInterval(intervalId);
+  intervalId = null;
+}
 
-const faceNormal = twemoji.convert.fromCodePoint('1F642');
-const faceSuccess = twemoji.convert.fromCodePoint('1F60E');
-const faceFailure = twemoji.convert.fromCodePoint('1F635');
+const initializeGame = () => {
+  isMineHidden = gen2DArray(height, width, false);
+  isCellOpen = gen2DArray(height, width, false);
+  isMarkedWithFlag = gen2DArray(height, width, false);
 
-const resetBtn = document.getElementsByClassName('reset-btn')[0];
-resetBtn.addEventListener('click', initGame);
+  hasGameStarted = false;
+  hasOpenedMinedCell = false;
+  hasOpenedAllSafeCells = false;
+  safeCellCount = height*width-mines;
+  remainingMines = mines;
+  if (remainingMines < 10) {
+    remains.textContent = `00${remainingMines}`;
+  } else if (remainingMines < 100) {
+    remains.textContent = `0${remainingMines}`;
+  }
+  changeFaceOfResetButton(FACE_NORMAL);
+  timer.textContent = '000';
+  stopTimer();
+
+  initializeBoard();
+}
+
+const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
+const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
+const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
+
+const resetButton = document.getElementsByClassName('reset-button')[0];
+resetButton.addEventListener('click', initializeGame);
 const changeFaceOfResetButton = (face) => {
-  resetBtn.textContent = face;
-  twemoji.parse(resetBtn, {
+  resetButton.textContent = face;
+  twemoji.parse(resetButton, {
     folder: 'svg',
     ext: '.svg'
   });
 }
-changeFaceOfResetButton(faceNormal);
+changeFaceOfResetButton(FACE_NORMAL);
 
 const board = document.getElementsByClassName('board')[0];
-const df = document.createDocumentFragment();
+const documentFragment = document.createDocumentFragment();
 
-initBoard();
+const UNOPENED_CELL = 'cell cell--unopened';
+const OPENED_CELL = 'cell cell--opened';
+const FLAGGED_CELL = 'cell cell--unopened cell--flagged';
+const WRONGLY_FLAGGED_CELL = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
+const MINED_CELL = 'cell cell--unopened cell--mined';
+const EXPLODED_CELL = 'cell cell--exploded';
 
-const switchBtn = document.getElementsByClassName('switch')[0];
-let isFlagModeOn = false;
-switchBtn.addEventListener('click', function (e) {
-  isFlagModeOn = switchBtn.classList.toggle('switch--on');
-});
+const strToInt = (str) => parseInt(str, 10);
 
-// m 行 n 列の2次元配列を生成
-function gen2DArray(m, n, val) {
-  let table = new Array(m);
-  for (let i = 0; i < table.length; i++) {
-    table[i] = new Array(n).fill(val);
-  }
-  return table;
-}
+// 0 以上 val 未満の整数乱数を返す
+const random = (val) =>  Math.floor(Math.random()*val);
 
-function touchCell(e) {
-  if (!hasGameStarted && !isFlagModeOn) {
-    initMines(e);
-    openCell(e);
-
-    if (!intervalId) {
-      intervalId = setInterval(advanceTimer, 1000);
-    }
-  } else {
-    const cell = e.target;
-    const i = strToInt(cell.dataset.row);
-    const j = strToInt(cell.dataset.col);
-
-    if (isFlagModeOn && !isCellOpen[i][j]) {
-      toggleFlag(e);
-      if (!intervalId) {
-        intervalId = setInterval(advanceTimer, 1000);
-      }
-    } else if (!isCellOpen[i][j]) {
-      openCell(e);
-    } else {
-      exeChording(e);
-    }
-
-    if (safeCellCount === 0) {
-      hasOpenedAllSafeCells = true;
-    }
-
-    if (hasOpenedMinedCell || hasOpenedAllSafeCells) {
-      stopTimer();
-      for (let i = 0; i < height; i++) {
-        for (let j = 0; j < width; j++) {
-          const cell = document.getElementById(`cell-${i}-${j}`);
-          cell.removeEventListener('click', touchCell);
-          cell.removeEventListener('contextmenu', toggleFlag);
-        }
-      }
-
-      if (hasOpenedMinedCell) {
-        changeFaceOfResetButton(faceFailure);
-        for (let i = 0; i < height; i++) {
-          for (let j = 0; j < width; j++) {
-            if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
-              const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopen cell--mined';
-            } else if (!isCellOpen[i][j] && !isMineHidden[i][j] && isMarkedWithFlag[i][j]) {
-              const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
-            }
-          }
-        }
-      } else {
-        changeFaceOfResetButton(faceSuccess);
-        remains.textContent = '000';
-        for (let i = 0; i < height; i++) {
-          for (let j = 0; j < width; j++) {
-            if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
-              const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopen cell--flagged'
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-function initMines(e) {
+const initializeMines = e => {
   const cell = e.target;
-  const i = strToInt(cell.dataset.row);
-  const j = strToInt(cell.dataset.col);
+  const rowTouchedFirst = strToInt(cell.dataset.row);
+  const columnTouchedFirst = strToInt(cell.dataset.col);
 
   if (!hasGameStarted) {
     hasGameStarted = true;
     for (let k = 0; k < mines; k++) {
       while (true) {
-        const row = rand(height);
-        const col = rand(width);
-        if (!isMineHidden[row][col] && !(i === row && j === col)) {
-          // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
-          isMineHidden[row][col] = true;
+        const rowPickedRandomly = random(height);
+        const columnPickedRandomly = random(width);
+        if (!isMineHidden[rowPickedRandomly][columnPickedRandomly] && !(rowTouchedFirst === rowPickedRandomly && columnTouchedFirst === columnPickedRandomly)) {
+          isMineHidden[rowPickedRandomly][columnPickedRandomly] = true;
           break;
         }
       }
 
       /*
-      let row = rand(height);
-      let col = rand(width);
+      let row = random(height);
+      let col = random(width);
       if (!isMineHidden[row][col] && !(i === row && j === col)) {
         // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
         isMineHidden[row][col] = true;
@@ -202,42 +157,16 @@ function initMines(e) {
   }
 }
 
-// 0 以上 val 未満の整数乱数を返す
-function rand(val) {
-  return Math.floor(Math.random()*val);
-}
-
-function openCell(e) {
-  const cell = e.target;
-  const i = strToInt(cell.dataset.row);
-  const j = strToInt(cell.dataset.col);
-
-  if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
-    if (isMineHidden[i][j]) {
-      isCellOpen[i][j] = true;
-      hasOpenedMinedCell = true;
-      cell.className = 'cell cell--exploded'
-    } else {
-      openSafeCell(i, j);
-      searchMines(i, j);
-    }
-  }
-}
-
-function strToInt(str) {
-  return parseInt(str, 10);
-}
-
-function openSafeCell(i, j) {
+const openSafeCell = (i, j) => {
   const cell = document.getElementById(`cell-${i}-${j}`);
   isCellOpen[i][j] = true;
-  cell.className = 'cell cell--open';
+  cell.className = OPENED_CELL;
 
   safeCellCount--;
 }
 
 // row 行 col 列のマスの周囲8個のマスの行・列を返す
-function getNeighborCellsIndex(row, col) {
+const getNeighborCellsIndex = (row, col) => {
   return [[row-1, col-1], [row-1, col], [row-1, col+1],
           [row, col-1],                 [row, col+1],
           [row+1, col-1], [row+1, col], [row+1, col+1]];
@@ -246,7 +175,7 @@ function getNeighborCellsIndex(row, col) {
 // row 行 col 列の cell が board に含まれているかを判定
 const checkIfCellIsInsideBoard = (row, col) => 0 <= row && row < height && 0 <= col && col < width;
 
-function searchMines(i, j) {
+const searchMines = (i, j) => {
   let cnt = 0;
   const neighborCells = getNeighborCellsIndex(i, j);
 
@@ -270,7 +199,24 @@ function searchMines(i, j) {
   }
 }
 
-function toggleFlag(e) {
+const openCell = e => {
+  const cell = e.target;
+  const i = strToInt(cell.dataset.row);
+  const j = strToInt(cell.dataset.col);
+
+  if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
+    if (isMineHidden[i][j]) {
+      isCellOpen[i][j] = true;
+      hasOpenedMinedCell = true;
+      cell.className = EXPLODED_CELL;
+    } else {
+      openSafeCell(i, j);
+      searchMines(i, j);
+    }
+  }
+}
+
+const toggleFlag = e => {
   e.preventDefault();
 
   const cell = e.target;
@@ -279,7 +225,7 @@ function toggleFlag(e) {
   if (!isCellOpen[i][j]) {
     if (!isMarkedWithFlag[i][j]) {
       isMarkedWithFlag[i][j] = true;
-      cell.className = 'cell cell--unopen cell--flagged';
+      cell.className = FLAGGED_CELL;
 
       remainingMines--;
       if (remainingMines < 10) {
@@ -289,7 +235,7 @@ function toggleFlag(e) {
       }
     } else {
       isMarkedWithFlag[i][j] = false;
-      cell.className = 'cell cell--unopen';
+      cell.className = UNOPENED_CELL;
 
       remainingMines++;
       if (remainingMines < 10) {
@@ -301,7 +247,7 @@ function toggleFlag(e) {
   }
 }
 
-function exeChording(e) {
+const exeChording = e => {
   const cell = e.target;
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
@@ -340,10 +286,10 @@ function exeChording(e) {
           if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
             if (isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
               // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
-              c.className = 'cell cell--unopen cell--flagged cell--flagged-wrongly';
+              c.className = WRONGLY_FLAGGED_CELL;
             } else if (!isMarkedWithFlag[row][col] && isMineHidden[row][col]) {
               // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
-              c.className = 'cell cell--exploded';
+              c.className = EXPLODED_CELL;
             } else if (!isMarkedWithFlag[row][col]) {
               // cell-${row}-${col}に爆弾がなくてflagも立っていないとき
               openSafeCell(row, col);
@@ -356,48 +302,74 @@ function exeChording(e) {
   }
 }
 
-function advanceTimer() {
-  let now = strToInt(timer.textContent);
-  now++;
-  if (now < 10) {
-    timer.textContent = `00${now}`;
-  } else if (now < 100) {
-    timer.textContent = `0${now}`;
-  } else if (now < 1000) {
-    timer.textContent = `${now}`;
+const touchCell = e => {
+  if (!hasGameStarted && !isFlagModeOn) {
+    initializeMines(e);
+    openCell(e);
+
+    if (!intervalId) {
+      intervalId = setInterval(advanceTimer, 1000);
+    }
   } else {
-    stopTimer();
+    const cell = e.target;
+    const i = strToInt(cell.dataset.row);
+    const j = strToInt(cell.dataset.col);
+
+    if (isFlagModeOn && !isCellOpen[i][j]) {
+      toggleFlag(e);
+      if (!intervalId) {
+        intervalId = setInterval(advanceTimer, 1000);
+      }
+    } else if (!isCellOpen[i][j]) {
+      openCell(e);
+    } else {
+      exeChording(e);
+    }
+
+    if (safeCellCount === 0) {
+      hasOpenedAllSafeCells = true;
+    }
+
+    if (hasOpenedMinedCell || hasOpenedAllSafeCells) {
+      stopTimer();
+      for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+          const cell = document.getElementById(`cell-${i}-${j}`);
+          cell.removeEventListener('click', touchCell);
+          cell.removeEventListener('contextmenu', toggleFlag);
+        }
+      }
+
+      if (hasOpenedMinedCell) {
+        changeFaceOfResetButton(FACE_FAILURE);
+        for (let i = 0; i < height; i++) {
+          for (let j = 0; j < width; j++) {
+            if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
+              const cell = document.getElementById(`cell-${i}-${j}`);
+              cell.className = MINED_CELL;
+            } else if (!isCellOpen[i][j] && !isMineHidden[i][j] && isMarkedWithFlag[i][j]) {
+              const cell = document.getElementById(`cell-${i}-${j}`);
+              cell.className = WRONGLY_FLAGGED_CELL;
+            }
+          }
+        }
+      } else {
+        changeFaceOfResetButton(FACE_SUCCESS);
+        remains.textContent = '000';
+        for (let i = 0; i < height; i++) {
+          for (let j = 0; j < width; j++) {
+            if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
+              const cell = document.getElementById(`cell-${i}-${j}`);
+              cell.className = FLAGGED_CELL
+            }
+          }
+        }
+      }
+    }
   }
 }
 
-function stopTimer() {
-  clearInterval(intervalId);
-  intervalId = null;
-}
-
-function initGame(e) {
-  isMineHidden = gen2DArray(height, width, false);
-  isCellOpen = gen2DArray(height, width, false);
-  isMarkedWithFlag = gen2DArray(height, width, false);
-
-  hasGameStarted = false;
-  hasOpenedMinedCell = false;
-  hasOpenedAllSafeCells = false;
-  safeCellCount = height*width-mines;
-  remainingMines = mines;
-  if (remainingMines < 10) {
-    remains.textContent = `00${remainingMines}`;
-  } else if (remainingMines < 100) {
-    remains.textContent = `0${remainingMines}`;
-  }
-  changeFaceOfResetButton(faceNormal);
-  timer.textContent = '000';
-  stopTimer();
-
-  initBoard();
-}
-
-function initBoard() {
+const initializeBoard = () => {
   while (board.firstChild) {
     board.removeChild(board.firstChild);
   }
@@ -411,7 +383,7 @@ function initBoard() {
       const cellID = `cell-${i}-${j}`;
       cell.id = cellID;
   
-      cell.className = 'cell cell--unopen';
+      cell.className = UNOPENED_CELL;
   
       cell.dataset.row = i;
       cell.dataset.col = j;
@@ -421,7 +393,35 @@ function initBoard() {
   
       row.appendChild(cell);
     }
-    df.appendChild(row);
+    documentFragment.appendChild(row);
   }
-  board.appendChild(df);
+  board.appendChild(documentFragment);
 }
+
+initializeBoard();
+
+const switchButton = document.getElementsByClassName('switch')[0];
+let isFlagModeOn = false;
+switchButton.addEventListener('click', () => {
+  isFlagModeOn = switchButton.classList.toggle('switch--on');
+});
+
+const selector = document.getElementsByTagName('select')[0];
+selector.addEventListener('change', e => {
+  const level = e.target.value;
+  if (level === 'easy') {
+    height = HEIGHT_EASY;
+    width = WIDTH_EASY;
+    mines = MINES_EASY;
+  } else if (level === 'normal') {
+    height = HEIGHT_NORMAL;
+    width = WIDTH_NORMAL;
+    mines = MINES_NORMAL;
+  } else {
+    height = HEIGHT_HARD;
+    width = WIDTH_HARD;
+    mines = MINES_HARD;
+  }
+
+  initializeGame();
+});
