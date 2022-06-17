@@ -12,6 +12,15 @@ let height = HEIGHT_EASY;
 let width = WIDTH_EASY;
 let mines = MINES_EASY;
 
+// m 行 n 列の2次元配列を生成
+const gen2DArray = (m, n, val) => {
+  let table = new Array(m);
+  for (let i = 0; i < table.length; i++) {
+    table[i] = new Array(n).fill(val);
+  }
+  return table;
+}
+
 let isMineHidden = gen2DArray(height, width, false);
 let isCellOpen = gen2DArray(height, width, false);
 let isMarkedWithFlag = gen2DArray(height, width, false);
@@ -58,15 +67,6 @@ let isFlagModeOn = false;
 switchButton.addEventListener('click', () => {
   isFlagModeOn = switchButton.classList.toggle('switch--on');
 });
-
-// m 行 n 列の2次元配列を生成
-function gen2DArray(m, n, val) {
-  let table = new Array(m);
-  for (let i = 0; i < table.length; i++) {
-    table[i] = new Array(n).fill(val);
-  }
-  return table;
-}
 
 function touchCell(e) {
   if (!hasGameStarted && !isFlagModeOn) {
