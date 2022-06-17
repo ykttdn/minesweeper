@@ -77,6 +77,57 @@ changeFaceOfResetButton(FACE_NORMAL);
 const board = document.getElementsByClassName('board')[0];
 const documentFragment = document.createDocumentFragment();
 
+const strToInt = (str) => parseInt(str, 10);
+
+// 0 以上 val 未満の整数乱数を返す
+const random = (val) =>  Math.floor(Math.random()*val);
+
+const initializeMines = (e) => {
+  const cell = e.target;
+  const rowOfCellTouchedFirst = strToInt(cell.dataset.row);
+  const columnOfCellTouchedFirst = strToInt(cell.dataset.col);
+
+  if (!hasGameStarted) {
+    hasGameStarted = true;
+    for (let k = 0; k < mines; k++) {
+      while (true) {
+        const rowPickedRandomly = random(height);
+        const columnPickedRandomly = random(width);
+        if (!isMineHidden[rowPickedRandomly][columnPickedRandomly] && !(rowOfCellTouchedFirst === rowPickedRandomly && columnOfCellTouchedFirst === columnPickedRandomly)) {
+          isMineHidden[rowPickedRandomly][columnPickedRandomly] = true;
+          break;
+        }
+      }
+
+      /*
+      let row = random(height);
+      let col = random(width);
+      if (!isMineHidden[row][col] && !(i === row && j === col)) {
+        // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
+        isMineHidden[row][col] = true;
+      } else {
+        // (row, col)成分に爆弾が埋められている，または，(row,col)成分が最初に開いたcellのとき
+        // (row, col)成分の右隣のcellに移動し続け，そこに爆弾がなければ埋める
+        while (true) {
+          col++;
+          if (col === width) {
+            col = 0;
+            row++;
+            if (row === height) {
+              row = 0;
+            }
+          }
+          if (!isMineHidden[row][col] && !(i === row && j === col)) {
+            isMineHidden[row][col] = 1;
+            break;
+          }
+        }
+      }
+      */
+    }
+  }
+}
+
 const initializeBoard = () => {
   while (board.firstChild) {
     board.removeChild(board.firstChild);
@@ -181,56 +232,6 @@ function touchCell(e) {
   }
 }
 
-function initializeMines(e) {
-  const cell = e.target;
-  const rowOfCellTouchedFirst = strToInt(cell.dataset.row);
-  const columnOfCellTouchedFirst = strToInt(cell.dataset.col);
-
-  if (!hasGameStarted) {
-    hasGameStarted = true;
-    for (let k = 0; k < mines; k++) {
-      while (true) {
-        const rowPickedRandomly = random(height);
-        const columnPickedRandomly = random(width);
-        if (!isMineHidden[rowPickedRandomly][columnPickedRandomly] && !(rowOfCellTouchedFirst === rowPickedRandomly && columnOfCellTouchedFirst === columnPickedRandomly)) {
-          isMineHidden[rowPickedRandomly][columnPickedRandomly] = true;
-          break;
-        }
-      }
-
-      /*
-      let row = random(height);
-      let col = random(width);
-      if (!isMineHidden[row][col] && !(i === row && j === col)) {
-        // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
-        isMineHidden[row][col] = true;
-      } else {
-        // (row, col)成分に爆弾が埋められている，または，(row,col)成分が最初に開いたcellのとき
-        // (row, col)成分の右隣のcellに移動し続け，そこに爆弾がなければ埋める
-        while (true) {
-          col++;
-          if (col === width) {
-            col = 0;
-            row++;
-            if (row === height) {
-              row = 0;
-            }
-          }
-          if (!isMineHidden[row][col] && !(i === row && j === col)) {
-            isMineHidden[row][col] = 1;
-            break;
-          }
-        }
-      }
-      */
-    }
-  }
-}
-
-// 0 以上 val 未満の整数乱数を返す
-function random(val) {
-  return Math.floor(Math.random()*val);
-}
 
 function openCell(e) {
   const cell = e.target;
@@ -247,10 +248,6 @@ function openCell(e) {
       searchMines(i, j);
     }
   }
-}
-
-function strToInt(str) {
-  return parseInt(str, 10);
 }
 
 function openSafeCell(i, j) {
