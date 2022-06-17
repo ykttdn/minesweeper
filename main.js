@@ -84,8 +84,8 @@ const random = (val) =>  Math.floor(Math.random()*val);
 
 const initializeMines = (e) => {
   const cell = e.target;
-  const rowOfCellTouchedFirst = strToInt(cell.dataset.row);
-  const columnOfCellTouchedFirst = strToInt(cell.dataset.col);
+  const rowTouchedFirst = strToInt(cell.dataset.row);
+  const columnTouchedFirst = strToInt(cell.dataset.col);
 
   if (!hasGameStarted) {
     hasGameStarted = true;
@@ -93,7 +93,7 @@ const initializeMines = (e) => {
       while (true) {
         const rowPickedRandomly = random(height);
         const columnPickedRandomly = random(width);
-        if (!isMineHidden[rowPickedRandomly][columnPickedRandomly] && !(rowOfCellTouchedFirst === rowPickedRandomly && columnOfCellTouchedFirst === columnPickedRandomly)) {
+        if (!isMineHidden[rowPickedRandomly][columnPickedRandomly] && !(rowTouchedFirst === rowPickedRandomly && columnTouchedFirst === columnPickedRandomly)) {
           isMineHidden[rowPickedRandomly][columnPickedRandomly] = true;
           break;
         }
