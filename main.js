@@ -59,6 +59,28 @@ const stopTimer = () => {
   intervalId = null;
 }
 
+const initializeGame = () => {
+  isMineHidden = gen2DArray(height, width, false);
+  isCellOpen = gen2DArray(height, width, false);
+  isMarkedWithFlag = gen2DArray(height, width, false);
+
+  hasGameStarted = false;
+  hasOpenedMinedCell = false;
+  hasOpenedAllSafeCells = false;
+  safeCellCount = height*width-mines;
+  remainingMines = mines;
+  if (remainingMines < 10) {
+    remains.textContent = `00${remainingMines}`;
+  } else if (remainingMines < 100) {
+    remains.textContent = `0${remainingMines}`;
+  }
+  changeFaceOfResetButton(FACE_NORMAL);
+  timer.textContent = '000';
+  stopTimer();
+
+  initializeBoard();
+}
+
 const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
 const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
 const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
@@ -376,28 +398,6 @@ let isFlagModeOn = false;
 switchButton.addEventListener('click', () => {
   isFlagModeOn = switchButton.classList.toggle('switch--on');
 });
-
-const initializeGame = () => {
-  isMineHidden = gen2DArray(height, width, false);
-  isCellOpen = gen2DArray(height, width, false);
-  isMarkedWithFlag = gen2DArray(height, width, false);
-
-  hasGameStarted = false;
-  hasOpenedMinedCell = false;
-  hasOpenedAllSafeCells = false;
-  safeCellCount = height*width-mines;
-  remainingMines = mines;
-  if (remainingMines < 10) {
-    remains.textContent = `00${remainingMines}`;
-  } else if (remainingMines < 100) {
-    remains.textContent = `0${remainingMines}`;
-  }
-  changeFaceOfResetButton(FACE_NORMAL);
-  timer.textContent = '000';
-  stopTimer();
-
-  initializeBoard();
-}
 
 const selector = document.getElementsByTagName('select')[0];
 selector.addEventListener('change', (e) => {
