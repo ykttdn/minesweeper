@@ -128,6 +128,65 @@ const initializeMines = (e) => {
   }
 }
 
+const openSafeCell = (i, j) => {
+  const cell = document.getElementById(`cell-${i}-${j}`);
+  isCellOpen[i][j] = true;
+  cell.className = 'cell cell--opened';
+
+  safeCellCount--;
+}
+
+// row 行 col 列のマスの周囲8個のマスの行・列を返す
+const getNeighborCellsIndex = (row, col) => {
+  return [[row-1, col-1], [row-1, col], [row-1, col+1],
+          [row, col-1],                 [row, col+1],
+          [row+1, col-1], [row+1, col], [row+1, col+1]];
+}
+
+// row 行 col 列の cell が board に含まれているかを判定
+const checkIfCellIsInsideBoard = (row, col) => 0 <= row && row < height && 0 <= col && col < width;
+
+const searchMines = (i, j) => {
+  let cnt = 0;
+  const neighborCells = getNeighborCellsIndex(i, j);
+
+  for (const [row, col] of neighborCells) {
+    if (checkIfCellIsInsideBoard(row, col) && isMineHidden[row][col]) {
+      cnt++;
+    }
+  }
+
+  if (cnt > 0) {
+    const cell = document.getElementById(`cell-${i}-${j}`);
+    cell.textContent = cnt;
+    cell.classList.add(`cnt-${cnt}`);
+  } else if (!hasOpenedMinedCell) {
+    for (const [row, col] of neighborCells) {
+      if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
+        openSafeCell(row, col);
+        searchMines(row, col);
+      }
+    }
+  }
+}
+
+const openCell = (e) => {
+  const cell = e.target;
+  const i = strToInt(cell.dataset.row);
+  const j = strToInt(cell.dataset.col);
+
+  if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
+    if (isMineHidden[i][j]) {
+      isCellOpen[i][j] = true;
+      hasOpenedMinedCell = true;
+      cell.className = 'cell cell--exploded'
+    } else {
+      openSafeCell(i, j);
+      searchMines(i, j);
+    }
+  }
+}
+
 const initializeBoard = () => {
   while (board.firstChild) {
     board.removeChild(board.firstChild);
@@ -227,66 +286,6 @@ function touchCell(e) {
             }
           }
         }
-      }
-    }
-  }
-}
-
-
-function openCell(e) {
-  const cell = e.target;
-  const i = strToInt(cell.dataset.row);
-  const j = strToInt(cell.dataset.col);
-
-  if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
-    if (isMineHidden[i][j]) {
-      isCellOpen[i][j] = true;
-      hasOpenedMinedCell = true;
-      cell.className = 'cell cell--exploded'
-    } else {
-      openSafeCell(i, j);
-      searchMines(i, j);
-    }
-  }
-}
-
-function openSafeCell(i, j) {
-  const cell = document.getElementById(`cell-${i}-${j}`);
-  isCellOpen[i][j] = true;
-  cell.className = 'cell cell--opened';
-
-  safeCellCount--;
-}
-
-// row 行 col 列のマスの周囲8個のマスの行・列を返す
-function getNeighborCellsIndex(row, col) {
-  return [[row-1, col-1], [row-1, col], [row-1, col+1],
-          [row, col-1],                 [row, col+1],
-          [row+1, col-1], [row+1, col], [row+1, col+1]];
-}
-
-// row 行 col 列の cell が board に含まれているかを判定
-const checkIfCellIsInsideBoard = (row, col) => 0 <= row && row < height && 0 <= col && col < width;
-
-function searchMines(i, j) {
-  let cnt = 0;
-  const neighborCells = getNeighborCellsIndex(i, j);
-
-  for (const [row, col] of neighborCells) {
-    if (checkIfCellIsInsideBoard(row, col) && isMineHidden[row][col]) {
-      cnt++;
-    }
-  }
-
-  if (cnt > 0) {
-    const cell = document.getElementById(`cell-${i}-${j}`);
-    cell.textContent = cnt;
-    cell.classList.add(`cnt-${cnt}`);
-  } else if (!hasOpenedMinedCell) {
-    for (const [row, col] of neighborCells) {
-      if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
-        openSafeCell(row, col);
-        searchMines(row, col);
       }
     }
   }
