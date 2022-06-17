@@ -41,6 +41,23 @@ if (remainingMines < 10) {
 
 const timer = document.getElementsByClassName('timer')[0];
 let intervalId;
+const advanceTimer = () => {
+  let now = strToInt(timer.textContent);
+  now++;
+  if (now < 10) {
+    timer.textContent = `00${now}`;
+  } else if (now < 100) {
+    timer.textContent = `0${now}`;
+  } else if (now < 1000) {
+    timer.textContent = `${now}`;
+  } else {
+    stopTimer();
+  }
+}
+const stopTimer = () => {
+  clearInterval(intervalId);
+  intervalId = null;
+}
 
 const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
 const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
@@ -334,25 +351,6 @@ function exeChording(e) {
       }
     }
   }
-}
-
-function advanceTimer() {
-  let now = strToInt(timer.textContent);
-  now++;
-  if (now < 10) {
-    timer.textContent = `00${now}`;
-  } else if (now < 100) {
-    timer.textContent = `0${now}`;
-  } else if (now < 1000) {
-    timer.textContent = `${now}`;
-  } else {
-    stopTimer();
-  }
-}
-
-function stopTimer() {
-  clearInterval(intervalId);
-  intervalId = null;
 }
 
 function initializeGame(e) {
