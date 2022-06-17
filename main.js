@@ -12,26 +12,6 @@ let height = HEIGHT_EASY;
 let width = WIDTH_EASY;
 let mines = MINES_EASY;
 
-const selector = document.getElementsByTagName('select')[0];
-selector.addEventListener('change', (e) => {
-  const level = e.target.value;
-  if (level === 'easy') {
-    height = HEIGHT_EASY;
-    width = WIDTH_EASY;
-    mines = MINES_EASY;
-  } else if (level === 'normal') {
-    height = HEIGHT_NORMAL;
-    width = WIDTH_NORMAL;
-    mines = MINES_NORMAL;
-  } else {
-    height = HEIGHT_HARD;
-    width = WIDTH_HARD;
-    mines = MINES_HARD;
-  }
-
-  initializeGame();
-});
-
 let isMineHidden = gen2DArray(height, width, false);
 let isCellOpen = gen2DArray(height, width, false);
 let isMarkedWithFlag = gen2DArray(height, width, false);
@@ -425,3 +405,23 @@ function initializeBoard() {
   }
   board.appendChild(documentFragment);
 }
+
+const selector = document.getElementsByTagName('select')[0];
+selector.addEventListener('change', (e) => {
+  const level = e.target.value;
+  if (level === 'easy') {
+    height = HEIGHT_EASY;
+    width = WIDTH_EASY;
+    mines = MINES_EASY;
+  } else if (level === 'normal') {
+    height = HEIGHT_NORMAL;
+    width = WIDTH_NORMAL;
+    mines = MINES_NORMAL;
+  } else {
+    height = HEIGHT_HARD;
+    width = WIDTH_HARD;
+    mines = MINES_HARD;
+  }
+
+  initializeGame();
+});
