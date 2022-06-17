@@ -13,7 +13,7 @@ let width = WIDTH_EASY;
 let mines = MINES_EASY;
 
 const selector = document.getElementsByTagName('select')[0];
-selector.addEventListener('change', function (e) {
+selector.addEventListener('change', (e) => {
   const level = e.target.value;
   if (level === 'easy') {
     height = HEIGHT_EASY;
@@ -75,7 +75,7 @@ initializeBoard();
 
 const switchButton = document.getElementsByClassName('switch')[0];
 let isFlagModeOn = false;
-switchButton.addEventListener('click', function (e) {
+switchButton.addEventListener('click', () => {
   isFlagModeOn = switchButton.classList.toggle('switch--on');
 });
 
