@@ -99,6 +99,13 @@ changeFaceOfResetButton(FACE_NORMAL);
 const board = document.getElementsByClassName('board')[0];
 const documentFragment = document.createDocumentFragment();
 
+const UNOPENED_CELL = 'cell cell--unopened';
+const OPENED_CELL = 'cell cell--opened';
+const FLAGGED_CELL = 'cell cell--unopened cell--flagged';
+const WRONGLY_FLAGGED_CELL = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
+const MINED_CELL = 'cell cell--unopened cell--mined';
+const EXPLODED_CELL = 'cell cell--exploded';
+
 const strToInt = (str) => parseInt(str, 10);
 
 // 0 以上 val 未満の整数乱数を返す
@@ -153,7 +160,7 @@ const initializeMines = e => {
 const openSafeCell = (i, j) => {
   const cell = document.getElementById(`cell-${i}-${j}`);
   isCellOpen[i][j] = true;
-  cell.className = 'cell cell--opened';
+  cell.className = OPENED_CELL;
 
   safeCellCount--;
 }
@@ -201,7 +208,7 @@ const openCell = e => {
     if (isMineHidden[i][j]) {
       isCellOpen[i][j] = true;
       hasOpenedMinedCell = true;
-      cell.className = 'cell cell--exploded'
+      cell.className = EXPLODED_CELL
     } else {
       openSafeCell(i, j);
       searchMines(i, j);
@@ -218,7 +225,7 @@ const toggleFlag = e => {
   if (!isCellOpen[i][j]) {
     if (!isMarkedWithFlag[i][j]) {
       isMarkedWithFlag[i][j] = true;
-      cell.className = 'cell cell--unopened cell--flagged';
+      cell.className = FLAGGED_CELL;
 
       remainingMines--;
       if (remainingMines < 10) {
@@ -228,7 +235,7 @@ const toggleFlag = e => {
       }
     } else {
       isMarkedWithFlag[i][j] = false;
-      cell.className = 'cell cell--unopened';
+      cell.className = UNOPENED_CELL;
 
       remainingMines++;
       if (remainingMines < 10) {
@@ -279,10 +286,10 @@ const exeChording = e => {
           if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
             if (isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
               // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
-              c.className = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
+              c.className = WRONGLY_FLAGGED_CELL;
             } else if (!isMarkedWithFlag[row][col] && isMineHidden[row][col]) {
               // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
-              c.className = 'cell cell--exploded';
+              c.className = EXPLODED_CELL;
             } else if (!isMarkedWithFlag[row][col]) {
               // cell-${row}-${col}に爆弾がなくてflagも立っていないとき
               openSafeCell(row, col);
@@ -339,10 +346,10 @@ const touchCell = e => {
           for (let j = 0; j < width; j++) {
             if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopened cell--mined';
+              cell.className = MINED_CELL;
             } else if (!isCellOpen[i][j] && !isMineHidden[i][j] && isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
+              cell.className = WRONGLY_FLAGGED_CELL;
             }
           }
         }
@@ -353,7 +360,7 @@ const touchCell = e => {
           for (let j = 0; j < width; j++) {
             if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = 'cell cell--unopened cell--flagged'
+              cell.className = FLAGGED_CELL
             }
           }
         }
@@ -376,7 +383,7 @@ const initializeBoard = () => {
       const cellID = `cell-${i}-${j}`;
       cell.id = cellID;
   
-      cell.className = 'cell cell--unopened';
+      cell.className = UNOPENED_CELL;
   
       cell.dataset.row = i;
       cell.dataset.col = j;
