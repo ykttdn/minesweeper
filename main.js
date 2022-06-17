@@ -377,7 +377,7 @@ switchButton.addEventListener('click', () => {
   isFlagModeOn = switchButton.classList.toggle('switch--on');
 });
 
-function initializeGame(e) {
+const initializeGame = () => {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
