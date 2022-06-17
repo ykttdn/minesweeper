@@ -104,7 +104,7 @@ const strToInt = (str) => parseInt(str, 10);
 // 0 以上 val 未満の整数乱数を返す
 const random = (val) =>  Math.floor(Math.random()*val);
 
-const initializeMines = (e) => {
+const initializeMines = e => {
   const cell = e.target;
   const rowTouchedFirst = strToInt(cell.dataset.row);
   const columnTouchedFirst = strToInt(cell.dataset.col);
@@ -192,7 +192,7 @@ const searchMines = (i, j) => {
   }
 }
 
-const openCell = (e) => {
+const openCell = e => {
   const cell = e.target;
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
@@ -209,7 +209,7 @@ const openCell = (e) => {
   }
 }
 
-const toggleFlag = (e) => {
+const toggleFlag = e => {
   e.preventDefault();
 
   const cell = e.target;
@@ -240,7 +240,7 @@ const toggleFlag = (e) => {
   }
 }
 
-const exeChording = (e) => {
+const exeChording = e => {
   const cell = e.target;
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
@@ -295,7 +295,7 @@ const exeChording = (e) => {
   }
 }
 
-const touchCell = (e) => {
+const touchCell = e => {
   if (!hasGameStarted && !isFlagModeOn) {
     initializeMines(e);
     openCell(e);
@@ -400,7 +400,7 @@ switchButton.addEventListener('click', () => {
 });
 
 const selector = document.getElementsByTagName('select')[0];
-selector.addEventListener('change', (e) => {
+selector.addEventListener('change', e => {
   const level = e.target.value;
   if (level === 'easy') {
     height = HEIGHT_EASY;
