@@ -12,19 +12,6 @@ let height = HEIGHT_EASY;
 let width = WIDTH_EASY;
 let mines = MINES_EASY;
 
-// m 行 n 列の2次元配列を生成
-const gen2DArray = (m, n, val) => {
-  let table = new Array(m);
-  for (let i = 0; i < table.length; i++) {
-    table[i] = new Array(n).fill(val);
-  }
-  return table;
-}
-
-let isMineHidden = gen2DArray(height, width, false);
-let isCellOpen = gen2DArray(height, width, false);
-let isMarkedWithFlag = gen2DArray(height, width, false);
-
 let hasGameStarted = false;
 let hasOpenedMinedCell = false;
 let hasOpenedAllSafeCells = false;
@@ -69,9 +56,6 @@ class Cell {
 let cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
 
 const initializeGame = () => {
-  isMineHidden = gen2DArray(height, width, false);
-  isCellOpen = gen2DArray(height, width, false);
-  isMarkedWithFlag = gen2DArray(height, width, false);
   cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
 
   hasGameStarted = false;
