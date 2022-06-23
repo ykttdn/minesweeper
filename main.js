@@ -59,6 +59,15 @@ const stopTimer = () => {
   intervalId = null;
 }
 
+class Cell {
+  constructor() {
+    this.isMineHiddenIn = false;
+    this.isOpened = false;
+    this.isFlagged = false;
+  }
+}
+let cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
+
 const initializeGame = () => {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
