@@ -72,6 +72,7 @@ const initializeGame = () => {
   isMineHidden = gen2DArray(height, width, false);
   isCellOpen = gen2DArray(height, width, false);
   isMarkedWithFlag = gen2DArray(height, width, false);
+  cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
 
   hasGameStarted = false;
   hasOpenedMinedCell = false;
@@ -131,8 +132,8 @@ const initializeMines = e => {
       while (true) {
         const rowPickedRandomly = random(height);
         const columnPickedRandomly = random(width);
-        if (!isMineHidden[rowPickedRandomly][columnPickedRandomly] && !(rowTouchedFirst === rowPickedRandomly && columnTouchedFirst === columnPickedRandomly)) {
-          isMineHidden[rowPickedRandomly][columnPickedRandomly] = true;
+        if (!cells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn && !(rowTouchedFirst === rowPickedRandomly && columnTouchedFirst === columnPickedRandomly)) {
+          cells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn = true;
           break;
         }
       }
@@ -140,9 +141,9 @@ const initializeMines = e => {
       /*
       let row = random(height);
       let col = random(width);
-      if (!isMineHidden[row][col] && !(i === row && j === col)) {
+      if (!cells[row][col].isMineHiddenIn && !(i === row && j === col)) {
         // (row, col)成分に爆弾が埋められていない，かつ，(row, col)成分が最初に開いたcellでないとき
-        isMineHidden[row][col] = true;
+        cells[row][col].isMineHiddenIn = true;
       } else {
         // (row, col)成分に爆弾が埋められている，または，(row,col)成分が最初に開いたcellのとき
         // (row, col)成分の右隣のcellに移動し続け，そこに爆弾がなければ埋める
@@ -155,8 +156,8 @@ const initializeMines = e => {
               row = 0;
             }
           }
-          if (!isMineHidden[row][col] && !(i === row && j === col)) {
-            isMineHidden[row][col] = 1;
+          if (!cells[row][col].isMineHiddenIn && !(i === row && j === col)) {
+            cells[row][col].isMineHiddenIn = 1;
             break;
           }
         }
@@ -189,7 +190,7 @@ const searchMines = (i, j) => {
   const neighborCells = getNeighborCellsIndex(i, j);
 
   for (const [row, col] of neighborCells) {
-    if (checkIfCellIsInsideBoard(row, col) && isMineHidden[row][col]) {
+    if (checkIfCellIsInsideBoard(row, col) && cells[row][col].isMineHiddenIn) {
       cnt++;
     }
   }
@@ -214,7 +215,7 @@ const openCell = e => {
   const j = strToInt(cell.dataset.col);
 
   if (!isCellOpen[i][j] && !isMarkedWithFlag[i][j]) {
-    if (isMineHidden[i][j]) {
+    if (cells[i][j].isMineHiddenIn) {
       isCellOpen[i][j] = true;
       hasOpenedMinedCell = true;
       cell.className = EXPLODED_CELL;
@@ -276,7 +277,7 @@ const exeChording = e => {
     if (mineCount === flagCount) {
       let canExeChording = true;
       for (const [row, col] of neighborCells) {
-        if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
+        if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col] && !cells[row][col].isMineHiddenIn) {
           canExeChording = false;
         }
       }
@@ -293,10 +294,10 @@ const exeChording = e => {
         for (const [row, col] of neighborCells) {
           const c = document.getElementById(`cell-${row}-${col}`);
           if (checkIfCellIsInsideBoard(row, col) && !isCellOpen[row][col]) {
-            if (isMarkedWithFlag[row][col] && !isMineHidden[row][col]) {
+            if (isMarkedWithFlag[row][col] && !cells[row][col].isMineHiddenIn) {
               // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
               c.className = WRONGLY_FLAGGED_CELL;
-            } else if (!isMarkedWithFlag[row][col] && isMineHidden[row][col]) {
+            } else if (!isMarkedWithFlag[row][col] && cells[row][col].isMineHiddenIn) {
               // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
               c.className = EXPLODED_CELL;
             } else if (!isMarkedWithFlag[row][col]) {
@@ -353,10 +354,10 @@ const touchCell = e => {
         changeFaceOfResetButton(FACE_FAILURE);
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
-            if (!isCellOpen[i][j] && isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
+            if (!isCellOpen[i][j] && cells[i][j].isMineHiddenIn && !isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
               cell.className = MINED_CELL;
-            } else if (!isCellOpen[i][j] && !isMineHidden[i][j] && isMarkedWithFlag[i][j]) {
+            } else if (!isCellOpen[i][j] && !cells[i][j].isMineHiddenIn && isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
               cell.className = WRONGLY_FLAGGED_CELL;
             }
@@ -367,7 +368,7 @@ const touchCell = e => {
         remains.textContent = '000';
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
-            if (isMineHidden[i][j] && !isMarkedWithFlag[i][j]) {
+            if (cells[i][j].isMineHiddenIn && !isMarkedWithFlag[i][j]) {
               const cell = document.getElementById(`cell-${i}-${j}`);
               cell.className = FLAGGED_CELL
             }
