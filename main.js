@@ -214,7 +214,7 @@ const openCell = e => {
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
 
-  if (!cells[i][j].isOpened && !isMarkedWithFlag[i][j]) {
+  if (!cells[i][j].isOpened && !cells[i][j].isFlagged) {
     if (cells[i][j].isMineHiddenIn) {
       cells[i][j].isOpened = true;
       hasOpenedMinedCell = true;
@@ -233,8 +233,8 @@ const toggleFlag = e => {
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
   if (!cells[i][j].isOpened) {
-    if (!isMarkedWithFlag[i][j]) {
-      isMarkedWithFlag[i][j] = true;
+    if (!cells[i][j].isFlagged) {
+      cells[i][j].isFlagged = true;
       cell.className = FLAGGED_CELL;
 
       remainingMines--;
@@ -244,7 +244,7 @@ const toggleFlag = e => {
         remains.textContent = `0${remainingMines}`;
       }
     } else {
-      isMarkedWithFlag[i][j] = false;
+      cells[i][j].isFlagged = false;
       cell.className = UNOPENED_CELL;
 
       remainingMines++;
@@ -269,7 +269,7 @@ const exeChording = e => {
     const neighborCells = getNeighborCellsIndex(i, j);
 
     for (const [row, col] of neighborCells) {
-      if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col]) {
+      if (checkIfCellIsInsideBoard(row, col) && cells[row][col].isFlagged) {
         flagCount++;
       }
     }
@@ -277,14 +277,14 @@ const exeChording = e => {
     if (mineCount === flagCount) {
       let canExeChording = true;
       for (const [row, col] of neighborCells) {
-        if (checkIfCellIsInsideBoard(row, col) && isMarkedWithFlag[row][col] && !cells[row][col].isMineHiddenIn) {
+        if (checkIfCellIsInsideBoard(row, col) && cells[row][col].isFlagged && !cells[row][col].isMineHiddenIn) {
           canExeChording = false;
         }
       }
 
       if (canExeChording) {
         for (const [row, col] of neighborCells) {
-          if (checkIfCellIsInsideBoard(row, col) && !cells[row][col].isOpened && !isMarkedWithFlag[row][col]) {
+          if (checkIfCellIsInsideBoard(row, col) && !cells[row][col].isOpened && !cells[row][col].isFlagged) {
             openSafeCell(row, col);
             searchMines(row, col);
           }
@@ -294,13 +294,13 @@ const exeChording = e => {
         for (const [row, col] of neighborCells) {
           const c = document.getElementById(`cell-${row}-${col}`);
           if (checkIfCellIsInsideBoard(row, col) && !cells[row][col].isOpened) {
-            if (isMarkedWithFlag[row][col] && !cells[row][col].isMineHiddenIn) {
+            if (cells[row][col].isFlagged && !cells[row][col].isMineHiddenIn) {
               // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
               c.className = WRONGLY_FLAGGED_CELL;
-            } else if (!isMarkedWithFlag[row][col] && cells[row][col].isMineHiddenIn) {
+            } else if (!cells[row][col].isFlagged && cells[row][col].isMineHiddenIn) {
               // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
               c.className = EXPLODED_CELL;
-            } else if (!isMarkedWithFlag[row][col]) {
+            } else if (!cells[row][col].isFlagged) {
               // cell-${row}-${col}に爆弾がなくてflagも立っていないとき
               openSafeCell(row, col);
               searchMines(row, col);
@@ -354,10 +354,10 @@ const touchCell = e => {
         changeFaceOfResetButton(FACE_FAILURE);
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
-            if (!cells[i][j].isOpened && cells[i][j].isMineHiddenIn && !isMarkedWithFlag[i][j]) {
+            if (!cells[i][j].isOpened && cells[i][j].isMineHiddenIn && !cells[i][j].isFlagged) {
               const cell = document.getElementById(`cell-${i}-${j}`);
               cell.className = MINED_CELL;
-            } else if (!cells[i][j].isOpened && !cells[i][j].isMineHiddenIn && isMarkedWithFlag[i][j]) {
+            } else if (!cells[i][j].isOpened && !cells[i][j].isMineHiddenIn && cells[i][j].isFlagged) {
               const cell = document.getElementById(`cell-${i}-${j}`);
               cell.className = WRONGLY_FLAGGED_CELL;
             }
@@ -368,7 +368,7 @@ const touchCell = e => {
         remains.textContent = '000';
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
-            if (cells[i][j].isMineHiddenIn && !isMarkedWithFlag[i][j]) {
+            if (cells[i][j].isMineHiddenIn && !cells[i][j].isFlagged) {
               const cell = document.getElementById(`cell-${i}-${j}`);
               cell.className = FLAGGED_CELL
             }
