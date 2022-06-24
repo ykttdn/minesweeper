@@ -19,13 +19,13 @@ let safeCellCount = height*width-mines;
 let remainingMines = mines;
 
 const remains = document.getElementsByClassName('remains')[0];
-const setMineCounter = remainingMines => {
+const setMineCounter = () => {
   if (remainingMines <= -100) {
     remains.textContent = `-99`;
   } else if (remainingMines <= -10) {
     remains.textContent = remainingMines;
   } else if (remainingMines <= -1) {
-    remains.textContent = ` ${remainingMines}`;
+    remains.textContent = `- ${-remainingMines}`;
   } else if (remainingMines <= 9) {
     remains.textContent = `00${remainingMines}`;
   } else if (remainingMines <= 99) {
