@@ -36,11 +36,7 @@ const setMineCounter = () => {
     remains.textContent = `999`;
   }
 }
-if (remainingMines < 10) {
-  remains.textContent = `00${remainingMines}`;
-} else if (remainingMines < 100) {
-  remains.textContent = `0${remainingMines}`;
-}
+setMineCounter();
 
 
 const timer = document.getElementsByClassName('timer')[0];
@@ -80,11 +76,7 @@ const initializeGame = () => {
   hasOpenedAllSafeCells = false;
   safeCellCount = height*width-mines;
   remainingMines = mines;
-  if (remainingMines < 10) {
-    remains.textContent = `00${remainingMines}`;
-  } else if (remainingMines < 100) {
-    remains.textContent = `0${remainingMines}`;
-  }
+  setMineCounter();
   changeFaceOfResetButton(FACE_NORMAL);
   timer.textContent = '000';
   stopTimer();
@@ -239,21 +231,13 @@ const toggleFlag = e => {
       cell.className = FLAGGED_CELL;
 
       remainingMines--;
-      if (remainingMines < 10) {
-        remains.textContent = `00${remainingMines}`;
-      } else if (remainingMines < 100) {
-        remains.textContent = `0${remainingMines}`;
-      }
+      setMineCounter();
     } else {
       cells[i][j].isFlagged = false;
       cell.className = UNOPENED_CELL;
 
       remainingMines++;
-      if (remainingMines < 10) {
-        remains.textContent = `00${remainingMines}`;
-      } else if (remainingMines < 100) {
-        remains.textContent = `0${remainingMines}`;
-      }
+      setMineCounter();
     }
   }
 }
@@ -366,7 +350,8 @@ const touchCell = e => {
         }
       } else {
         changeFaceOfResetButton(FACE_SUCCESS);
-        remains.textContent = '000';
+        remainingMines = 0;
+        setMineCounter();
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (cells[i][j].isMineHiddenIn && !cells[i][j].isFlagged) {
