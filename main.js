@@ -222,6 +222,10 @@ const openCell = e => {
 const toggleFlag = e => {
   e.preventDefault();
 
+  if (!intervalId) {
+    intervalId = setInterval(advanceTimer, 1000);
+  }
+
   const cell = e.target;
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
