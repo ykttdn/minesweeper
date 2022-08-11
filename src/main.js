@@ -20,6 +20,7 @@ let hasOpenedMinedCell = false;
 let hasOpenedAllSafeCells = false;
 let safeCellCount = height * width - mines;
 let remainingMines = mines;
+let isFlagModeOn = false;
 
 const remains = document.getElementsByClassName('remains')[0];
 const setMineCounter = () => {
@@ -107,7 +108,6 @@ const initializeGame = () => {
 
 resetButton.addEventListener('click', initializeGame);
 
-
 const board = document.getElementsByClassName('board')[0];
 const documentFragment = document.createDocumentFragment();
 
@@ -183,6 +183,7 @@ const getNeighborCellsIndex = (row, col) => {
 };
 
 // row 行 col 列の cell が board に含まれているかを判定
+// eslint-disable-next-line yoda
 const checkIfCellIsInsideBoard = (row, col) => 0 <= row && row < height && 0 <= col && col < width;
 
 const searchMines = (i, j) => {
@@ -408,7 +409,6 @@ const initializeBoard = () => {
 initializeBoard();
 
 const switchButton = document.getElementsByClassName('switch')[0];
-let isFlagModeOn = false;
 switchButton.addEventListener('click', () => {
   isFlagModeOn = switchButton.classList.toggle('switch--on');
 });
