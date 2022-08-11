@@ -1,3 +1,6 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-undef */
+
 const HEIGHT_EASY = 9;
 const HEIGHT_NORMAL = 16;
 const HEIGHT_HARD = 16;
@@ -15,13 +18,13 @@ let mines = MINES_EASY;
 let hasGameStarted = false;
 let hasOpenedMinedCell = false;
 let hasOpenedAllSafeCells = false;
-let safeCellCount = height*width-mines;
+let safeCellCount = height * width - mines;
 let remainingMines = mines;
 
 const remains = document.getElementsByClassName('remains')[0];
 const setMineCounter = () => {
   if (remainingMines <= -100) {
-    remains.textContent = `-99`;
+    remains.textContent = '-99';
   } else if (remainingMines <= -10) {
     remains.textContent = remainingMines;
   } else if (remainingMines <= -1) {
@@ -33,14 +36,21 @@ const setMineCounter = () => {
   } else if (remainingMines <= 999) {
     remains.textContent = remainingMines;
   } else {
-    remains.textContent = `999`;
+    remains.textContent = '999';
   }
-}
+};
 setMineCounter();
 
+const strToInt = (str) => parseInt(str, 10);
 
 const timer = document.getElementsByClassName('timer')[0];
+
 let intervalId;
+const stopTimer = () => {
+  clearInterval(intervalId);
+  intervalId = null;
+};
+
 const advanceTimer = () => {
   let now = strToInt(timer.textContent);
   now++;
@@ -53,11 +63,7 @@ const advanceTimer = () => {
   } else {
     stopTimer();
   }
-}
-const stopTimer = () => {
-  clearInterval(intervalId);
-  intervalId = null;
-}
+};
 
 class Cell {
   constructor() {
@@ -66,7 +72,22 @@ class Cell {
     this.isFlagged = false;
   }
 }
+// height 行 width 列で成分が Cell の二次元配列を作成
 let cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
+
+const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
+const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
+const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
+
+const resetButton = document.getElementsByClassName('reset-button')[0];
+const changeFaceOfResetButton = (face) => {
+  resetButton.textContent = face;
+  twemoji.parse(resetButton, {
+    folder: 'svg',
+    ext: '.svg',
+  });
+};
+changeFaceOfResetButton(FACE_NORMAL);
 
 const initializeGame = () => {
   cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
@@ -74,7 +95,7 @@ const initializeGame = () => {
   hasGameStarted = false;
   hasOpenedMinedCell = false;
   hasOpenedAllSafeCells = false;
-  safeCellCount = height*width-mines;
+  safeCellCount = height * width - mines;
   remainingMines = mines;
   setMineCounter();
   changeFaceOfResetButton(FACE_NORMAL);
@@ -82,22 +103,10 @@ const initializeGame = () => {
   stopTimer();
 
   initializeBoard();
-}
+};
 
-const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
-const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
-const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
-
-const resetButton = document.getElementsByClassName('reset-button')[0];
 resetButton.addEventListener('click', initializeGame);
-const changeFaceOfResetButton = (face) => {
-  resetButton.textContent = face;
-  twemoji.parse(resetButton, {
-    folder: 'svg',
-    ext: '.svg'
-  });
-}
-changeFaceOfResetButton(FACE_NORMAL);
+
 
 const board = document.getElementsByClassName('board')[0];
 const documentFragment = document.createDocumentFragment();
@@ -109,12 +118,10 @@ const WRONGLY_FLAGGED_CELL = 'cell cell--unopened cell--flagged cell--flagged-wr
 const MINED_CELL = 'cell cell--unopened cell--mined';
 const EXPLODED_CELL = 'cell cell--exploded';
 
-const strToInt = (str) => parseInt(str, 10);
-
 // 0 以上 val 未満の整数乱数を返す
-const random = (val) =>  Math.floor(Math.random()*val);
+const random = (val) => Math.floor(Math.random() * val);
 
-const initializeMines = e => {
+const initializeMines = (e) => {
   const cell = e.target;
   const rowTouchedFirst = strToInt(cell.dataset.row);
   const columnTouchedFirst = strToInt(cell.dataset.col);
@@ -158,7 +165,7 @@ const initializeMines = e => {
       */
     }
   }
-}
+};
 
 const openSafeCell = (i, j) => {
   const cell = document.getElementById(`cell-${i}-${j}`);
@@ -166,14 +173,14 @@ const openSafeCell = (i, j) => {
   cell.className = OPENED_CELL;
 
   safeCellCount--;
-}
+};
 
 // row 行 col 列のマスの周囲8個のマスの行・列を返す
 const getNeighborCellsIndex = (row, col) => {
-  return [[row-1, col-1], [row-1, col], [row-1, col+1],
-          [row, col-1],                 [row, col+1],
-          [row+1, col-1], [row+1, col], [row+1, col+1]];
-}
+  return [[row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
+          [row, col - 1],                     [row, col + 1],
+          [row + 1, col - 1], [row + 1, col], [row + 1, col + 1]];
+};
 
 // row 行 col 列の cell が board に含まれているかを判定
 const checkIfCellIsInsideBoard = (row, col) => 0 <= row && row < height && 0 <= col && col < width;
@@ -200,9 +207,9 @@ const searchMines = (i, j) => {
       }
     }
   }
-}
+};
 
-const openCell = e => {
+const openCell = (e) => {
   const cell = e.target;
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
@@ -217,9 +224,9 @@ const openCell = e => {
       searchMines(i, j);
     }
   }
-}
+};
 
-const toggleFlag = e => {
+const toggleFlag = (e) => {
   e.preventDefault();
 
   if (!intervalId) {
@@ -244,9 +251,9 @@ const toggleFlag = e => {
       setMineCounter();
     }
   }
-}
+};
 
-const exeChording = e => {
+const exeChording = (e) => {
   const cell = e.target;
   const i = strToInt(cell.dataset.row);
   const j = strToInt(cell.dataset.col);
@@ -299,9 +306,9 @@ const exeChording = e => {
       }
     }
   }
-}
+};
 
-const touchCell = e => {
+const touchCell = (e) => {
   if (!hasGameStarted && !isFlagModeOn) {
     initializeMines(e);
     openCell(e);
@@ -360,14 +367,14 @@ const touchCell = e => {
           for (let j = 0; j < width; j++) {
             if (cells[i][j].isMineHiddenIn && !cells[i][j].isFlagged) {
               const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = FLAGGED_CELL
+              cell.className = FLAGGED_CELL;
             }
           }
         }
       }
     }
   }
-}
+};
 
 const initializeBoard = () => {
   while (board.firstChild) {
@@ -376,27 +383,27 @@ const initializeBoard = () => {
 
   for (let i = 0; i < height; i++) {
     const row = document.createElement('div');
-    row.className ='row';
+    row.className = 'row';
     for (let j = 0; j < width; j++) {
       const cell = document.createElement('div');
-  
+
       const cellID = `cell-${i}-${j}`;
       cell.id = cellID;
-  
+
       cell.className = UNOPENED_CELL;
-  
+
       cell.dataset.row = i;
       cell.dataset.col = j;
-  
+
       cell.addEventListener('click', touchCell);
       cell.addEventListener('contextmenu', toggleFlag);
-  
+
       row.appendChild(cell);
     }
     documentFragment.appendChild(row);
   }
   board.appendChild(documentFragment);
-}
+};
 
 initializeBoard();
 
@@ -407,7 +414,7 @@ switchButton.addEventListener('click', () => {
 });
 
 const selector = document.getElementsByTagName('select')[0];
-selector.addEventListener('change', e => {
+selector.addEventListener('change', (e) => {
   const level = e.target.value;
   if (level === 'easy') {
     height = HEIGHT_EASY;
