@@ -41,8 +41,16 @@ const setMineCounter = () => {
 };
 setMineCounter();
 
+const strToInt = (str) => parseInt(str, 10);
+
 const timer = document.getElementsByClassName('timer')[0];
+
 let intervalId;
+const stopTimer = () => {
+  clearInterval(intervalId);
+  intervalId = null;
+};
+
 const advanceTimer = () => {
   let now = strToInt(timer.textContent);
   now++;
@@ -56,10 +64,6 @@ const advanceTimer = () => {
     stopTimer();
   }
 };
-const stopTimer = () => {
-  clearInterval(intervalId);
-  intervalId = null;
-};
 
 class Cell {
   constructor() {
@@ -68,7 +72,22 @@ class Cell {
     this.isFlagged = false;
   }
 }
+// height 行 width 列で成分が Cell の二次元配列を作成
 let cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
+
+const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
+const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
+const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
+
+const resetButton = document.getElementsByClassName('reset-button')[0];
+const changeFaceOfResetButton = (face) => {
+  resetButton.textContent = face;
+  twemoji.parse(resetButton, {
+    folder: 'svg',
+    ext: '.svg',
+  });
+};
+changeFaceOfResetButton(FACE_NORMAL);
 
 const initializeGame = () => {
   cells = JSON.parse(JSON.stringify((new Array(height)).fill((new Array(width)).fill(new Cell()))));
@@ -86,20 +105,8 @@ const initializeGame = () => {
   initializeBoard();
 };
 
-const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
-const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
-const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
-
-const resetButton = document.getElementsByClassName('reset-button')[0];
 resetButton.addEventListener('click', initializeGame);
-const changeFaceOfResetButton = (face) => {
-  resetButton.textContent = face;
-  twemoji.parse(resetButton, {
-    folder: 'svg',
-    ext: '.svg',
-  });
-};
-changeFaceOfResetButton(FACE_NORMAL);
+
 
 const board = document.getElementsByClassName('board')[0];
 const documentFragment = document.createDocumentFragment();
@@ -110,8 +117,6 @@ const FLAGGED_CELL = 'cell cell--unopened cell--flagged';
 const WRONGLY_FLAGGED_CELL = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
 const MINED_CELL = 'cell cell--unopened cell--mined';
 const EXPLODED_CELL = 'cell cell--exploded';
-
-const strToInt = (str) => parseInt(str, 10);
 
 // 0 以上 val 未満の整数乱数を返す
 const random = (val) => Math.floor(Math.random() * val);
