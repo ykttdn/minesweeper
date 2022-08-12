@@ -1,7 +1,6 @@
 /* eslint-disable lines-between-class-members */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-plusplus */
-/* eslint-disable no-undef */
 
 const HEIGHT_EASY = 9;
 const HEIGHT_NORMAL = 16;
@@ -114,6 +113,7 @@ const initializeGame = () => {
   timer.textContent = '000';
   stopTimer();
 
+  // eslint-disable-next-line no-use-before-define
   initializeBoard();
 };
 
@@ -143,6 +143,7 @@ const initializeMines = (e: Event) => {
   if (!hasGameStarted) {
     hasGameStarted = true;
     for (let k = 0; k < mines; k++) {
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         const rowPickedRandomly = random(height);
         const columnPickedRandomly = random(width);
@@ -194,15 +195,21 @@ const openSafeCell = (i: number, j: number) => {
 };
 
 // row 行 col 列のマスの周囲8個のマスの行・列を返す
+// eslint-disable-next-line arrow-body-style
 const getNeighborCellsIndex = (row: number, col: number) => {
   return [[row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
+    // eslint-disable-next-line indent, no-multi-spaces
           [row, col - 1],                     [row, col + 1],
+    // eslint-disable-next-line indent
           [row + 1, col - 1], [row + 1, col], [row + 1, col + 1]];
 };
 
 // row 行 col 列の cell が board に含まれているかを判定
-// eslint-disable-next-line yoda
-const checkIfCellIsInsideBoard = (row: number, col: number) => 0 <= row && row < height && 0 <= col && col < width;
+// eslint-disable-next-line arrow-body-style
+const checkIfCellIsInsideBoard = (row: number, col: number) => {
+  // eslint-disable-next-line yoda
+  return 0 <= row && row < height && 0 <= col && col < width;
+};
 
 const searchMines = (i: number, j: number) => {
   let cnt = 0;
