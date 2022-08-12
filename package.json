@@ -1,0 +1,27 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "You can play [here](https://ykttdn.github.io/minesweeper/).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ykttdn/minesweeper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ykttdn/minesweeper/issues"
+  },
+  "homepage": "https://github.com/ykttdn/minesweeper#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
+    "eslint": "^8.21.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "typescript": "^4.7.4"
+  }
+}
