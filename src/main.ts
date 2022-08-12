@@ -128,12 +128,12 @@ const EXPLODED_CELL = 'cell cell--exploded';
 const random = (val: number) => Math.floor(Math.random() * val);
 
 const initializeMines = (e: Event) => {
-  const cell = e.target;
-  if (!(cell instanceof HTMLElement)) {
+  const cellTouchedFirst = e.target;
+  if (!(cellTouchedFirst instanceof HTMLElement)) {
     return;
   }
-  const rowTouchedFirst = strToInt(<string>cell.dataset.row);
-  const columnTouchedFirst = strToInt(<string>cell.dataset.col);
+  const rowTouchedFirst = strToInt(<string>cellTouchedFirst.dataset.row);
+  const columnTouchedFirst = strToInt(<string>cellTouchedFirst.dataset.col);
 
   if (!hasGameStarted) {
     hasGameStarted = true;
@@ -179,9 +179,9 @@ const initializeMines = (e: Event) => {
 };
 
 const openSafeCell = (i: number, j: number) => {
-  const cell = <Element>document.getElementById(`cell-${i}-${j}`);
+  const safeCell = <Element>document.getElementById(`cell-${i}-${j}`);
   cells[i][j].isOpened = true;
-  cell.className = OPENED_CELL;
+  safeCell.className = OPENED_CELL;
 
   safeCellCount--;
 };
@@ -363,19 +363,19 @@ const touchCell = (e :Event) => {
       intervalId = setInterval(advanceTimer, 1000);
     }
   } else {
-    const cell = e.target;
-    if (!(cell instanceof HTMLElement)) {
+    const touchedCell = e.target;
+    if (!(touchedCell instanceof HTMLElement)) {
       return;
     }
-    const i = strToInt(<string>cell.dataset.row);
-    const j = strToInt(<string>cell.dataset.col);
+    const touchedRow = strToInt(<string>touchedCell.dataset.row);
+    const touchedColumn = strToInt(<string>touchedCell.dataset.col);
 
-    if (isFlagModeOn && !cells[i][j].isOpened) {
+    if (isFlagModeOn && !cells[touchedRow][touchedColumn].isOpened) {
       toggleFlag(e);
       if (!intervalId) {
         intervalId = setInterval(advanceTimer, 1000);
       }
-    } else if (!cells[i][j].isOpened) {
+    } else if (!cells[touchedRow][touchedColumn].isOpened) {
       openCell(e);
     } else {
       exeChording(e);
@@ -389,9 +389,9 @@ const touchCell = (e :Event) => {
       stopTimer();
       for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
-          const cell = document.getElementById(`cell-${i}-${j}`);
-          cell.removeEventListener('click', touchCell);
-          cell.removeEventListener('contextmenu', toggleFlag);
+          const eachCell = <Element>document.getElementById(`cell-${i}-${j}`);
+          eachCell.removeEventListener('click', touchCell);
+          eachCell.removeEventListener('contextmenu', toggleFlag);
         }
       }
 
@@ -400,11 +400,11 @@ const touchCell = (e :Event) => {
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (!cells[i][j].isOpened && cells[i][j].isMineHiddenIn && !cells[i][j].isFlagged) {
-              const cell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
-              cell.className = MINED_CELL;
+              const minedCell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
+              minedCell.className = MINED_CELL;
             } else if (!cells[i][j].isOpened && !cells[i][j].isMineHiddenIn && cells[i][j].isFlagged) {
-              const cell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
-              cell.className = WRONGLY_FLAGGED_CELL;
+              const wronglyFlaggedCell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
+              wronglyFlaggedCell.className = WRONGLY_FLAGGED_CELL;
             }
           }
         }
@@ -415,8 +415,8 @@ const touchCell = (e :Event) => {
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (cells[i][j].isMineHiddenIn && !cells[i][j].isFlagged) {
-              const cell = document.getElementById(`cell-${i}-${j}`);
-              cell.className = FLAGGED_CELL;
+              const minedUnflaggedCell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
+              minedUnflaggedCell.className = FLAGGED_CELL;
             }
           }
         }
