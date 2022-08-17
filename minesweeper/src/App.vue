@@ -2,6 +2,7 @@
 import MainHeader from "./components/MainHeader.vue";
 import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
+import BottomSection from "./components/BottomSection.vue";
 </script>
 
 <template>
@@ -9,5 +10,6 @@ import PlaySection from "./components/PlaySection.vue";
   <main class="wrapper">
     <LevelSelector></LevelSelector>
     <PlaySection></PlaySection>
+    <BottomSection></BottomSection>
   </main>
 </template>
