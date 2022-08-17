@@ -5,5 +5,7 @@ import PlaySection from "./components/PlaySection.vue";
 
 <template>
   <MainHeader></MainHeader>
-  <PlaySection></PlaySection>
+  <main class="wrapper">
+    <PlaySection></PlaySection>
+  </main>
 </template>
