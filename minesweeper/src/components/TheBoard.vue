@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { inject } from "vue";
 import BaseRow from "./BaseRow.vue";
 
-const ROW_SIZE_EASY = 9;
-const rowSize = ROW_SIZE_EASY;
+const rowSize = inject("rowSize");
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { provide, ref } from "vue";
 import MainHeader from "./components/MainHeader.vue";
 import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
@@ -8,6 +8,9 @@ import BottomSection from "./components/BottomSection.vue";
 const rowSize = ref(9);
 const columnSize = ref(9);
 const mineNumber = ref(10);
+
+provide("rowSize", rowSize);
+provide("columnSize", columnSize);
 
 const changeParameters = (selectedLevel: string) => {
   if (selectedLevel === "normal") {

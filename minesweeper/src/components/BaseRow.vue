@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { inject } from "vue";
 import BaseCell from "./BaseCell.vue";
 
-const COLUMN_SIZE_EASY = 9;
-const columnSize = COLUMN_SIZE_EASY;
+const columnSize = inject("columnSize");
 </script>
 
 <template>
