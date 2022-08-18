@@ -7,6 +7,10 @@ const rowSize = inject("rowSize");
 
 <template>
   <div class="board">
-    <BaseRow v-for="rowNumber in rowSize" :key="rowNumber"></BaseRow>
+    <BaseRow
+      v-for="rowNumber in rowSize"
+      :key="rowNumber"
+      :row-number="rowNumber"
+    ></BaseRow>
   </div>
 </template>
