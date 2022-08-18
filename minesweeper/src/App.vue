@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref } from "vue";
+import { nextTick, provide, ref } from "vue";
 import MainHeader from "./components/MainHeader.vue";
 import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
@@ -11,6 +11,13 @@ const mineNumber = ref(10);
 
 provide("rowSize", rowSize);
 provide("columnSize", columnSize);
+
+const hasResetTriggered = ref(true);
+const initializeBoard = async () => {
+  hasResetTriggered.value = false;
+  await nextTick();
+  hasResetTriggered.value = true;
+};
 
 const changeParameters = (selectedLevel: string) => {
   if (selectedLevel === "normal") {
@@ -26,6 +33,7 @@ const changeParameters = (selectedLevel: string) => {
     columnSize.value = 9;
     mineNumber.value = 10;
   }
+  initializeBoard();
 };
 </script>
 
@@ -36,7 +44,12 @@ const changeParameters = (selectedLevel: string) => {
     <span>{{ " " + rowSize }}</span>
     <span>{{ " " + columnSize }}</span>
     <span>{{ " " + mineNumber }}</span>
-    <PlaySection></PlaySection>
+    <PlaySection
+      :row-size="rowSize"
+      :column-size="columnSize"
+      :hasResetTriggered="hasResetTriggered"
+      @initialize-board="initializeBoard"
+    ></PlaySection>
     <BottomSection></BottomSection>
   </main>
 </template>
