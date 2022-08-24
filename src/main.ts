@@ -90,7 +90,7 @@ const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
 const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
 const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
 
-const resetButton = <HTMLElement>document.getElementsByClassName('reset-button')[0];
+const resetButton = <HTMLButtonElement>document.getElementsByClassName('reset-button')[0];
 const changeFaceOfResetButton = (face: string) => {
   resetButton.textContent = face;
   twemoji.parse(resetButton, {
@@ -101,6 +101,10 @@ const changeFaceOfResetButton = (face: string) => {
 changeFaceOfResetButton(FACE_NORMAL);
 
 const initializeGame = () => {
+  if (!hasGameStarted) {
+    return;
+  }
+
   cells = initializeCells(height, width);
 
   hasGameStarted = false;
