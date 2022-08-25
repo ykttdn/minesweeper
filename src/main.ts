@@ -86,17 +86,13 @@ const initializeCells = (rowSize: number, columnSize: number) => {
 };
 let cells = initializeCells(height, width);
 
-const FACE_NORMAL = twemoji.convert.fromCodePoint('1F642');
-const FACE_SUCCESS = twemoji.convert.fromCodePoint('1F60E');
-const FACE_FAILURE = twemoji.convert.fromCodePoint('1F635');
+const FACE_NORMAL = 'reset-button face-normal';
+const FACE_SUCCESS = 'reset-button face-success';
+const FACE_FAILURE = 'reset-button face-failure';
 
 const resetButton = <HTMLButtonElement>document.getElementsByClassName('reset-button')[0];
 const changeFaceOfResetButton = (face: string) => {
-  resetButton.textContent = face;
-  twemoji.parse(resetButton, {
-    folder: 'svg',
-    ext: '.svg',
-  });
+  resetButton.className = face;
 };
 changeFaceOfResetButton(FACE_NORMAL);
 
