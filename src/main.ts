@@ -23,10 +23,10 @@ let safeCellCount = height * width - mines;
 let remainingMines = mines;
 let isFlagModeOn = false;
 
-const remains = <HTMLElement>document.getElementsByClassName('remains')[0];
+const remains = <HTMLElement>document.getElementsByClassName("remains")[0];
 const setMineCounter = () => {
   if (remainingMines <= -100) {
-    remains.textContent = '-99';
+    remains.textContent = "-99";
   } else if (remainingMines <= -10) {
     remains.textContent = `${remainingMines}`;
   } else if (remainingMines <= -1) {
@@ -38,14 +38,14 @@ const setMineCounter = () => {
   } else if (remainingMines <= 999) {
     remains.textContent = `${remainingMines}`;
   } else {
-    remains.textContent = '999';
+    remains.textContent = "999";
   }
 };
 setMineCounter();
 
 const strToInt = (str: string) => parseInt(str, 10);
 
-const timer = <HTMLElement>document.getElementsByClassName('timer')[0];
+const timer = <HTMLElement>document.getElementsByClassName("timer")[0];
 
 let intervalId: number;
 const stopTimer = () => {
@@ -81,16 +81,23 @@ class Cell {
 // height 行 width 列で成分が Cell の二次元配列を作成
 // eslint-disable-next-line arrow-body-style
 const initializeCells = (rowSize: number, columnSize: number) => {
-  // eslint-disable-next-line max-len
-  return <Cell[][]>JSON.parse(JSON.stringify((new Array(rowSize)).fill((new Array(columnSize)).fill(new Cell()))));
+  return <Cell[][]>(
+    JSON.parse(
+      JSON.stringify(
+        new Array(rowSize).fill(new Array(columnSize).fill(new Cell()))
+      )
+    )
+  );
 };
 let cells = initializeCells(height, width);
 
-const FACE_NORMAL = 'reset-button face-normal';
-const FACE_SUCCESS = 'reset-button face-success';
-const FACE_FAILURE = 'reset-button face-failure';
+const FACE_NORMAL = "reset-button face-normal";
+const FACE_SUCCESS = "reset-button face-success";
+const FACE_FAILURE = "reset-button face-failure";
 
-const resetButton = <HTMLButtonElement>document.getElementsByClassName('reset-button')[0];
+const resetButton = <HTMLButtonElement>(
+  document.getElementsByClassName("reset-button")[0]
+);
 const changeFaceOfResetButton = (face: string) => {
   resetButton.className = face;
 };
@@ -110,24 +117,25 @@ const initializeGame = () => {
   remainingMines = mines;
   setMineCounter();
   changeFaceOfResetButton(FACE_NORMAL);
-  timer.textContent = '000';
+  timer.textContent = "000";
   stopTimer();
 
   // eslint-disable-next-line no-use-before-define
   initializeBoard();
 };
 
-resetButton.addEventListener('click', initializeGame);
+resetButton.addEventListener("click", initializeGame);
 
-const board = <HTMLElement>document.getElementsByClassName('board')[0];
+const board = <HTMLElement>document.getElementsByClassName("board")[0];
 const documentFragment = document.createDocumentFragment();
 
-const UNOPENED_CELL = 'cell cell--unopened';
-const OPENED_CELL = 'cell cell--opened';
-const FLAGGED_CELL = 'cell cell--unopened cell--flagged';
-const WRONGLY_FLAGGED_CELL = 'cell cell--unopened cell--flagged cell--flagged-wrongly';
-const MINED_CELL = 'cell cell--unopened cell--mined';
-const EXPLODED_CELL = 'cell cell--exploded';
+const UNOPENED_CELL = "cell cell--unopened";
+const OPENED_CELL = "cell cell--opened";
+const FLAGGED_CELL = "cell cell--unopened cell--flagged";
+const WRONGLY_FLAGGED_CELL =
+  "cell cell--unopened cell--flagged cell--flagged-wrongly";
+const MINED_CELL = "cell cell--unopened cell--mined";
+const EXPLODED_CELL = "cell cell--exploded";
 
 // 0 以上 val 未満の整数乱数を返す
 const random = (val: number) => Math.floor(Math.random() * val);
@@ -148,11 +156,16 @@ const initializeMines = (e: Event) => {
         const rowPickedRandomly = random(height);
         const columnPickedRandomly = random(width);
         if (
-          !(<Cell>(<Cell[]>cells[rowPickedRandomly])[columnPickedRandomly]).isMineHiddenIn
-          && !(rowTouchedFirst === rowPickedRandomly
-          && columnTouchedFirst === columnPickedRandomly)
+          !(<Cell>(<Cell[]>cells[rowPickedRandomly])[columnPickedRandomly])
+            .isMineHiddenIn &&
+          !(
+            rowTouchedFirst === rowPickedRandomly &&
+            columnTouchedFirst === columnPickedRandomly
+          )
         ) {
-          (<Cell>(<Cell[]>cells[rowPickedRandomly])[columnPickedRandomly]).isMineHiddenIn = true;
+          (<Cell>(
+            (<Cell[]>cells[rowPickedRandomly])[columnPickedRandomly]
+          )).isMineHiddenIn = true;
           break;
         }
       }
@@ -197,11 +210,16 @@ const openSafeCell = (i: number, j: number) => {
 // row 行 col 列のマスの周囲8個のマスの行・列を返す
 // eslint-disable-next-line arrow-body-style
 const getNeighborCellsIndex = (row: number, col: number) => {
-  return [[row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
-    // eslint-disable-next-line indent, no-multi-spaces
-          [row, col - 1],                     [row, col + 1],
-    // eslint-disable-next-line indent
-          [row + 1, col - 1], [row + 1, col], [row + 1, col + 1]];
+  return [
+    [row - 1, col - 1],
+    [row - 1, col],
+    [row - 1, col + 1],
+    [row, col - 1],
+    [row, col + 1],
+    [row + 1, col - 1],
+    [row + 1, col],
+    [row + 1, col + 1],
+  ];
 };
 
 // row 行 col 列の cell が board に含まれているかを判定
@@ -220,8 +238,8 @@ const searchMines = (i: number, j: number) => {
       return;
     }
     if (
-      checkIfCellIsInsideBoard(row, col)
-      && (<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
+      checkIfCellIsInsideBoard(row, col) &&
+      (<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
     ) {
       cnt++;
     }
@@ -237,8 +255,8 @@ const searchMines = (i: number, j: number) => {
         return;
       }
       if (
-        checkIfCellIsInsideBoard(row, col)
-        && !(<Cell>(<Cell[]>cells[row])[col]).isOpened
+        checkIfCellIsInsideBoard(row, col) &&
+        !(<Cell>(<Cell[]>cells[row])[col]).isOpened
       ) {
         openSafeCell(row, col);
         searchMines(row, col);
@@ -255,7 +273,10 @@ const openCell = (e: Event) => {
   const i = strToInt(<string>cell.dataset.row);
   const j = strToInt(<string>cell.dataset.col);
 
-  if (!(<Cell>(<Cell[]>cells[i])[j]).isOpened && !(<Cell>(<Cell[]>cells[i])[j]).isFlagged) {
+  if (
+    !(<Cell>(<Cell[]>cells[i])[j]).isOpened &&
+    !(<Cell>(<Cell[]>cells[i])[j]).isFlagged
+  ) {
     if ((<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn) {
       (<Cell>(<Cell[]>cells[i])[j]).isOpened = true;
       hasOpenedMinedCell = true;
@@ -316,8 +337,8 @@ const exeChording = (e: Event) => {
         return;
       }
       if (
-        checkIfCellIsInsideBoard(row, col)
-        && (<Cell>(<Cell[]>cells[row])[col]).isFlagged
+        checkIfCellIsInsideBoard(row, col) &&
+        (<Cell>(<Cell[]>cells[row])[col]).isFlagged
       ) {
         flagCount++;
       }
@@ -330,9 +351,9 @@ const exeChording = (e: Event) => {
           return;
         }
         if (
-          checkIfCellIsInsideBoard(row, col)
-          && (<Cell>(<Cell[]>cells[row])[col]).isFlagged
-          && !(<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
+          checkIfCellIsInsideBoard(row, col) &&
+          (<Cell>(<Cell[]>cells[row])[col]).isFlagged &&
+          !(<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
         ) {
           canExeChording = false;
         }
@@ -344,9 +365,9 @@ const exeChording = (e: Event) => {
             return;
           }
           if (
-            checkIfCellIsInsideBoard(row, col)
-            && !(<Cell>(<Cell[]>cells[row])[col]).isOpened
-            && !(<Cell>(<Cell[]>cells[row])[col]).isFlagged
+            checkIfCellIsInsideBoard(row, col) &&
+            !(<Cell>(<Cell[]>cells[row])[col]).isOpened &&
+            !(<Cell>(<Cell[]>cells[row])[col]).isFlagged
           ) {
             openSafeCell(row, col);
             searchMines(row, col);
@@ -359,16 +380,19 @@ const exeChording = (e: Event) => {
             return;
           }
           const c = <HTMLElement>document.getElementById(`cell-${row}-${col}`);
-          if (checkIfCellIsInsideBoard(row, col) && !(<Cell>(<Cell[]>cells[row])[col]).isOpened) {
+          if (
+            checkIfCellIsInsideBoard(row, col) &&
+            !(<Cell>(<Cell[]>cells[row])[col]).isOpened
+          ) {
             if (
-              (<Cell>(<Cell[]>cells[row])[col]).isFlagged
-              && !(<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
+              (<Cell>(<Cell[]>cells[row])[col]).isFlagged &&
+              !(<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
             ) {
               // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
               c.className = WRONGLY_FLAGGED_CELL;
             } else if (
-              !(<Cell>(<Cell[]>cells[row])[col]).isFlagged
-              && (<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
+              !(<Cell>(<Cell[]>cells[row])[col]).isFlagged &&
+              (<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
             ) {
               // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
               c.className = EXPLODED_CELL;
@@ -384,7 +408,7 @@ const exeChording = (e: Event) => {
   }
 };
 
-const touchCell = (e :Event) => {
+const touchCell = (e: Event) => {
   if (!hasGameStarted && !isFlagModeOn) {
     initializeMines(e);
     openCell(e);
@@ -400,7 +424,10 @@ const touchCell = (e :Event) => {
     const touchedRow = strToInt(<string>touchedCell.dataset.row);
     const touchedColumn = strToInt(<string>touchedCell.dataset.col);
 
-    if (isFlagModeOn && !(<Cell>(<Cell[]>cells[touchedRow])[touchedColumn]).isOpened) {
+    if (
+      isFlagModeOn &&
+      !(<Cell>(<Cell[]>cells[touchedRow])[touchedColumn]).isOpened
+    ) {
       toggleFlag(e);
       if (!intervalId) {
         intervalId = setInterval(advanceTimer, 1000);
@@ -419,9 +446,11 @@ const touchCell = (e :Event) => {
       stopTimer();
       for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
-          const eachCell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
-          eachCell.removeEventListener('click', touchCell);
-          eachCell.removeEventListener('contextmenu', toggleFlag);
+          const eachCell = <HTMLElement>(
+            document.getElementById(`cell-${i}-${j}`)
+          );
+          eachCell.removeEventListener("click", touchCell);
+          eachCell.removeEventListener("contextmenu", toggleFlag);
         }
       }
 
@@ -430,18 +459,22 @@ const touchCell = (e :Event) => {
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (
-              !(<Cell>(<Cell[]>cells[i])[j]).isOpened
-              && (<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn
-              && !(<Cell>(<Cell[]>cells[i])[j]).isFlagged
+              !(<Cell>(<Cell[]>cells[i])[j]).isOpened &&
+              (<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn &&
+              !(<Cell>(<Cell[]>cells[i])[j]).isFlagged
             ) {
-              const minedCell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
+              const minedCell = <HTMLElement>(
+                document.getElementById(`cell-${i}-${j}`)
+              );
               minedCell.className = MINED_CELL;
             } else if (
-              !(<Cell>(<Cell[]>cells[i])[j]).isOpened
-              && !(<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn
-              && (<Cell>(<Cell[]>cells[i])[j]).isFlagged
+              !(<Cell>(<Cell[]>cells[i])[j]).isOpened &&
+              !(<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn &&
+              (<Cell>(<Cell[]>cells[i])[j]).isFlagged
             ) {
-              const wronglyFlaggedCell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
+              const wronglyFlaggedCell = <HTMLElement>(
+                document.getElementById(`cell-${i}-${j}`)
+              );
               wronglyFlaggedCell.className = WRONGLY_FLAGGED_CELL;
             }
           }
@@ -453,10 +486,12 @@ const touchCell = (e :Event) => {
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (
-              (<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn
-              && !(<Cell>(<Cell[]>cells[i])[j]).isFlagged
+              (<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn &&
+              !(<Cell>(<Cell[]>cells[i])[j]).isFlagged
             ) {
-              const minedUnflaggedCell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
+              const minedUnflaggedCell = <HTMLElement>(
+                document.getElementById(`cell-${i}-${j}`)
+              );
               minedUnflaggedCell.className = FLAGGED_CELL;
             }
           }
@@ -472,10 +507,10 @@ const initializeBoard = () => {
   }
 
   for (let i = 0; i < height; i++) {
-    const row = document.createElement('div');
-    row.className = 'row';
+    const row = document.createElement("div");
+    row.className = "row";
     for (let j = 0; j < width; j++) {
-      const cell = document.createElement('div');
+      const cell = document.createElement("div");
 
       const cellID = `cell-${i}-${j}`;
       cell.id = cellID;
@@ -485,8 +520,8 @@ const initializeBoard = () => {
       cell.dataset.row = `${i}`;
       cell.dataset.col = `${j}`;
 
-      cell.addEventListener('click', touchCell);
-      cell.addEventListener('contextmenu', toggleFlag);
+      cell.addEventListener("click", touchCell);
+      cell.addEventListener("contextmenu", toggleFlag);
 
       row.appendChild(cell);
     }
@@ -497,23 +532,23 @@ const initializeBoard = () => {
 
 initializeBoard();
 
-const switchButton = <HTMLElement>document.getElementsByClassName('switch')[0];
-switchButton.addEventListener('click', () => {
-  isFlagModeOn = switchButton.classList.toggle('switch--on');
+const switchButton = <HTMLElement>document.getElementsByClassName("switch")[0];
+switchButton.addEventListener("click", () => {
+  isFlagModeOn = switchButton.classList.toggle("switch--on");
 });
 
-const selector = <HTMLSelectElement>document.getElementsByTagName('select')[0];
-selector.addEventListener('change', (e) => {
+const selector = <HTMLSelectElement>document.getElementsByTagName("select")[0];
+selector.addEventListener("change", (e) => {
   const { target } = e;
   if (!(target instanceof HTMLSelectElement)) {
     return;
   }
   const level = target.value;
-  if (level === 'easy') {
+  if (level === "easy") {
     height = HEIGHT_EASY;
     width = WIDTH_EASY;
     mines = MINES_EASY;
-  } else if (level === 'normal') {
+  } else if (level === "normal") {
     height = HEIGHT_NORMAL;
     width = WIDTH_NORMAL;
     mines = MINES_NORMAL;
