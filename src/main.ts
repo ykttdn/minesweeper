@@ -125,6 +125,9 @@ const initializeMines = (e: Event) => {
             columnTouchedFirst === columnPickedRandomly
           )
         ) {
+          // ランダムに選んだマスに爆弾が隠されていなくて，そのマスがクリックしたマスでないとき
+          // そのマスに爆弾を配置する
+
           (<Cell>(
             (<Cell[]>cells[rowPickedRandomly])[columnPickedRandomly]
           )).isMineHiddenIn = true;
@@ -192,7 +195,7 @@ const checkIfCellIsInsideBoard = (row: number, col: number) => {
 };
 
 const searchMines = (i: number, j: number) => {
-  let cnt = 0;
+  let numberOfNeighboringCells = 0;
   const neighborCells = getNeighborCellsIndex(i, j);
 
   for (const [row, col] of neighborCells) {
@@ -203,15 +206,18 @@ const searchMines = (i: number, j: number) => {
       checkIfCellIsInsideBoard(row, col) &&
       (<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
     ) {
-      cnt++;
+      numberOfNeighboringCells++;
     }
   }
 
-  if (cnt > 0) {
+  if (numberOfNeighboringCells > 0) {
     const cell = <HTMLElement>document.getElementById(`cell-${i}-${j}`);
-    cell.textContent = `${cnt}`;
-    cell.classList.add(`cnt-${cnt}`);
+    cell.textContent = `${numberOfNeighboringCells}`;
+    cell.classList.add(`cnt-${numberOfNeighboringCells}`);
   } else if (!hasOpenedMinedCell) {
+    // 周囲のマスに爆弾がないとき
+    // それらのマスのさらに周囲のマスに爆弾がないか調べる
+
     for (const [row, col] of neighborCells) {
       if (row === undefined || col === undefined) {
         return;
@@ -239,11 +245,18 @@ const openCell = (e: Event) => {
     !(<Cell>(<Cell[]>cells[i])[j]).isOpened &&
     !(<Cell>(<Cell[]>cells[i])[j]).isFlagged
   ) {
+    // 開いていなくて旗も立っていないマスを開くとき
     if ((<Cell>(<Cell[]>cells[i])[j]).isMineHiddenIn) {
+      // そのマスに爆弾が埋まっていたら
+      // そのマスを爆破してゲーム終了へ
+
       (<Cell>(<Cell[]>cells[i])[j]).isOpened = true;
       hasOpenedMinedCell = true;
       cell.className = EXPLODED_CELL;
     } else {
+      // そのマスに爆弾が埋まっていなければ
+      // そのマスを開いて周囲の爆弾の数を表示
+
       openSafeCell(i, j);
       searchMines(i, j);
     }
@@ -264,13 +277,20 @@ const toggleFlag = (e: Event) => {
   const i = strToInt(<string>cell.dataset.row);
   const j = strToInt(<string>cell.dataset.col);
   if (!(<Cell>(<Cell[]>cells[i])[j]).isOpened) {
+    // マスが空いていないとき
     if (!(<Cell>(<Cell[]>cells[i])[j]).isFlagged) {
+      // そのマスに旗が立っていなければ
+      // 旗を立てる
+
       (<Cell>(<Cell[]>cells[i])[j]).isFlagged = true;
       cell.className = FLAGGED_CELL;
 
       remainingMines--;
       setMineCounter(remainingMines);
     } else {
+      // そのマスに旗が立っていれば
+      // 旗を取る
+
       (<Cell>(<Cell[]>cells[i])[j]).isFlagged = false;
       cell.className = UNOPENED_CELL;
 
@@ -289,6 +309,8 @@ const exeChording = (e: Event) => {
   const j = strToInt(<string>cell.dataset.col);
 
   if ((<Cell>(<Cell[]>cells[i])[j]).isOpened) {
+    // 空いているマスをクリックしたとき
+
     const mineCount = strToInt(<string>cell.textContent);
 
     let flagCount = 0;
@@ -307,6 +329,9 @@ const exeChording = (e: Event) => {
     }
 
     if (mineCount === flagCount) {
+      // そのマスに描かれている数と周囲の旗の数が一致しているとき
+      // 一旦コーディングできるとする
+
       let canExeChording = true;
       for (const [row, col] of neighborCells) {
         if (row === undefined || col === undefined) {
@@ -317,11 +342,16 @@ const exeChording = (e: Event) => {
           (<Cell>(<Cell[]>cells[row])[col]).isFlagged &&
           !(<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
         ) {
+          // 爆弾のないマスに旗が立っているとき
+          // コーディングできない
+
           canExeChording = false;
         }
       }
 
       if (canExeChording) {
+        // コーディングできるとき
+
         for (const [row, col] of neighborCells) {
           if (row === undefined || col === undefined) {
             return;
@@ -331,33 +361,42 @@ const exeChording = (e: Event) => {
             !(<Cell>(<Cell[]>cells[row])[col]).isOpened &&
             !(<Cell>(<Cell[]>cells[row])[col]).isFlagged
           ) {
+            // 周囲のマスのうち，開いていなくて，かつ，旗が立っていないマス
+            // すなわち安全に開けるマスに対し
+            // コーディングを実行
+
             openSafeCell(row, col);
             searchMines(row, col);
           }
         }
       } else {
+        // コーディングできない，すなわち，爆弾のないマスに旗が立っているとき
+
         hasOpenedMinedCell = true;
         for (const [row, col] of neighborCells) {
           if (row === undefined || col === undefined) {
             return;
           }
-          const c = <HTMLElement>document.getElementById(`cell-${row}-${col}`);
+          const neighboringCell = <HTMLElement>(
+            document.getElementById(`cell-${row}-${col}`)
+          );
           if (
             checkIfCellIsInsideBoard(row, col) &&
             !(<Cell>(<Cell[]>cells[row])[col]).isOpened
           ) {
+            // 周囲の開いていないマスに対し以下を実行
             if (
               (<Cell>(<Cell[]>cells[row])[col]).isFlagged &&
               !(<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
             ) {
               // cell-${row}-${col}に爆弾がないのにflagが立てられているとき
-              c.className = WRONGLY_FLAGGED_CELL;
+              neighboringCell.className = WRONGLY_FLAGGED_CELL;
             } else if (
               !(<Cell>(<Cell[]>cells[row])[col]).isFlagged &&
               (<Cell>(<Cell[]>cells[row])[col]).isMineHiddenIn
             ) {
               // cell-${row}-${col}に爆弾があるのにflagが立っていないとき
-              c.className = EXPLODED_CELL;
+              neighboringCell.className = EXPLODED_CELL;
             } else if (!(<Cell>(<Cell[]>cells[row])[col]).isFlagged) {
               // cell-${row}-${col}に爆弾がなくてflagも立っていないとき
               openSafeCell(row, col);
@@ -372,6 +411,9 @@ const exeChording = (e: Event) => {
 
 const touchCell = (e: Event) => {
   if (!hasGameStarted && !isFlagModeOn) {
+    // ゲームが始まっていない状態でマスを開こうとしたとき
+    // 爆弾の配置を初期化して，クリックされたマスを開く
+
     initializeMines(e);
     openCell(e);
 
@@ -379,6 +421,8 @@ const touchCell = (e: Event) => {
       intervalId = window.setInterval(advanceTimer, 1000);
     }
   } else {
+    // ゲームが始まっている，もしくは，マスの旗をつけ外しするとき
+
     const touchedCell = e.target;
     if (!(touchedCell instanceof HTMLElement)) {
       return;
@@ -390,13 +434,19 @@ const touchCell = (e: Event) => {
       isFlagModeOn &&
       !(<Cell>(<Cell[]>cells[touchedRow])[touchedColumn]).isOpened
     ) {
+      // 開いていないマスをクリックして旗をつけ外しするとき
+
       toggleFlag(e);
       if (!intervalId) {
         intervalId = window.setInterval(advanceTimer, 1000);
       }
     } else if (!(<Cell>(<Cell[]>cells[touchedRow])[touchedColumn]).isOpened) {
+      // フラグモードがオフで開いていないマスをクリックしたとき
+
       openCell(e);
     } else {
+      // 開かれているマスをクリックしたとき
+
       exeChording(e);
     }
 
@@ -405,6 +455,9 @@ const touchCell = (e: Event) => {
     }
 
     if (hasOpenedMinedCell || hasOpenedAllSafeCells) {
+      // 爆弾のマスを開いてしまったか，もしくは，安全なマスを全て開いたとき
+      // ゲームを終了させる
+
       stopTimer();
       for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
@@ -417,6 +470,9 @@ const touchCell = (e: Event) => {
       }
 
       if (hasOpenedMinedCell) {
+        // 爆弾のマスを開いてしまったとき
+        // 残りの爆弾を表示する
+
         changeFaceOfResetButton(FACE_FAILURE);
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
@@ -442,6 +498,8 @@ const touchCell = (e: Event) => {
           }
         }
       } else {
+        // 安全なマスを全て開いたとき
+
         changeFaceOfResetButton(FACE_SUCCESS);
         remainingMines = 0;
         setMineCounter(remainingMines);
