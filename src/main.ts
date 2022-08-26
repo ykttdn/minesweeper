@@ -1,6 +1,11 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 /* eslint-disable lines-between-class-members */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-plusplus */
+
+import Cell from "./modules/Cell";
+import initializeCells from "./modules/InitializeCells";
 
 const HEIGHT_EASY = 9;
 const HEIGHT_NORMAL = 16;
@@ -67,28 +72,6 @@ const advanceTimer = () => {
   }
 };
 
-class Cell {
-  isMineHiddenIn: boolean;
-  isOpened: boolean;
-  isFlagged: boolean;
-
-  constructor() {
-    this.isMineHiddenIn = false;
-    this.isOpened = false;
-    this.isFlagged = false;
-  }
-}
-// height 行 width 列で成分が Cell の二次元配列を作成
-// eslint-disable-next-line arrow-body-style
-const initializeCells = (rowSize: number, columnSize: number) => {
-  return <Cell[][]>(
-    JSON.parse(
-      JSON.stringify(
-        new Array(rowSize).fill(new Array(columnSize).fill(new Cell()))
-      )
-    )
-  );
-};
 let cells = initializeCells(height, width);
 
 const FACE_NORMAL = "reset-button face-normal";
