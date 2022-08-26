@@ -258,7 +258,7 @@ const toggleFlag = (e: Event) => {
   e.preventDefault();
 
   if (!intervalId) {
-    intervalId = setInterval(advanceTimer, 1000);
+    intervalId = window.setInterval(advanceTimer, 1000);
   }
 
   const cell = e.target;
@@ -380,7 +380,7 @@ const touchCell = (e: Event) => {
     openCell(e);
 
     if (!intervalId) {
-      intervalId = setInterval(advanceTimer, 1000);
+      intervalId = window.setInterval(advanceTimer, 1000);
     }
   } else {
     const touchedCell = e.target;
@@ -396,7 +396,7 @@ const touchCell = (e: Event) => {
     ) {
       toggleFlag(e);
       if (!intervalId) {
-        intervalId = setInterval(advanceTimer, 1000);
+        intervalId = window.setInterval(advanceTimer, 1000);
       }
     } else if (!(<Cell>(<Cell[]>cells[touchedRow])[touchedColumn]).isOpened) {
       openCell(e);
