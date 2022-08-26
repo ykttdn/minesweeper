@@ -70,10 +70,6 @@ const changeFaceOfResetButton = (face: string) => {
 changeFaceOfResetButton(FACE_NORMAL);
 
 const initializeGame = () => {
-  if (!hasGameStarted) {
-    return;
-  }
-
   cells = initializeCells(height, width);
 
   hasGameStarted = false;
