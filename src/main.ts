@@ -5,6 +5,15 @@
 /* eslint-disable no-plusplus */
 
 import Cell from "./modules/Cell";
+import {
+  UNOPENED_CELL,
+  OPENED_CELL,
+  FLAGGED_CELL,
+  WRONGLY_FLAGGED_CELL,
+  MINED_CELL,
+  EXPLODED_CELL,
+} from "./modules/CellState";
+import initializeBoard from "./modules/InitializeBoard";
 import initializeCells from "./modules/InitializeCells";
 
 const HEIGHT_EASY = 9;
@@ -102,23 +111,10 @@ const initializeGame = () => {
   changeFaceOfResetButton(FACE_NORMAL);
   timer.textContent = "000";
   stopTimer();
-
-  // eslint-disable-next-line no-use-before-define
-  initializeBoard();
+  initializeBoard(height, width);
 };
 
 resetButton.addEventListener("click", initializeGame);
-
-const board = <HTMLElement>document.getElementsByClassName("board")[0];
-const documentFragment = document.createDocumentFragment();
-
-const UNOPENED_CELL = "cell cell--unopened";
-const OPENED_CELL = "cell cell--opened";
-const FLAGGED_CELL = "cell cell--unopened cell--flagged";
-const WRONGLY_FLAGGED_CELL =
-  "cell cell--unopened cell--flagged cell--flagged-wrongly";
-const MINED_CELL = "cell cell--unopened cell--mined";
-const EXPLODED_CELL = "cell cell--exploded";
 
 // 0 以上 val 未満の整数乱数を返す
 const random = (val: number) => Math.floor(Math.random() * val);
@@ -484,36 +480,7 @@ const touchCell = (e: Event) => {
   }
 };
 
-const initializeBoard = () => {
-  while (board.firstChild) {
-    board.removeChild(board.firstChild);
-  }
-
-  for (let i = 0; i < height; i++) {
-    const row = document.createElement("div");
-    row.className = "row";
-    for (let j = 0; j < width; j++) {
-      const cell = document.createElement("div");
-
-      const cellID = `cell-${i}-${j}`;
-      cell.id = cellID;
-
-      cell.className = UNOPENED_CELL;
-
-      cell.dataset.row = `${i}`;
-      cell.dataset.col = `${j}`;
-
-      cell.addEventListener("click", touchCell);
-      cell.addEventListener("contextmenu", toggleFlag);
-
-      row.appendChild(cell);
-    }
-    documentFragment.appendChild(row);
-  }
-  board.appendChild(documentFragment);
-};
-
-initializeBoard();
+initializeBoard(height, width);
 
 const switchButton = <HTMLElement>document.getElementsByClassName("switch")[0];
 switchButton.addEventListener("click", () => {
