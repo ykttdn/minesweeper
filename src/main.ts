@@ -6,6 +6,7 @@
 
 import Cell from "./modules/Cell";
 import initializeCells from "./modules/InitializeCells";
+import setMineCounter from "./modules/SetMineCounter";
 
 const HEIGHT_EASY = 9;
 const HEIGHT_NORMAL = 16;
@@ -28,25 +29,7 @@ let safeCellCount = height * width - mines;
 let remainingMines = mines;
 let isFlagModeOn = false;
 
-const remains = <HTMLElement>document.getElementsByClassName("remains")[0];
-const setMineCounter = () => {
-  if (remainingMines <= -100) {
-    remains.textContent = "-99";
-  } else if (remainingMines <= -10) {
-    remains.textContent = `${remainingMines}`;
-  } else if (remainingMines <= -1) {
-    remains.textContent = `- ${-remainingMines}`;
-  } else if (remainingMines <= 9) {
-    remains.textContent = `00${remainingMines}`;
-  } else if (remainingMines <= 99) {
-    remains.textContent = `0${remainingMines}`;
-  } else if (remainingMines <= 999) {
-    remains.textContent = `${remainingMines}`;
-  } else {
-    remains.textContent = "999";
-  }
-};
-setMineCounter();
+setMineCounter(remainingMines);
 
 const strToInt = (str: string) => parseInt(str, 10);
 
@@ -98,7 +81,7 @@ const initializeGame = () => {
   hasOpenedAllSafeCells = false;
   safeCellCount = height * width - mines;
   remainingMines = mines;
-  setMineCounter();
+  setMineCounter(remainingMines);
   changeFaceOfResetButton(FACE_NORMAL);
   timer.textContent = "000";
   stopTimer();
@@ -290,13 +273,13 @@ const toggleFlag = (e: Event) => {
       cell.className = FLAGGED_CELL;
 
       remainingMines--;
-      setMineCounter();
+      setMineCounter(remainingMines);
     } else {
       (<Cell>(<Cell[]>cells[i])[j]).isFlagged = false;
       cell.className = UNOPENED_CELL;
 
       remainingMines++;
-      setMineCounter();
+      setMineCounter(remainingMines);
     }
   }
 };
@@ -465,7 +448,7 @@ const touchCell = (e: Event) => {
       } else {
         changeFaceOfResetButton(FACE_SUCCESS);
         remainingMines = 0;
-        setMineCounter();
+        setMineCounter(remainingMines);
         for (let i = 0; i < height; i++) {
           for (let j = 0; j < width; j++) {
             if (
