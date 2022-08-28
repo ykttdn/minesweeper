@@ -1,26 +1,26 @@
 <script setup lang="ts">
+import openCell from "../modules/OpenCell";
+
 const props = defineProps({
   rowNumber: Number,
   columnNumber: Number,
 });
 
-const OPENED_CELL = "cell cell--opened";
-
-const onClickCell = (event: Event) => {
-  const target = event.target;
-  if (!(target instanceof HTMLElement)) {
-    return;
-  }
+const onClickCell = () => {
   const row = props.rowNumber;
   const column = props.columnNumber;
   if (row === undefined || column === undefined) {
     return;
   }
-  console.log(`Clicked at (${row}, ${column})`);
-  target.className = OPENED_CELL;
+
+  openCell(row, column);
 };
 </script>
 
 <template>
-  <div class="cell cell--unopened" @click="onClickCell"></div>
+  <div
+    :id="`cell-${rowNumber}-${columnNumber}`"
+    class="cell cell--unopened"
+    @click="onClickCell"
+  ></div>
 </template>
