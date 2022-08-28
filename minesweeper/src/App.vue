@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref } from "vue";
+import { nextTick, provide, ref } from "vue";
 import MainHeader from "./components/MainHeader.vue";
 import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
@@ -12,12 +12,17 @@ const mineNumber = ref(10);
 provide("rowSize", rowSize);
 provide("columnSize", columnSize);
 
-const changeParameters = (selectedLevel: string) => {
-  if (selectedLevel === "normal") {
+const hasFinishedResizingBoard = ref(true);
+provide("hasFinishedResizingBoard", hasFinishedResizingBoard);
+
+const changeParameters = async (newLevel: string) => {
+  hasFinishedResizingBoard.value = false;
+
+  if (newLevel === "normal") {
     rowSize.value = 16;
     columnSize.value = 16;
     mineNumber.value = 40;
-  } else if (selectedLevel === "hard") {
+  } else if (newLevel === "hard") {
     rowSize.value = 16;
     columnSize.value = 30;
     mineNumber.value = 99;
@@ -28,8 +33,12 @@ const changeParameters = (selectedLevel: string) => {
   }
 
   console.log(
-    `Level changed to ${selectedLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
+    `Level changed to ${newLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
   );
+
+  await nextTick();
+
+  hasFinishedResizingBoard.value = true;
 };
 </script>
 

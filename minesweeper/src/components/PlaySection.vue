@@ -3,6 +3,9 @@ import TheBoard from "./TheBoard.vue";
 import RemainsCounter from "./RemainsCounter.vue";
 import ResetButton from "./ResetButton.vue";
 import TheTimer from "./TheTimer.vue";
+import { inject } from "vue";
+
+const hasFinishedResizingBoard = inject("hasFinishedResizingBoard");
 </script>
 
 <template>
@@ -12,6 +15,6 @@ import TheTimer from "./TheTimer.vue";
       <ResetButton></ResetButton>
       <TheTimer></TheTimer>
     </div>
-    <TheBoard></TheBoard>
+    <TheBoard v-if="hasFinishedResizingBoard"></TheBoard>
   </div>
 </template>

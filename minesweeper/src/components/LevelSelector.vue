@@ -3,8 +3,7 @@ import { ref } from "vue";
 
 const level = ref("easy");
 const emit = defineEmits(["changeParameters"]);
-const changeLevel = (selectedLevel: string) =>
-  emit("changeParameters", selectedLevel);
+const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
 </script>
 
 <template>
