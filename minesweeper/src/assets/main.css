@@ -74,6 +74,7 @@ body {
   border-bottom: 4px solid #888;
   border-left: 4px solid #fff;
   padding: 1px;
+  cursor: pointer;
 }
 
 .board {
