@@ -47,7 +47,6 @@ const changeParameters = (selectedLevel: string) => {
     <PlaySection
       :row-size="rowSize"
       :column-size="columnSize"
-      :mine-number="mineNumber"
       :hasResetTriggered="hasResetTriggered"
       @initialize-board="initializeBoard"
     ></PlaySection>
