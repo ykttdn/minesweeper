@@ -21,5 +21,4 @@ const changeLevel = (selectedLevel: string) =>
       <option value="hard">HARD</option>
     </select>
   </div>
-  <span>{{ level }}</span>
 </template>

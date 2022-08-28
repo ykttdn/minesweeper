@@ -26,6 +26,10 @@ const changeParameters = (selectedLevel: string) => {
     columnSize.value = 9;
     mineNumber.value = 10;
   }
+
+  console.log(
+    `Level changed to ${selectedLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
+  );
 };
 </script>
 
@@ -33,9 +37,6 @@ const changeParameters = (selectedLevel: string) => {
   <MainHeader></MainHeader>
   <main class="wrapper">
     <LevelSelector @change-parameters="changeParameters"></LevelSelector>
-    <span>{{ " " + rowSize }}</span>
-    <span>{{ " " + columnSize }}</span>
-    <span>{{ " " + mineNumber }}</span>
     <PlaySection></PlaySection>
     <BottomSection></BottomSection>
   </main>

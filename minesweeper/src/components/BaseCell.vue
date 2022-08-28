@@ -16,7 +16,7 @@ const onClickCell = (event: Event) => {
   if (row === undefined || column === undefined) {
     return;
   }
-  console.log(row, column);
+  console.log(`Clicked at (${row}, ${column})`);
   target.className = OPENED_CELL;
 };
 </script>
