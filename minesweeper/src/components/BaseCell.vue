@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import { openCell } from "../modules/OpenCell";
+import { openCell } from "../modules/MainAlgorithm";
 
 const props = defineProps({
   rowNumber: Number,

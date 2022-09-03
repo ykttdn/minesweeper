@@ -4,7 +4,7 @@ import MainHeader from "./components/MainHeader.vue";
 import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
 import BottomSection from "./components/BottomSection.vue";
-import { initializeMines, isMineHiddenIn } from "./modules/OpenCell";
+import { initializeMines, isMineHiddenIn } from "./modules/MainAlgorithm";
 import {
   COLUMN_SIZE_EASY,
   COLUMN_SIZE_HARD,
