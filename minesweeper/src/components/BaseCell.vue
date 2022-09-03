@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import { touchCell } from "../modules/MainAlgorithm";
+import { toggleFlag, touchCell } from "../modules/MainAlgorithm";
 
 defineProps({
   rowNumber: Number,
@@ -25,6 +25,13 @@ const onClickCell = (
   }
   touchCell(row, column, rowSize, columnSize);
 };
+
+const onContextMenu = (row: number | undefined, column: number | undefined) => {
+  if (row === undefined || column === undefined) {
+    return;
+  }
+  toggleFlag(row, column);
+};
 </script>
 
 <template>
@@ -35,5 +42,6 @@ const onClickCell = (
       startGame(rowNumber, columnNumber),
         onClickCell(rowNumber, columnNumber, rowSize, columnSize)
     "
+    @contextmenu.prevent="onContextMenu(rowNumber, columnNumber)"
   ></div>
 </template>

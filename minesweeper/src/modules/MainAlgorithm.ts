@@ -1,8 +1,10 @@
 import {
   COLUMN_SIZE_HARD,
   EXPLODED_CELL,
+  FLAGGED_CELL,
   OPENED_CELL,
   ROW_SIZE_HARD,
+  UNOPENED_CELL,
 } from "./GameParameters";
 import { initialize2DArray } from "./Initialize2DArray";
 import { getAdjacentCellsIndex } from "./GetAdjacentCellsIndex";
@@ -14,6 +16,7 @@ export const isMineHiddenIn = initialize2DArray(
   false
 );
 const isOpened = initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false);
+const isFlagged = initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false);
 
 // 0 以上 val 未満の整数乱数を返す
 const random = (val: number) => Math.floor(Math.random() * val);
@@ -54,6 +57,7 @@ export const initializeParameters = (rowSize: number, columnSize: number) => {
   for (let row = 0; row < rowSize; row++) {
     for (let column = 0; column < columnSize; column++) {
       isOpened[row][column] = false;
+      isFlagged[row][column] = false;
     }
   }
 };
@@ -119,6 +123,23 @@ const seekAdjacentMines = (
   }
 };
 
+export const toggleFlag = (row: number, column: number) => {
+  const cellTargeted = document.getElementById(`cell-${row}-${column}`);
+  if (cellTargeted === null) {
+    return;
+  }
+
+  if (!isOpened[row][column]) {
+    if (!isFlagged[row][column]) {
+      isFlagged[row][column] = true;
+      cellTargeted.className = FLAGGED_CELL;
+    } else {
+      isFlagged[row][column] = false;
+      cellTargeted.className = UNOPENED_CELL;
+    }
+  }
+};
+
 export const touchCell = (
   row: number,
   column: number,
@@ -129,6 +150,11 @@ export const touchCell = (
   if (cellTargeted === null) {
     return;
   }
+
+  if (isFlagged[row][column]) {
+    return;
+  }
+
   if (isMineHiddenIn[row][column]) {
     cellTargeted.className = EXPLODED_CELL;
     console.log(`exploded (${row}, ${column})`);
