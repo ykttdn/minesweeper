@@ -10,7 +10,7 @@ const rowSize = inject("rowSize");
     <BaseRow
       v-for="rowNumber in rowSize"
       :key="rowNumber"
-      :row-number="rowNumber"
+      :row-number="rowNumber - 1"
     ></BaseRow>
   </div>
 </template>

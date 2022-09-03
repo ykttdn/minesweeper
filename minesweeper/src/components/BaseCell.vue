@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import openCell from "../modules/OpenCell";
+import { inject } from "vue";
+import { openCell } from "../modules/OpenCell";
 
 const props = defineProps({
   rowNumber: Number,
   columnNumber: Number,
 });
+
+const startGame = inject("startGame") as (
+  row: number | undefined,
+  column: number | undefined
+) => void;
 
 const onClickCell = () => {
   const row = props.rowNumber;
@@ -12,7 +18,6 @@ const onClickCell = () => {
   if (row === undefined || column === undefined) {
     return;
   }
-
   openCell(row, column);
 };
 </script>
@@ -21,6 +26,6 @@ const onClickCell = () => {
   <div
     :id="`cell-${rowNumber}-${columnNumber}`"
     class="cell cell--unopened"
-    @click="onClickCell"
+    @click="startGame(rowNumber, columnNumber), onClickCell()"
   ></div>
 </template>

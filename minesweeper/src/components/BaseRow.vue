@@ -13,7 +13,7 @@ const columnSize = inject("columnSize");
       v-for="columnNumber in columnSize"
       :key="columnNumber"
       :row-number="rowNumber"
-      :column-number="columnNumber"
+      :column-number="columnNumber - 1"
     ></BaseCell>
   </div>
 </template>
