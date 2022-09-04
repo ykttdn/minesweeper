@@ -131,13 +131,41 @@ export const toggleFlag = (row: number, column: number) => {
     return;
   }
 
+  const remainsCounter = document.getElementsByClassName("remains")[0];
+  const sRemainingMines = remainsCounter.textContent;
+  if (sRemainingMines === null) {
+    return;
+  }
+  let remainingMines = parseInt(sRemainingMines.replace(/ /g, ""), 10);
+  if (isNaN(remainingMines)) {
+    return;
+  }
+
   if (!isOpened[row][column]) {
     if (!isFlagged[row][column]) {
       isFlagged[row][column] = true;
       cellTargeted.className = FLAGGED_CELL;
+      remainingMines--;
     } else {
       isFlagged[row][column] = false;
       cellTargeted.className = UNOPENED_CELL;
+      remainingMines++;
+    }
+
+    if (remainingMines <= -100) {
+      remainsCounter.textContent = "-99";
+    } else if (remainingMines <= -10) {
+      remainsCounter.textContent = `${remainingMines}`;
+    } else if (remainingMines <= -1) {
+      remainsCounter.textContent = `- ${-remainingMines}`;
+    } else if (remainingMines <= 9) {
+      remainsCounter.textContent = `00${remainingMines}`;
+    } else if (remainingMines <= 99) {
+      remainsCounter.textContent = `0${remainingMines}`;
+    } else if (remainingMines <= 999) {
+      remainsCounter.textContent = `${remainingMines}`;
+    } else {
+      remainsCounter.textContent = "999";
     }
   }
 };

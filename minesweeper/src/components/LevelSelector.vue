@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject } from "vue";
 
-const level = ref("easy");
+const selectedLevel = inject("level") as string;
 const emit = defineEmits(["changeParameters"]);
 const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
 </script>
@@ -12,8 +12,8 @@ const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
     <select
       name="level"
       id="level"
-      v-model="level"
-      @change="changeLevel(level)"
+      v-model="selectedLevel"
+      @change="changeLevel(selectedLevel)"
     >
       <option value="easy">EASY</option>
       <option value="normal">NORMAL</option>

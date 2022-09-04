@@ -11,7 +11,7 @@ const hasFinishedResizingBoard = inject("hasFinishedResizingBoard");
 <template>
   <div class="play-area">
     <div class="top-area">
-      <RemainsCounter></RemainsCounter>
+      <RemainsCounter v-if="hasFinishedResizingBoard"></RemainsCounter>
       <ResetButton></ResetButton>
       <TheTimer></TheTimer>
     </div>

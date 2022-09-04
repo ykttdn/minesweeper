@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, provide, ref } from "vue";
+import { computed, nextTick, provide, ref } from "vue";
 import MainHeader from "./components/MainHeader.vue";
 import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
@@ -24,9 +24,27 @@ import {
 const rowSize = ref(ROW_SIZE_EASY);
 const columnSize = ref(COLUMN_SIZE_EASY);
 const mineNumber = ref(MINE_NUMBER_EASY);
+const displayedMineNumber = computed(() => {
+  if (mineNumber.value <= -100) {
+    return "-99";
+  } else if (mineNumber.value <= -10) {
+    return `${mineNumber.value}`;
+  } else if (mineNumber.value <= -1) {
+    return `- ${-mineNumber.value}`;
+  } else if (mineNumber.value <= 9) {
+    return `00${mineNumber.value}`;
+  } else if (mineNumber.value <= 99) {
+    return `0${mineNumber.value}`;
+  } else if (mineNumber.value <= 999) {
+    return `${mineNumber.value}`;
+  } else {
+    return "999";
+  }
+});
 
 provide("rowSize", rowSize);
 provide("columnSize", columnSize);
+provide("displayedMineNumber", displayedMineNumber);
 
 const hasFinishedResizingBoard = ref(true);
 provide("hasFinishedResizingBoard", hasFinishedResizingBoard);
@@ -58,27 +76,28 @@ const startGame = (
 };
 provide("startGame", startGame);
 
-const resetBoard = async (newLevel?: string) => {
+const level = ref("easy");
+provide("level", level);
+
+const resetBoard = async (newLevel: string) => {
   hasFinishedResizingBoard.value = false;
 
-  if (newLevel !== undefined) {
-    if (newLevel === "normal") {
-      rowSize.value = ROW_SIZE_NORMAL;
-      columnSize.value = COLUMN_SIZE_NORMAL;
-      mineNumber.value = MINE_NUMBER_NORMAL;
-    } else if (newLevel === "hard") {
-      rowSize.value = ROW_SIZE_HARD;
-      columnSize.value = COLUMN_SIZE_HARD;
-      mineNumber.value = MINE_NUMBER_HARD;
-    } else {
-      rowSize.value = ROW_SIZE_EASY;
-      columnSize.value = COLUMN_SIZE_EASY;
-      mineNumber.value = MINE_NUMBER_EASY;
-    }
-    console.log(
-      `Level changed to ${newLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
-    );
+  if (newLevel === "normal") {
+    rowSize.value = ROW_SIZE_NORMAL;
+    columnSize.value = COLUMN_SIZE_NORMAL;
+    mineNumber.value = MINE_NUMBER_NORMAL;
+  } else if (newLevel === "hard") {
+    rowSize.value = ROW_SIZE_HARD;
+    columnSize.value = COLUMN_SIZE_HARD;
+    mineNumber.value = MINE_NUMBER_HARD;
+  } else {
+    rowSize.value = ROW_SIZE_EASY;
+    columnSize.value = COLUMN_SIZE_EASY;
+    mineNumber.value = MINE_NUMBER_EASY;
   }
+  console.log(
+    `Level changed to ${newLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
+  );
 
   hasGameStarted.value = false;
 
