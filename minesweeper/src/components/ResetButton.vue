@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { inject } from "vue";
+
+const resetBoard = inject("resetBoard") as (newLevel?: string) => void;
+</script>
+
 <template>
-  <div class="reset-button"></div>
+  <button class="reset-button" @click="resetBoard()"></button>
 </template>

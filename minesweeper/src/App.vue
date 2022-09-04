@@ -58,39 +58,41 @@ const startGame = (
 };
 provide("startGame", startGame);
 
-const changeParameters = async (newLevel: string) => {
+const resetBoard = async (newLevel?: string) => {
   hasFinishedResizingBoard.value = false;
 
-  if (newLevel === "normal") {
-    rowSize.value = ROW_SIZE_NORMAL;
-    columnSize.value = COLUMN_SIZE_NORMAL;
-    mineNumber.value = MINE_NUMBER_NORMAL;
-  } else if (newLevel === "hard") {
-    rowSize.value = ROW_SIZE_HARD;
-    columnSize.value = COLUMN_SIZE_HARD;
-    mineNumber.value = MINE_NUMBER_HARD;
-  } else {
-    rowSize.value = ROW_SIZE_EASY;
-    columnSize.value = COLUMN_SIZE_EASY;
-    mineNumber.value = MINE_NUMBER_EASY;
+  if (newLevel !== undefined) {
+    if (newLevel === "normal") {
+      rowSize.value = ROW_SIZE_NORMAL;
+      columnSize.value = COLUMN_SIZE_NORMAL;
+      mineNumber.value = MINE_NUMBER_NORMAL;
+    } else if (newLevel === "hard") {
+      rowSize.value = ROW_SIZE_HARD;
+      columnSize.value = COLUMN_SIZE_HARD;
+      mineNumber.value = MINE_NUMBER_HARD;
+    } else {
+      rowSize.value = ROW_SIZE_EASY;
+      columnSize.value = COLUMN_SIZE_EASY;
+      mineNumber.value = MINE_NUMBER_EASY;
+    }
+    console.log(
+      `Level changed to ${newLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
+    );
   }
 
   hasGameStarted.value = false;
-
-  console.log(
-    `Level changed to ${newLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
-  );
 
   await nextTick();
 
   hasFinishedResizingBoard.value = true;
 };
+provide("resetBoard", resetBoard);
 </script>
 
 <template>
   <MainHeader></MainHeader>
   <main class="wrapper">
-    <LevelSelector @change-parameters="changeParameters"></LevelSelector>
+    <LevelSelector @change-parameters="resetBoard"></LevelSelector>
     <PlaySection></PlaySection>
     <BottomSection></BottomSection>
   </main>
