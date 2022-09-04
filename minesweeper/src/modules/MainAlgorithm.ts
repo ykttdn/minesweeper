@@ -5,6 +5,7 @@ import {
   OPENED_CELL,
   ROW_SIZE_HARD,
   UNOPENED_CELL,
+  WRONGLY_FLAGGED_CELL,
 } from "./GameParameters";
 import { initialize2DArray } from "./Initialize2DArray";
 import { getAdjacentCellsIndex } from "./GetAdjacentCellsIndex";
@@ -53,6 +54,8 @@ export const initializeMines = (
   }
 };
 
+let hasOpenedMinedCell = false;
+
 export const initializeParameters = (rowSize: number, columnSize: number) => {
   for (let row = 0; row < rowSize; row++) {
     for (let column = 0; column < columnSize; column++) {
@@ -60,6 +63,7 @@ export const initializeParameters = (rowSize: number, columnSize: number) => {
       isFlagged[row][column] = false;
     }
   }
+  hasOpenedMinedCell = false;
 };
 
 const openSafeCell = (row: number, column: number) => {
@@ -97,15 +101,13 @@ const seekAdjacentMines = (
   }
 
   if (adjacentMinesNumber > 0) {
-    const adjacentCell = document.getElementById(`cell-${row}-${column}`);
-    if (adjacentCell === null) {
+    const targetedCell = document.getElementById(`cell-${row}-${column}`);
+    if (targetedCell === null) {
       return;
     }
-    adjacentCell.textContent = `${adjacentMinesNumber}`;
-    adjacentCell.classList.add(`cnt-${adjacentMinesNumber}`);
-  }
-  //  if (!hasOpenedMinedCell)
-  else {
+    targetedCell.textContent = `${adjacentMinesNumber}`;
+    targetedCell.classList.add(`cnt-${adjacentMinesNumber}`);
+  } else if (!hasOpenedMinedCell) {
     for (const [adjacentRow, adjacentColumn] of adjacentCells) {
       if (
         checkIfCellIsInsideBoard(
@@ -140,6 +142,116 @@ export const toggleFlag = (row: number, column: number) => {
   }
 };
 
+const executeChording = (
+  row: number,
+  column: number,
+  rowSize: number,
+  columnSize: number
+) => {
+  const clickedCell = document.getElementById(`cell-${row}-${column}`);
+  if (clickedCell === null) {
+    return;
+  }
+
+  const sMineCount = clickedCell.textContent;
+  if (
+    sMineCount === null ||
+    sMineCount === "" ||
+    sMineCount < "1" ||
+    sMineCount > "8"
+  ) {
+    return;
+  }
+  const mineCount = parseInt(sMineCount, 10);
+
+  let adjacentFlagNumber = 0;
+  const adjacentCells = getAdjacentCellsIndex(row, column);
+  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    if (
+      checkIfCellIsInsideBoard(
+        adjacentRow,
+        adjacentColumn,
+        rowSize,
+        columnSize
+      ) &&
+      isFlagged[adjacentRow][adjacentColumn]
+    ) {
+      adjacentFlagNumber++;
+    }
+  }
+
+  if (mineCount === adjacentFlagNumber) {
+    let canExecuteChording = true;
+    for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+      if (
+        checkIfCellIsInsideBoard(
+          adjacentRow,
+          adjacentColumn,
+          rowSize,
+          columnSize
+        ) &&
+        isFlagged[adjacentRow][adjacentColumn] &&
+        !isMineHiddenIn[adjacentRow][adjacentColumn]
+      ) {
+        canExecuteChording = false;
+      }
+    }
+    console.log(canExecuteChording ? "chording" : "error");
+
+    if (canExecuteChording) {
+      for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+        if (
+          checkIfCellIsInsideBoard(
+            adjacentRow,
+            adjacentColumn,
+            rowSize,
+            columnSize
+          ) &&
+          !isOpened[adjacentRow][adjacentColumn] &&
+          !isFlagged[adjacentRow][adjacentColumn]
+        ) {
+          openSafeCell(adjacentRow, adjacentColumn);
+          seekAdjacentMines(adjacentRow, adjacentColumn, rowSize, columnSize);
+        }
+      }
+    } else {
+      hasOpenedMinedCell = true;
+      for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+        if (
+          checkIfCellIsInsideBoard(
+            adjacentRow,
+            adjacentColumn,
+            rowSize,
+            columnSize
+          ) &&
+          !isOpened[adjacentRow][adjacentColumn]
+        ) {
+          const adjacentCell = document.getElementById(
+            `cell-${adjacentRow}-${adjacentColumn}`
+          );
+          if (adjacentCell === null) {
+            continue;
+          }
+          if (
+            isFlagged[adjacentRow][adjacentColumn] &&
+            !isMineHiddenIn[adjacentRow][adjacentColumn]
+          ) {
+            adjacentCell.className = WRONGLY_FLAGGED_CELL;
+          } else if (
+            !isFlagged[adjacentRow][adjacentColumn] &&
+            isMineHiddenIn[adjacentRow][adjacentColumn]
+          ) {
+            adjacentCell.className = EXPLODED_CELL;
+          } else if (!isFlagged[adjacentRow][adjacentColumn]) {
+            openSafeCell(adjacentRow, adjacentColumn);
+            seekAdjacentMines(adjacentRow, adjacentColumn, rowSize, columnSize);
+          }
+        }
+      }
+    }
+  }
+};
+
 export const touchCell = (
   row: number,
   column: number,
@@ -161,7 +273,9 @@ export const touchCell = (
     return;
   }
 
-  if (!isOpened[row][column]) {
+  if (isOpened[row][column]) {
+    executeChording(row, column, rowSize, columnSize);
+  } else {
     openSafeCell(row, column);
     seekAdjacentMines(row, column, rowSize, columnSize);
   }
