@@ -63,7 +63,6 @@ const startGame = (
   ) {
     console.log("Game Started");
     hasGameStarted.value = true;
-    initializeParameters(rowSize.value, columnSize.value);
     initializeMines(
       rowSize.value,
       columnSize.value,
@@ -95,6 +94,7 @@ const resetBoard = async (newLevel: string) => {
     columnSize.value = COLUMN_SIZE_EASY;
     mineNumber.value = MINE_NUMBER_EASY;
   }
+  initializeParameters(rowSize.value, columnSize.value, mineNumber.value);
   console.log(
     `Level changed to ${newLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
   );

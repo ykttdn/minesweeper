@@ -13,7 +13,7 @@ const hasFinishedResizingBoard = inject("hasFinishedResizingBoard");
     <div class="top-area">
       <RemainsCounter v-if="hasFinishedResizingBoard"></RemainsCounter>
       <ResetButton></ResetButton>
-      <TheTimer></TheTimer>
+      <TheTimer v-if="hasFinishedResizingBoard"></TheTimer>
     </div>
     <TheBoard v-if="hasFinishedResizingBoard"></TheBoard>
   </div>
