@@ -15,3 +15,7 @@ export const WRONGLY_FLAGGED_CELL =
   "cell cell--unopened cell--flagged cell--flagged-wrongly";
 export const MINED_CELL = "cell cell--unopened cell--mined";
 export const EXPLODED_CELL = "cell cell--exploded";
+
+export const FACE_NORMAL = "reset-button face-normal";
+export const FACE_SUCCESS = "reset-button face-success";
+export const FACE_FAILURE = "reset-button face-failure";

@@ -6,5 +6,8 @@ const resetBoard = inject("resetBoard") as (newLevel: string) => void;
 </script>
 
 <template>
-  <button class="reset-button" @click="resetBoard(currentLevel)"></button>
+  <button
+    class="reset-button face-normal"
+    @click="resetBoard(currentLevel)"
+  ></button>
 </template>

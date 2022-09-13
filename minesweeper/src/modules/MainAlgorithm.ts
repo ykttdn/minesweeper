@@ -2,6 +2,9 @@ import {
   COLUMN_SIZE_EASY,
   COLUMN_SIZE_HARD,
   EXPLODED_CELL,
+  FACE_FAILURE,
+  FACE_NORMAL,
+  FACE_SUCCESS,
   FLAGGED_CELL,
   MINED_CELL,
   MINE_NUMBER_EASY,
@@ -15,6 +18,7 @@ import { initialize2DArray } from "./Initialize2DArray";
 import { getAdjacentCellsIndex } from "./GetAdjacentCellsIndex";
 import { checkIfCellIsInsideBoard } from "./CheckIfCellIsInsideBoard";
 import { advanceTimer } from "./AdvanceTimer";
+import { changeResetButtonFace } from "./ChangeResetButtonFace";
 
 export const isMineHiddenIn = initialize2DArray(
   ROW_SIZE_HARD,
@@ -80,6 +84,7 @@ export const initializeParameters = (
   clearInterval(interval);
   interval = 0;
   safeCellNumber = rowSize * columnSize - mineNumber;
+  changeResetButtonFace(FACE_NORMAL);
 };
 
 const openSafeCell = (row: number, column: number) => {
@@ -347,6 +352,7 @@ export const touchCell = (
     clearInterval(interval);
 
     if (hasOpenedMinedCell) {
+      changeResetButtonFace(FACE_FAILURE);
       for (let row = 0; row < rowSize; row++) {
         for (let column = 0; column < columnSize; column++) {
           if (
@@ -375,6 +381,7 @@ export const touchCell = (
         }
       }
     } else {
+      changeResetButtonFace(FACE_SUCCESS);
       for (let row = 0; row < rowSize; row++) {
         for (let column = 0; column < columnSize; column++) {
           if (isMineHiddenIn[row][column] && !isFlagged[row][column]) {

@@ -76,6 +76,18 @@ body {
   padding: 1px;
 }
 
+.face-normal {
+  background-image: url(./svg/1f642.svg);
+}
+
+.face-success {
+  background-image: url(./svg/1f60e.svg);
+}
+
+.face-failure {
+  background-image: url(./svg/1f635.svg);
+}
+
 .board {
   border-top: 4px solid #888;
   border-right: 4px solid #fff;
