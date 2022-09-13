@@ -67,6 +67,12 @@ let hasOpenedMinedCell = false;
 let hasOpenedAllSafeCells = false;
 let interval = 0;
 let safeCellNumber = ROW_SIZE_EASY * COLUMN_SIZE_EASY - MINE_NUMBER_EASY;
+export let isFlagModeOn = false;
+
+export const toggleFlagMode = () => {
+  const switchButton = document.getElementsByClassName("switch")[0];
+  isFlagModeOn = switchButton.classList.toggle("switch--on");
+};
 
 export const initializeParameters = (
   rowSize: number,
@@ -324,6 +330,11 @@ export const touchCell = (
 
   const cellTargeted = document.getElementById(`cell-${row}-${column}`);
   if (cellTargeted === null) {
+    return;
+  }
+
+  if (isFlagModeOn && !isOpened[row][column]) {
+    toggleFlag(row, column);
     return;
   }
 

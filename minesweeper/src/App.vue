@@ -7,6 +7,7 @@ import BottomSection from "./components/BottomSection.vue";
 import {
   initializeMines,
   initializeParameters,
+  isFlagModeOn,
   isMineHiddenIn,
 } from "./modules/MainAlgorithm";
 import {
@@ -56,6 +57,9 @@ const startGame = (
   rowClickedFirst: number | undefined,
   columnClickedFirst: number | undefined
 ) => {
+  if (isFlagModeOn) {
+    return;
+  }
   if (
     !hasGameStarted.value &&
     rowClickedFirst !== undefined &&
