@@ -20,7 +20,7 @@ import { checkIfCellIsInsideBoard } from "./CheckIfCellIsInsideBoard";
 import { advanceTimer } from "./AdvanceTimer";
 import { changeResetButtonFace } from "./ChangeResetButtonFace";
 
-export const isMineHiddenIn = initialize2DArray(
+const isMineHiddenIn = initialize2DArray(
   ROW_SIZE_HARD,
   COLUMN_SIZE_HARD,
   false
@@ -101,7 +101,6 @@ const openSafeCell = (row: number, column: number) => {
   isOpened[row][column] = true;
   safeCell.className = OPENED_CELL;
   safeCellNumber--;
-  console.log(`opened (${row}, ${column}) ${safeCellNumber}`);
 };
 
 const seekAdjacentMines = (
@@ -258,7 +257,6 @@ const executeChording = (
         canExecuteChording = false;
       }
     }
-    console.log(canExecuteChording ? "chording" : "error");
 
     if (canExecuteChording) {
       for (const [adjacentRow, adjacentColumn] of adjacentCells) {
@@ -347,7 +345,6 @@ export const touchCell = (
     isOpened[row][column] = true;
     clearInterval(interval);
     cellTargeted.className = EXPLODED_CELL;
-    console.log(`exploded (${row}, ${column})`);
   } else if (isOpened[row][column]) {
     executeChording(row, column, rowSize, columnSize);
   } else {

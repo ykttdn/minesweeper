@@ -8,7 +8,6 @@ import {
   initializeMines,
   initializeParameters,
   isFlagModeOn,
-  isMineHiddenIn,
 } from "./modules/MainAlgorithm";
 import {
   COLUMN_SIZE_EASY,
@@ -65,7 +64,6 @@ const startGame = (
     rowClickedFirst !== undefined &&
     columnClickedFirst !== undefined
   ) {
-    console.log("Game Started");
     hasGameStarted.value = true;
     initializeMines(
       rowSize.value,
@@ -74,7 +72,6 @@ const startGame = (
       rowClickedFirst,
       columnClickedFirst
     );
-    console.log(isMineHiddenIn);
   }
 };
 provide("startGame", startGame);
@@ -99,9 +96,6 @@ const resetBoard = async (newLevel: string) => {
     mineNumber.value = MINE_NUMBER_EASY;
   }
   initializeParameters(rowSize.value, columnSize.value, mineNumber.value);
-  console.log(
-    `Level changed to ${newLevel}\n\trow size: ${rowSize.value}\n\tcolumn size: ${columnSize.value}\n\tmine number: ${mineNumber.value}`
-  );
 
   hasGameStarted.value = false;
 
