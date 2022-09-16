@@ -1,6 +1,6 @@
 # Minesweeper
 
-You can play [here](https://ykttdn.github.io/minesweeper/).
+You can play [here](https://dapper-cassata-601cf2.netlify.app/).
 
 ## Recommended IDE Setup
 
