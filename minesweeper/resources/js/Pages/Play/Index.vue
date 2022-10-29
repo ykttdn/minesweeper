@@ -1,8 +1,11 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Score from "@/Components/Score.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { useForm, Head } from "@inertiajs/inertia-vue3";
+
+defineProps(["scores"]);
 
 const result = useForm({
     level: "",
@@ -30,6 +33,10 @@ const result = useForm({
                 <input type="number" v-model="result.time" />
                 <PrimaryButton class="mt-4">Send</PrimaryButton>
             </form>
+
+            <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
+                <Score v-for="score in scores" :key="score.id" :score="score" />
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>

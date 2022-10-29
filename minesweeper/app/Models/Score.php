@@ -13,4 +13,9 @@ class Score extends Model
         'level',
         'time',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
