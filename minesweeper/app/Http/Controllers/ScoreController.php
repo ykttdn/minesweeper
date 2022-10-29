@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Score;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ScoreController extends Controller
 {
@@ -14,7 +15,7 @@ class ScoreController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Play/Index', []);
     }
 
     /**
@@ -35,7 +36,14 @@ class ScoreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'level' => 'required|string|max:10',
+            'time' => 'required|integer'
+        ]);
+
+        $request->user()->scores()->create($validated);
+
+        return redirect(route('play.index'));
     }
 
     /**
