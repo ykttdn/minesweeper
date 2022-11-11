@@ -19,7 +19,12 @@ import { getAdjacentCellsIndex } from "./GetAdjacentCellsIndex";
 import { checkIfCellIsInsideBoard } from "./CheckIfCellIsInsideBoard";
 import { advanceTimer } from "./AdvanceTimer";
 import { changeResetButtonFace } from "./ChangeResetButtonFace";
+import { useForm } from "@inertiajs/inertia-vue3";
 
+const result = useForm({
+    level: "",
+    time: 0,
+});
 const isMineHiddenIn = initialize2DArray(
     ROW_SIZE_HARD,
     COLUMN_SIZE_HARD,
@@ -369,6 +374,18 @@ export const touchCell = (
 
     if (safeCellNumber === 0) {
         hasOpenedAllSafeCells = true;
+        result.time = parseInt(
+            document.getElementsByClassName("timer")[0].textContent,
+            10
+        );
+        if (columnSize === COLUMN_SIZE_EASY) {
+            result.level = "easy";
+        } else if (columnSize === COLUMN_SIZE_HARD) {
+            result.level = "hard";
+        } else {
+            result.level = "normal";
+        }
+        result.post(route("play.store"));
     }
 
     if (hasOpenedMinedCell || hasOpenedAllSafeCells) {
