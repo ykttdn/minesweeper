@@ -17,17 +17,8 @@ body {
     border-radius: 5px;
     box-shadow: 0px 0px 2px #bbb;
     cursor: pointer;
-    padding-right: 20px;
-    padding-left: 2px;
-}
-
-.level-selection::after {
-    content: "\f107";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    position: relative;
-    right: 26px;
-    pointer-events: none;
+    padding-left: 5px;
+    width: 70px;
 }
 
 .play-area {
@@ -80,15 +71,15 @@ body {
 }
 
 .face-normal {
-    background-image: url(./svg/1f642.svg);
+    background-image: url("./svg/slightly-smiling-face.svg");
 }
 
 .face-success {
-    background-image: url(./svg/1f60e.svg);
+    background-image: url("./svg/smiling-face-with-sunglasses.svg");
 }
 
 .face-failure {
-    background-image: url(./svg/1f635.svg);
+    background-image: url("./svg/face-with-crossed-out-eyes.svg");
 }
 
 .board {
@@ -138,30 +129,22 @@ body {
     background-color: #f00;
     border-top: 2px solid #888;
     border-left: 2px solid #888;
-}
-.cell--exploded::before {
-    content: "\e4e9";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    color: #000;
+    content: url("./svg/explosion.svg");
+    padding: 5px;
 }
 
-.cell--flagged::before {
-    content: "\f024";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    color: #f00;
+.cell--flagged {
+    content: url("./svg/triangular-flag.svg");
+    padding: 2px;
 }
 
 .cell--flagged-wrongly {
     background-color: #ffaaaa;
 }
 
-.cell--mined::before {
-    content: "\f1e2";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    color: #000;
+.cell--mined {
+    content: url("./svg/bomb.svg");
+    padding: 1px;
 }
 
 .cnt-1 {
@@ -219,9 +202,9 @@ body {
 }
 
 .flag-icon {
-    color: #f00;
-    margin-top: 6px;
-    margin-left: 8px;
+    background-image: url("./svg/triangular-flag.svg");
+    width: 30px;
+    height: 30px;
 }
 
 .bottom-area {

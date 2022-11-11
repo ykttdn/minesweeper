@@ -9,6 +9,6 @@ const onClickToggleButton = () => {
 <template>
     <div class="bottom-area">
         <div class="switch" @click="onClickToggleButton"></div>
-        <i class="fa-solid fa-flag flag-icon"></i>
+        <div class="flag-icon"></div>
     </div>
 </template>
