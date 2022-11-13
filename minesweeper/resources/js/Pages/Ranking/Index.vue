@@ -4,7 +4,7 @@ import { Head } from "@inertiajs/inertia-vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Score from "@/Components/Score.vue";
 
-defineProps(["scores"]);
+defineProps(["rankingEasy", "rankingNormal", "rankingHard"]);
 </script>
 
 <template>
@@ -28,8 +28,33 @@ defineProps(["scores"]);
 
     <AuthenticatedLayout>
         <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+            EASY
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Score v-for="score in scores" :key="score.id" :score="score" />
+                <Score
+                    v-for="score in rankingEasy"
+                    :key="score.id"
+                    :score="score"
+                />
+            </div>
+        </div>
+        <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+            NORMAL
+            <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
+                <Score
+                    v-for="score in rankingNormal"
+                    :key="score.id"
+                    :score="score"
+                />
+            </div>
+        </div>
+        <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+            HARD
+            <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
+                <Score
+                    v-for="score in rankingHard"
+                    :key="score.id"
+                    :score="score"
+                />
             </div>
         </div>
     </AuthenticatedLayout>

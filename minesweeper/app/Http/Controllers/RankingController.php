@@ -15,8 +15,26 @@ class RankingController extends Controller
      */
     public function index()
     {
+        $rankingEasy = Score::with('user:id,name')
+            ->where('level', 'easy')
+            ->orderBy('time')
+            ->take(3)
+            ->get();
+        $rankingNormal = Score::with('user:id,name')
+            ->where('level', 'normal')
+            ->orderBy('time')
+            ->take(3)
+            ->get();
+        $rankingHard = Score::with('user:id,name')
+            ->where('level', 'hard')
+            ->orderBy('time')
+            ->take(3)
+            ->get();
+
         return Inertia::render('Ranking/Index', [
-            'scores' => Score::with('user:id,name')->latest()->get(),
+            'rankingEasy' => $rankingEasy,
+            'rankingNormal' => $rankingNormal,
+            'rankingHard' => $rankingHard,
         ]);
     }
 
