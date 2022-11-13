@@ -42,8 +42,8 @@ const showingNavigationDropdown = ref(false);
                                     Play
                                 </NavLink>
                                 <NavLink
-                                    :href="route('play.index')"
-                                    :active="route().current('play.index')"
+                                    :href="route('ranking.index')"
+                                    :active="route().current('ranking.index')"
                                 >
                                     Ranking
                                 </NavLink>
@@ -156,8 +156,8 @@ const showingNavigationDropdown = ref(false);
                             Play
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
-                            :href="route('play.index')"
-                            :active="route().current('play.index')"
+                            :href="route('ranking.index')"
+                            :active="route().current('ranking.index')"
                         >
                             Ranking
                         </ResponsiveNavLink>

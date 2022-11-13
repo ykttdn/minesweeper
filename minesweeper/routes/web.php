@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ScoreController;
+use App\Http\Controllers\RankingController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,6 +32,10 @@ Route::get('/dashboard', function () {
 
 Route::resource('play', ScoreController::class)
     ->only(['index', 'store'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('ranking', RankingController::class)
+    ->only(['index'])
     ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';
