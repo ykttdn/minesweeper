@@ -16,7 +16,7 @@ class ScoreController extends Controller
     public function index()
     {
         return Inertia::render('Play/Index', [
-            'scores' => Score::with('user:id,name')->latest()->get(),
+            'scores' => Score::with('user:id,name')->latest()->where('user_id', \Auth::user()->id)->take(3)->get(),
         ]);
     }
 
