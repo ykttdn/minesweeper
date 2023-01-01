@@ -161,7 +161,12 @@ const result = useForm({
             </form>
 
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Score v-for="score in scores" :key="score.id" :score="score" />
+                <Score
+                    v-for="score in scores"
+                    :key="score.id"
+                    :score="score"
+                    :showsLevel="true"
+                />
             </div>
         </div>
     </AuthenticatedLayout>

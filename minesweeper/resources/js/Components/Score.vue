@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
-defineProps(["score"]);
+defineProps(["score", "showsLevel"]);
 </script>
 
 <template>
@@ -14,7 +14,7 @@ defineProps(["score"]);
                     }}</small>
                 </div>
             </div>
-            <p class="mt-4 text-lg text-gray-900">
+            <p v-if="showsLevel" class="mt-4 text-lg text-gray-900">
                 {{ score.level.toUpperCase() }}
             </p>
             <p class="mt-4 text-lg text-gray-900">{{ score.time }} sec</p>

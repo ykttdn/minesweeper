@@ -34,6 +34,7 @@ defineProps(["rankingEasy", "rankingNormal", "rankingHard"]);
                     v-for="score in rankingEasy"
                     :key="score.id"
                     :score="score"
+                    :showsLevel="false"
                 />
             </div>
         </div>
@@ -44,6 +45,7 @@ defineProps(["rankingEasy", "rankingNormal", "rankingHard"]);
                     v-for="score in rankingNormal"
                     :key="score.id"
                     :score="score"
+                    :showsLevel="false"
                 />
             </div>
         </div>
@@ -54,6 +56,7 @@ defineProps(["rankingEasy", "rankingNormal", "rankingHard"]);
                     v-for="score in rankingHard"
                     :key="score.id"
                     :score="score"
+                    :showsLevel="false"
                 />
             </div>
         </div>
