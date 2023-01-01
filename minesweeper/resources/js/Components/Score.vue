@@ -14,8 +14,10 @@ defineProps(["score"]);
                     }}</small>
                 </div>
             </div>
-            <p class="mt-4 text-lg text-gray-900">{{ score.level }}</p>
-            <p class="mt-4 text-lg text-gray-900">{{ score.time }}</p>
+            <p class="mt-4 text-lg text-gray-900">
+                {{ score.level.toUpperCase() }}
+            </p>
+            <p class="mt-4 text-lg text-gray-900">{{ score.time }} sec</p>
         </div>
     </div>
 </template>
