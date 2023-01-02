@@ -31,10 +31,11 @@ defineProps(["rankingEasy", "rankingNormal", "rankingHard"]);
             EASY
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
                 <Score
-                    v-for="score in rankingEasy"
+                    v-for="(score, index) in rankingEasy"
                     :key="score.id"
                     :score="score"
                     :showsLevel="false"
+                    :ranking="index + 1"
                 />
             </div>
         </div>
@@ -42,10 +43,11 @@ defineProps(["rankingEasy", "rankingNormal", "rankingHard"]);
             NORMAL
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
                 <Score
-                    v-for="score in rankingNormal"
+                    v-for="(score, index) in rankingNormal"
                     :key="score.id"
                     :score="score"
                     :showsLevel="false"
+                    :ranking="index + 1"
                 />
             </div>
         </div>
@@ -53,10 +55,11 @@ defineProps(["rankingEasy", "rankingNormal", "rankingHard"]);
             HARD
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
                 <Score
-                    v-for="score in rankingHard"
+                    v-for="(score, index) in rankingHard"
                     :key="score.id"
                     :score="score"
                     :showsLevel="false"
+                    :ranking="index + 1"
                 />
             </div>
         </div>

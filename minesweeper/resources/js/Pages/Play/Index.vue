@@ -166,6 +166,7 @@ const result = useForm({
                     :key="score.id"
                     :score="score"
                     :showsLevel="true"
+                    :ranking="0"
                 />
             </div>
         </div>
