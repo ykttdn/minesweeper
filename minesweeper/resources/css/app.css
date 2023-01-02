@@ -18,7 +18,9 @@ body {
     box-shadow: 0px 0px 2px #bbb;
     cursor: pointer;
     padding-left: 5px;
-    width: 70px;
+    width: 120px;
+    margin-top: 4px;
+    margin-left: 4px;
 }
 
 .play-area {
