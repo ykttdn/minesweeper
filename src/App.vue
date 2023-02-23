@@ -14,7 +14,7 @@ import {
   ROW_SIZE_EASY,
   ROW_SIZE_HARD,
   ROW_SIZE_NORMAL,
-} from "./modules/GameParameters";
+} from "./utils/GameParameters";
 
 const rowSize = ref(ROW_SIZE_EASY);
 const columnSize = ref(COLUMN_SIZE_EASY);
