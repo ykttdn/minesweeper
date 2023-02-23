@@ -119,7 +119,7 @@ const result = useForm({
 
 <template>
     <Head>
-        <title>Minesweeper</title>
+        <title>Play</title>
 
         <!-- reset CSS -->
         <link
