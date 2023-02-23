@@ -119,7 +119,7 @@ const result = useForm({
 
 <template>
     <Head>
-        <title>Minesweeper</title>
+        <title>Play</title>
 
         <!-- reset CSS -->
         <link
@@ -161,7 +161,13 @@ const result = useForm({
             </form>
 
             <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                <Score v-for="score in scores" :key="score.id" :score="score" />
+                <Score
+                    v-for="score in scores"
+                    :key="score.id"
+                    :score="score"
+                    :showsLevel="true"
+                    :ranking="0"
+                />
             </div>
         </div>
     </AuthenticatedLayout>

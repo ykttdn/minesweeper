@@ -18,7 +18,9 @@ body {
     box-shadow: 0px 0px 2px #bbb;
     cursor: pointer;
     padding-left: 5px;
-    width: 70px;
+    width: 120px;
+    margin-top: 4px;
+    margin-left: 4px;
 }
 
 .play-area {
@@ -211,6 +213,24 @@ body {
     display: flex;
     margin: 8px auto 0px auto;
     max-width: fit-content;
+}
+
+.gold-medal {
+    background-image: url("./svg/1st-place-medal.svg");
+    width: 40px;
+    height: 40px;
+}
+
+.silver-medal {
+    background-image: url("./svg/2nd-place-medal.svg");
+    width: 40px;
+    height: 40px;
+}
+
+.bronze-medal {
+    background-image: url("./svg/3rd-place-medal.svg");
+    width: 40px;
+    height: 40px;
 }
 
 @media screen and (min-width: 768px), print {

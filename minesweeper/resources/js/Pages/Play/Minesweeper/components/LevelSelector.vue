@@ -8,7 +8,7 @@ const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
 
 <template>
     <div class="level-selection">
-        <label for="level">Level:</label>
+        <label for="level">Level :</label>
         <select
             name="level"
             id="level"
