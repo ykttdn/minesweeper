@@ -5,11 +5,6 @@ import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
 import BottomSection from "./components/BottomSection.vue";
 import {
-  initializeMines,
-  initializeParameters,
-  isFlagModeOn,
-} from "./modules/MainAlgorithm";
-import {
   COLUMN_SIZE_EASY,
   COLUMN_SIZE_HARD,
   COLUMN_SIZE_NORMAL,
@@ -49,33 +44,6 @@ provide("displayedMineNumber", displayedMineNumber);
 const hasFinishedResizingBoard = ref(true);
 provide("hasFinishedResizingBoard", hasFinishedResizingBoard);
 
-const hasGameStarted = ref(false);
-provide("hasGameStarted", hasGameStarted);
-
-const startGame = (
-  rowClickedFirst: number | undefined,
-  columnClickedFirst: number | undefined
-) => {
-  if (isFlagModeOn) {
-    return;
-  }
-  if (
-    !hasGameStarted.value &&
-    rowClickedFirst !== undefined &&
-    columnClickedFirst !== undefined
-  ) {
-    hasGameStarted.value = true;
-    initializeMines(
-      rowSize.value,
-      columnSize.value,
-      mineNumber.value,
-      rowClickedFirst,
-      columnClickedFirst
-    );
-  }
-};
-provide("startGame", startGame);
-
 const level = ref("easy");
 provide("level", level);
 
@@ -95,9 +63,6 @@ const resetBoard = async (newLevel: string) => {
     columnSize.value = COLUMN_SIZE_EASY;
     mineNumber.value = MINE_NUMBER_EASY;
   }
-  initializeParameters(rowSize.value, columnSize.value, mineNumber.value);
-
-  hasGameStarted.value = false;
 
   await nextTick();
 
