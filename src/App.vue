@@ -15,6 +15,7 @@ import {
   ROW_SIZE_HARD,
   ROW_SIZE_NORMAL,
 } from "./utils/GameParameters";
+import { useCellStore } from "./stores/cell";
 
 const rowSize = ref(ROW_SIZE_EASY);
 const columnSize = ref(COLUMN_SIZE_EASY);
@@ -48,6 +49,8 @@ provide("hasFinishedResizingBoard", hasFinishedResizingBoard);
 const level = ref("easy");
 provide("level", level);
 
+const { initializeCells, initializeParameters } = useCellStore();
+
 const resetBoard = async (newLevel: string) => {
   hasFinishedResizingBoard.value = false;
 
@@ -64,6 +67,9 @@ const resetBoard = async (newLevel: string) => {
     columnSize.value = COLUMN_SIZE_EASY;
     mineNumber.value = MINE_NUMBER_EASY;
   }
+
+  initializeCells(rowSize.value, columnSize.value);
+  initializeParameters();
 
   await nextTick();
 

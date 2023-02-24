@@ -14,6 +14,18 @@ export const useCellStore = defineStore("cell", () => {
 
   const hasGameStarted = ref(false);
 
+  const initializeCells = (rowSize: number, columnSize: number) => {
+    for (let row = 0; row < rowSize; row++) {
+      for (let column = 0; column < columnSize; column++) {
+        isOpened.value[row][column] = false;
+      }
+    }
+  };
+
+  const initializeParameters = () => {
+    hasGameStarted.value = false;
+  };
+
   const initializeMines = (
     rowSize: number,
     columnSize: number,
@@ -64,7 +76,9 @@ export const useCellStore = defineStore("cell", () => {
   };
 
   return {
+    initializeCells,
     initializeMines,
+    initializeParameters,
     isMineHiddenIn,
     isOpened,
     openCell,
