@@ -11,6 +11,9 @@ export const useCellStore = defineStore("cell", () => {
   const isOpened = ref(
     initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
   );
+  const isFlagged = ref(
+    initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
+  );
 
   const hasGameStarted = ref(false);
 
@@ -18,6 +21,7 @@ export const useCellStore = defineStore("cell", () => {
     for (let row = 0; row < rowSize; row++) {
       for (let column = 0; column < columnSize; column++) {
         isOpened.value[row][column] = false;
+        isFlagged.value[row][column] = false;
       }
     }
   };
@@ -68,19 +72,51 @@ export const useCellStore = defineStore("cell", () => {
     }
   };
 
+  const isFlagModeOn = ref(false);
+
+  const toggleFlagMode = () => {
+    const switchButton = document.getElementsByClassName("switch")[0];
+    isFlagModeOn.value = switchButton.classList.toggle("switch--on");
+  };
+
   const openCell = (row: number | undefined, column: number | undefined) => {
     if (row === undefined || column === undefined) {
       return;
     }
+
+    if (isFlagModeOn.value) {
+      toggleFlag(row, column);
+      return;
+    }
+
+    if (isFlagged.value[row][column]) {
+      return;
+    }
+
     isOpened.value[row][column] = true;
+  };
+
+  const toggleFlag = (row: number | undefined, column: number | undefined) => {
+    if (row === undefined || column === undefined) {
+      return;
+    }
+
+    if (isOpened.value[row][column]) {
+      return;
+    }
+
+    isFlagged.value[row][column] = !isFlagged.value[row][column];
   };
 
   return {
     initializeCells,
     initializeMines,
     initializeParameters,
+    isFlagged,
     isMineHiddenIn,
     isOpened,
     openCell,
+    toggleFlag,
+    toggleFlagMode,
   };
 });
