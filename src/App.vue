@@ -39,6 +39,7 @@ const displayedMineNumber = computed(() => {
 
 provide("rowSize", rowSize);
 provide("columnSize", columnSize);
+provide("mineNumber", mineNumber);
 provide("displayedMineNumber", displayedMineNumber);
 
 const hasFinishedResizingBoard = ref(true);
