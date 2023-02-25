@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
+import { useParametersStore } from "@/stores/parameters";
 import { storeToRefs } from "pinia";
-import { computed, inject } from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
   rowNumber: Number,
@@ -12,9 +13,8 @@ const cellStore = useCellStore();
 const { initializeMines, openCell, toggleFlag } = cellStore;
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
-const rowSize = inject("rowSize") as number;
-const columnSize = inject("columnSize") as number;
-const mineNumber = inject("mineNumber") as number;
+const parameters = useParametersStore();
+const { rowSize, columnSize, mineNumber } = storeToRefs(parameters);
 
 const cellState = computed(() => {
   if (props.rowNumber === undefined || props.columnNumber === undefined) {

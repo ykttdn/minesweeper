@@ -3,9 +3,11 @@ import TheBoard from "./TheBoard.vue";
 import RemainsCounter from "./RemainsCounter.vue";
 import ResetButton from "./ResetButton.vue";
 import TheTimer from "./TheTimer.vue";
-import { inject } from "vue";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
 
-const hasFinishedResizingBoard = inject("hasFinishedResizingBoard");
+const parameters = useParametersStore();
+const { hasFinishedResizingBoard } = storeToRefs(parameters);
 </script>
 
 <template>

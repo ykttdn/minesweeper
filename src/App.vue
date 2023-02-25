@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, provide, ref } from "vue";
+import { nextTick, provide } from "vue";
 import MainHeader from "./components/MainHeader.vue";
 import LevelSelector from "./components/LevelSelector.vue";
 import PlaySection from "./components/PlaySection.vue";
@@ -17,41 +17,14 @@ import {
 } from "./utils/GameParameters";
 import { useCellStore } from "./stores/cell";
 import { useParametersStore } from "./stores/parameters";
+import { storeToRefs } from "pinia";
 
-const rowSize = ref(ROW_SIZE_EASY);
-const columnSize = ref(COLUMN_SIZE_EASY);
-const mineNumber = ref(MINE_NUMBER_EASY);
-const displayedMineNumber = computed(() => {
-  if (mineNumber.value <= -100) {
-    return "-99";
-  } else if (mineNumber.value <= -10) {
-    return `${mineNumber.value}`;
-  } else if (mineNumber.value <= -1) {
-    return `- ${-mineNumber.value}`;
-  } else if (mineNumber.value <= 9) {
-    return `00${mineNumber.value}`;
-  } else if (mineNumber.value <= 99) {
-    return `0${mineNumber.value}`;
-  } else if (mineNumber.value <= 999) {
-    return `${mineNumber.value}`;
-  } else {
-    return "999";
-  }
-});
-
-provide("rowSize", rowSize);
-provide("columnSize", columnSize);
-provide("mineNumber", mineNumber);
-provide("displayedMineNumber", displayedMineNumber);
-
-const hasFinishedResizingBoard = ref(true);
-provide("hasFinishedResizingBoard", hasFinishedResizingBoard);
-
-const level = ref("easy");
-provide("level", level);
+const parameters = useParametersStore();
+const { rowSize, columnSize, mineNumber, hasFinishedResizingBoard } =
+  storeToRefs(parameters);
+const { initializeParameters } = parameters;
 
 const { initializeCells } = useCellStore();
-const { initializeParameters } = useParametersStore();
 
 const resetBoard = async (newLevel: string) => {
   hasFinishedResizingBoard.value = false;

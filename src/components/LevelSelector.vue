@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
 
-const selectedLevel = inject("level") as string;
+const parameters = useParametersStore();
+const { level } = storeToRefs(parameters);
+
 const emit = defineEmits(["changeParameters"]);
 const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
 </script>
@@ -12,8 +15,8 @@ const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
     <select
       name="level"
       id="level"
-      v-model="selectedLevel"
-      @change="changeLevel(selectedLevel)"
+      v-model="level"
+      @change="changeLevel(level)"
     >
       <option value="easy">EASY</option>
       <option value="normal">NORMAL</option>

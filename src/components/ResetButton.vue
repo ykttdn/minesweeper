@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { inject } from "vue";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
 
-const currentLevel = inject("level") as string;
+const parameters = useParametersStore();
+const { level } = storeToRefs(parameters);
+
 const resetBoard = inject("resetBoard") as (newLevel: string) => void;
 </script>
 
 <template>
-  <button
-    class="reset-button face-normal"
-    @click="resetBoard(currentLevel)"
-  ></button>
+  <button class="reset-button face-normal" @click="resetBoard(level)"></button>
 </template>
