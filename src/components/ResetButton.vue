@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
-import { storeToRefs } from "pinia";
 
 const parameters = useParametersStore();
-const { level } = storeToRefs(parameters);
+const { columnSize, initializeParameters, rowSize } = parameters;
 
-const resetBoard = inject("resetBoard") as (newLevel: string) => void;
+const { initializeCells } = useCellStore();
 </script>
 
 <template>
-  <button class="reset-button face-normal" @click="resetBoard(level)"></button>
+  <button
+    class="reset-button face-normal"
+    @click="initializeCells(rowSize, columnSize), initializeParameters()"
+  ></button>
 </template>

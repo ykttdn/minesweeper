@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
 import { storeToRefs } from "pinia";
 
 const parameters = useParametersStore();
-const { level } = storeToRefs(parameters);
+const { columnSize, level, rowSize } = storeToRefs(parameters);
+const { initializeParameters, changeLevel } = parameters;
 
-const emit = defineEmits(["changeParameters"]);
-const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
+const { initializeCells } = useCellStore();
 </script>
 
 <template>
@@ -16,7 +17,11 @@ const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
       name="level"
       id="level"
       v-model="level"
-      @change="changeLevel(level)"
+      @change="
+        changeLevel(),
+          initializeCells(rowSize, columnSize),
+          initializeParameters()
+      "
     >
       <option value="easy">EASY</option>
       <option value="normal">NORMAL</option>

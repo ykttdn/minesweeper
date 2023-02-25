@@ -28,10 +28,6 @@ export const useCellStore = defineStore("cell", () => {
     }
   };
 
-  const initializeParameters = () => {
-    hasGameStarted.value = false;
-  };
-
   const initializeMines = (
     rowSize: number,
     columnSize: number,
@@ -106,7 +102,6 @@ export const useCellStore = defineStore("cell", () => {
   return {
     initializeCells,
     initializeMines,
-    initializeParameters,
     isFlagged,
     isMineHiddenIn,
     isOpened,

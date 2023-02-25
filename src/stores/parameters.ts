@@ -1,7 +1,13 @@
 import {
   COLUMN_SIZE_EASY,
+  COLUMN_SIZE_HARD,
+  COLUMN_SIZE_NORMAL,
   MINE_NUMBER_EASY,
+  MINE_NUMBER_HARD,
+  MINE_NUMBER_NORMAL,
   ROW_SIZE_EASY,
+  ROW_SIZE_HARD,
+  ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
 import { defineStore } from "pinia";
 import { ref } from "vue";
@@ -15,18 +21,32 @@ export const useParametersStore = defineStore("parameters", () => {
 
   const hasGameStarted = ref(false);
 
-  const hasFinishedResizingBoard = ref(true);
-
   const initializeParameters = () => {
     hasGameStarted.value = false;
   };
 
   const isFlagModeOn = ref(false);
 
+  const changeLevel = () => {
+    if (level.value === "normal") {
+      rowSize.value = ROW_SIZE_NORMAL;
+      columnSize.value = COLUMN_SIZE_NORMAL;
+      mineNumber.value = MINE_NUMBER_NORMAL;
+    } else if (level.value === "hard") {
+      rowSize.value = ROW_SIZE_HARD;
+      columnSize.value = COLUMN_SIZE_HARD;
+      mineNumber.value = MINE_NUMBER_HARD;
+    } else {
+      rowSize.value = ROW_SIZE_EASY;
+      columnSize.value = COLUMN_SIZE_EASY;
+      mineNumber.value = MINE_NUMBER_EASY;
+    }
+  };
+
   return {
+    changeLevel,
     columnSize,
     hasGameStarted,
-    hasFinishedResizingBoard,
     initializeParameters,
     isFlagModeOn,
     level,
