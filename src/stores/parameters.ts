@@ -26,6 +26,9 @@ export const useParametersStore = defineStore("parameters", () => {
   };
 
   const isFlagModeOn = ref(false);
+  const toggleFlagMode = () => {
+    isFlagModeOn.value = !isFlagModeOn.value;
+  };
 
   const changeLevel = () => {
     if (level.value === "normal") {
@@ -52,5 +55,6 @@ export const useParametersStore = defineStore("parameters", () => {
     level,
     mineNumber,
     rowSize,
+    toggleFlagMode,
   };
 });

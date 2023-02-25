@@ -5,10 +5,7 @@ import { computed } from "vue";
 
 const parameters = useParametersStore();
 const { isFlagModeOn } = storeToRefs(parameters);
-
-const toggleFlagMode = () => {
-  isFlagModeOn.value = !isFlagModeOn.value;
-};
+const { toggleFlagMode } = parameters;
 
 const switchButtonState = computed(() => {
   if (isFlagModeOn.value) {
