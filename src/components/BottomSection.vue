@@ -1,12 +1,27 @@
 <script setup lang="ts">
-import { useCellStore } from "@/stores/cell";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
-const { toggleFlagMode } = useCellStore();
+const parameters = useParametersStore();
+const { isFlagModeOn } = storeToRefs(parameters);
+
+const toggleFlagMode = () => {
+  isFlagModeOn.value = !isFlagModeOn.value;
+};
+
+const switchButtonState = computed(() => {
+  if (isFlagModeOn.value) {
+    return "switch switch--on";
+  } else {
+    return "switch";
+  }
+});
 </script>
 
 <template>
   <div class="bottom-area">
-    <div class="switch" @click="toggleFlagMode"></div>
+    <div :class="switchButtonState" @click="toggleFlagMode"></div>
     <i class="fa-solid fa-flag flag-icon"></i>
   </div>
 </template>

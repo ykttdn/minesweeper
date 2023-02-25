@@ -16,6 +16,7 @@ import {
   ROW_SIZE_NORMAL,
 } from "./utils/GameParameters";
 import { useCellStore } from "./stores/cell";
+import { useParametersStore } from "./stores/parameters";
 
 const rowSize = ref(ROW_SIZE_EASY);
 const columnSize = ref(COLUMN_SIZE_EASY);
@@ -49,7 +50,8 @@ provide("hasFinishedResizingBoard", hasFinishedResizingBoard);
 const level = ref("easy");
 provide("level", level);
 
-const { initializeCells, initializeParameters } = useCellStore();
+const { initializeCells } = useCellStore();
+const { initializeParameters } = useParametersStore();
 
 const resetBoard = async (newLevel: string) => {
   hasFinishedResizingBoard.value = false;

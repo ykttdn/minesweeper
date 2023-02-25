@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
+import { storeToRefs } from "pinia";
 import { computed, inject } from "vue";
 
 const props = defineProps({
@@ -7,14 +8,9 @@ const props = defineProps({
   columnNumber: Number,
 });
 
-const {
-  initializeMines,
-  isFlagged,
-  isMineHiddenIn,
-  isOpened,
-  openCell,
-  toggleFlag,
-} = useCellStore();
+const cellStore = useCellStore();
+const { initializeMines, openCell, toggleFlag } = cellStore;
+const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const rowSize = inject("rowSize") as number;
 const columnSize = inject("columnSize") as number;
@@ -25,12 +21,12 @@ const cellState = computed(() => {
     return "cell cell--unopened";
   }
 
-  if (isFlagged[props.rowNumber][props.columnNumber]) {
+  if (isFlagged.value[props.rowNumber][props.columnNumber]) {
     return "cell cell--unopened cell--flagged";
   }
 
-  if (isOpened[props.rowNumber][props.columnNumber]) {
-    if (isMineHiddenIn[props.rowNumber][props.columnNumber]) {
+  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+    if (isMineHiddenIn.value[props.rowNumber][props.columnNumber]) {
       return "cell cell--exploded";
     } else {
       return "cell cell--opened";

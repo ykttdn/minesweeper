@@ -1,10 +1,14 @@
 import { ref } from "vue";
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { initialize2DArray } from "@/utils/Initialize2DArray";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
 import { random } from "@/utils/random";
+import { useParametersStore } from "./parameters";
 
 export const useCellStore = defineStore("cell", () => {
+  const parameters = useParametersStore();
+  const { hasGameStarted, isFlagModeOn } = storeToRefs(parameters);
+
   const isMineHiddenIn = ref(
     initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
   );
@@ -14,8 +18,6 @@ export const useCellStore = defineStore("cell", () => {
   const isFlagged = ref(
     initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
   );
-
-  const hasGameStarted = ref(false);
 
   const initializeCells = (rowSize: number, columnSize: number) => {
     for (let row = 0; row < rowSize; row++) {
@@ -72,13 +74,6 @@ export const useCellStore = defineStore("cell", () => {
     }
   };
 
-  const isFlagModeOn = ref(false);
-
-  const toggleFlagMode = () => {
-    const switchButton = document.getElementsByClassName("switch")[0];
-    isFlagModeOn.value = switchButton.classList.toggle("switch--on");
-  };
-
   const openCell = (row: number | undefined, column: number | undefined) => {
     if (row === undefined || column === undefined) {
       return;
@@ -117,6 +112,5 @@ export const useCellStore = defineStore("cell", () => {
     isOpened,
     openCell,
     toggleFlag,
-    toggleFlagMode,
   };
 });
