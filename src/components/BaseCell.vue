@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
-import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
-import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
@@ -12,7 +10,7 @@ const props = defineProps({
 });
 
 const cellStore = useCellStore();
-const { initializeMines, openCell, toggleFlag } = cellStore;
+const { countAdjacentMines, initializeMines, openCell, toggleFlag } = cellStore;
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
@@ -27,27 +25,15 @@ const adjacentMinesNumber = computed(() => {
     return "";
   }
 
-  let count = 0;
-  const adjacentCells = getAdjacentCellsIndex(
+  const counter = countAdjacentMines(
     props.rowNumber,
-    props.columnNumber
+    props.columnNumber,
+    rowSize.value,
+    columnSize.value
   );
-  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-    if (
-      isCellInsideBoard(
-        adjacentRow,
-        adjacentColumn,
-        rowSize.value,
-        columnSize.value
-      ) &&
-      isMineHiddenIn.value[adjacentRow][adjacentColumn]
-    ) {
-      count++;
-    }
-  }
 
-  if (count > 0) {
-    return count;
+  if (counter > 0) {
+    return counter;
   } else {
     return "";
   }

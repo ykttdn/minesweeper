@@ -58,14 +58,12 @@ export const useCellStore = defineStore("cell", () => {
     }
   };
 
-  const openCell = (
+  const countAdjacentMines = (
     row: number,
     column: number,
     rowSize: number,
     columnSize: number
-  ) => {
-    isOpened.value[row][column] = true;
-
+  ): number => {
     let adjacentMinesNumber = 0;
     const adjacentCells = getAdjacentCellsIndex(row, column);
     for (const [adjacentRow, adjacentColumn] of adjacentCells) {
@@ -77,7 +75,26 @@ export const useCellStore = defineStore("cell", () => {
       }
     }
 
+    return adjacentMinesNumber;
+  };
+
+  const openCell = (
+    row: number,
+    column: number,
+    rowSize: number,
+    columnSize: number
+  ) => {
+    isOpened.value[row][column] = true;
+
+    const adjacentMinesNumber = countAdjacentMines(
+      row,
+      column,
+      rowSize,
+      columnSize
+    );
+
     if (adjacentMinesNumber === 0) {
+      const adjacentCells = getAdjacentCellsIndex(row, column);
       for (const [adjacentRow, adjacentColumn] of adjacentCells) {
         if (
           isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
@@ -94,6 +111,7 @@ export const useCellStore = defineStore("cell", () => {
   };
 
   return {
+    countAdjacentMines,
     initializeCells,
     initializeMines,
     isFlagged,
