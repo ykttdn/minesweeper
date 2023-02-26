@@ -32,13 +32,9 @@ export const useCellStore = defineStore("cell", () => {
     rowSize: number,
     columnSize: number,
     mineNumber: number,
-    rowClickedFirst: number | undefined,
-    columnClickedFirst: number | undefined
+    rowClickedFirst: number,
+    columnClickedFirst: number
   ) => {
-    if (rowClickedFirst === undefined || columnClickedFirst === undefined) {
-      return;
-    }
-
     if (hasGameStarted.value) {
       return;
     }
@@ -70,11 +66,7 @@ export const useCellStore = defineStore("cell", () => {
     }
   };
 
-  const openCell = (row: number | undefined, column: number | undefined) => {
-    if (row === undefined || column === undefined) {
-      return;
-    }
-
+  const openCell = (row: number, column: number) => {
     if (isFlagModeOn.value) {
       toggleFlag(row, column);
       return;
@@ -87,11 +79,7 @@ export const useCellStore = defineStore("cell", () => {
     isOpened.value[row][column] = true;
   };
 
-  const toggleFlag = (row: number | undefined, column: number | undefined) => {
-    if (row === undefined || column === undefined) {
-      return;
-    }
-
+  const toggleFlag = (row: number, column: number) => {
     if (isOpened.value[row][column]) {
       return;
     }

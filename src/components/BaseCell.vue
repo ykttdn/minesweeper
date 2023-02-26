@@ -5,8 +5,8 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 const props = defineProps({
-  rowNumber: Number,
-  columnNumber: Number,
+  rowNumber: { type: Number, required: true },
+  columnNumber: { type: Number, required: true },
 });
 
 const cellStore = useCellStore();
@@ -17,10 +17,6 @@ const parameters = useParametersStore();
 const { rowSize, columnSize, mineNumber } = storeToRefs(parameters);
 
 const cellState = computed(() => {
-  if (props.rowNumber === undefined || props.columnNumber === undefined) {
-    return "cell cell--unopened";
-  }
-
   if (isFlagged.value[props.rowNumber][props.columnNumber]) {
     return "cell cell--unopened cell--flagged";
   }

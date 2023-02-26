@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import BaseCell from "./BaseCell.vue";
 
 defineProps({
-  rowNumber: Number,
+  rowNumber: { type: Number, required: true },
 });
 
 const parameters = useParametersStore();
