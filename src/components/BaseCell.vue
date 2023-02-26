@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
+import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
+import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
@@ -10,7 +12,13 @@ const props = defineProps({
 });
 
 const cellStore = useCellStore();
-const { countAdjacentMines, initializeMines, openCell, toggleFlag } = cellStore;
+const {
+  countAdjacentMines,
+  executeChording,
+  initializeMines,
+  openCell,
+  toggleFlag,
+} = cellStore;
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
@@ -62,6 +70,9 @@ const cellState = computed(() => {
 
 const onCellClicked = () => {
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
+    if (adjacentMinesNumber.value > 0) {
+      triggerChording();
+    }
     return;
   }
 
@@ -99,6 +110,56 @@ const onCellRightClicked = () => {
   }
 
   toggleFlag(props.rowNumber, props.columnNumber);
+};
+
+const triggerChording = () => {
+  let adjacentFlagsNumber = 0;
+  const adjacentCells = getAdjacentCellsIndex(
+    props.rowNumber,
+    props.columnNumber
+  );
+  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    if (
+      isCellInsideBoard(
+        adjacentRow,
+        adjacentColumn,
+        rowSize.value,
+        columnSize.value
+      ) &&
+      isFlagged.value[adjacentRow][adjacentColumn]
+    ) {
+      adjacentFlagsNumber++;
+    }
+  }
+
+  if (adjacentMinesNumber.value != adjacentFlagsNumber) {
+    return;
+  }
+
+  let canExecuteChording = true;
+  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    if (
+      isCellInsideBoard(
+        adjacentRow,
+        adjacentColumn,
+        rowSize.value,
+        columnSize.value
+      ) &&
+      isFlagged.value[adjacentRow][adjacentColumn] &&
+      !isMineHiddenIn.value[adjacentRow][adjacentColumn]
+    ) {
+      canExecuteChording = false;
+    }
+  }
+
+  if (canExecuteChording) {
+    executeChording(
+      props.rowNumber,
+      props.columnNumber,
+      rowSize.value,
+      columnSize.value
+    );
+  }
 };
 </script>
 

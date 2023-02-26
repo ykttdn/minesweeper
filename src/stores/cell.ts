@@ -106,12 +106,31 @@ export const useCellStore = defineStore("cell", () => {
     }
   };
 
+  const executeChording = (
+    row: number,
+    column: number,
+    rowSize: number,
+    columnSize: number
+  ) => {
+    const adjacentCells = getAdjacentCellsIndex(row, column);
+    for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+      if (
+        isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
+        !isOpened.value[adjacentRow][adjacentColumn] &&
+        !isFlagged.value[adjacentRow][adjacentColumn]
+      ) {
+        openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
+      }
+    }
+  };
+
   const toggleFlag = (row: number, column: number) => {
     isFlagged.value[row][column] = !isFlagged.value[row][column];
   };
 
   return {
     countAdjacentMines,
+    executeChording,
     initializeCells,
     initializeMines,
     isFlagged,
