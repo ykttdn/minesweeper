@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
+import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
+import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
@@ -17,20 +19,59 @@ const parameters = useParametersStore();
 const { columnSize, hasGameStarted, isFlagModeOn, mineNumber, rowSize } =
   storeToRefs(parameters);
 
+const adjacentMinesNumber = computed(() => {
+  if (
+    !isOpened.value[props.rowNumber][props.columnNumber] ||
+    isMineHiddenIn.value[props.rowNumber][props.columnNumber]
+  ) {
+    return "";
+  }
+
+  let count = 0;
+  const adjacentCells = getAdjacentCellsIndex(
+    props.rowNumber,
+    props.columnNumber
+  );
+  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    if (
+      isCellInsideBoard(
+        adjacentRow,
+        adjacentColumn,
+        rowSize.value,
+        columnSize.value
+      ) &&
+      isMineHiddenIn.value[adjacentRow][adjacentColumn]
+    ) {
+      count++;
+    }
+  }
+
+  if (count > 0) {
+    return count;
+  } else {
+    return "";
+  }
+});
+
 const cellState = computed(() => {
+  let className = "cell cell--unopened";
+
   if (isFlagged.value[props.rowNumber][props.columnNumber]) {
-    return "cell cell--unopened cell--flagged";
+    className = "cell cell--unopened cell--flagged";
   }
 
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
     if (isMineHiddenIn.value[props.rowNumber][props.columnNumber]) {
-      return "cell cell--exploded";
+      className = "cell cell--exploded";
     } else {
-      return "cell cell--opened";
+      className = "cell cell--opened";
+      if (adjacentMinesNumber.value > 0) {
+        className += ` count-${adjacentMinesNumber.value}`;
+      }
     }
   }
 
-  return "cell cell--unopened";
+  return className;
 });
 
 const onCellClicked = () => {
@@ -76,5 +117,7 @@ const onCellRightClicked = () => {
     :class="cellState"
     @click="onCellClicked"
     @contextmenu.prevent="onCellRightClicked"
-  ></div>
+  >
+    {{ adjacentMinesNumber }}
+  </div>
 </template>
