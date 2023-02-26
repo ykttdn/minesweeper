@@ -1,12 +1,16 @@
 import { ref } from "vue";
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { initialize2DArray } from "@/utils/Initialize2DArray";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
 import { random } from "@/utils/random";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
+import { useParametersStore } from "./parameters";
 
 export const useCellStore = defineStore("cell", () => {
+  const parameters = useParametersStore();
+  const { hasOpenedMinedCell } = storeToRefs(parameters);
+
   const isMineHiddenIn = ref(
     initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
   );
@@ -20,6 +24,7 @@ export const useCellStore = defineStore("cell", () => {
   const initializeCells = (rowSize: number, columnSize: number) => {
     for (let row = 0; row < rowSize; row++) {
       for (let column = 0; column < columnSize; column++) {
+        isMineHiddenIn.value[row][column] = false;
         isOpened.value[row][column] = false;
         isFlagged.value[row][column] = false;
       }
@@ -33,12 +38,6 @@ export const useCellStore = defineStore("cell", () => {
     rowClickedFirst: number,
     columnClickedFirst: number
   ) => {
-    for (let row = 0; row < rowSize; row++) {
-      for (let column = 0; column < columnSize; column++) {
-        isMineHiddenIn.value[row][column] = false;
-      }
-    }
-
     for (let i = 0; i < mineNumber; i++) {
       // eslint-disable-next-line no-constant-condition
       while (true) {
@@ -86,6 +85,10 @@ export const useCellStore = defineStore("cell", () => {
   ) => {
     isOpened.value[row][column] = true;
 
+    if (hasOpenedMinedCell.value) {
+      return;
+    }
+
     const adjacentMinesNumber = countAdjacentMines(
       row,
       column,
@@ -100,6 +103,7 @@ export const useCellStore = defineStore("cell", () => {
           isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
           !isOpened.value[adjacentRow][adjacentColumn]
         ) {
+          isFlagged.value[adjacentRow][adjacentColumn] = false;
           openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
         }
       }

@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
+import {
+  EXPLODED_CELL,
+  FLAGGED_CELL,
+  MINED_CELL,
+  OPENED_CELL,
+  UNOPENED_CELL,
+  WRONGLY_FLAGGED_CELL,
+} from "@/utils/GameParameters";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { storeToRefs } from "pinia";
@@ -22,8 +30,14 @@ const {
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
-const { columnSize, hasGameStarted, isFlagModeOn, mineNumber, rowSize } =
-  storeToRefs(parameters);
+const {
+  columnSize,
+  hasGameStarted,
+  isFlagModeOn,
+  mineNumber,
+  rowSize,
+  hasOpenedMinedCell,
+} = storeToRefs(parameters);
 
 const adjacentMinesNumber = computed(() => {
   if (
@@ -48,27 +62,46 @@ const adjacentMinesNumber = computed(() => {
 });
 
 const cellState = computed(() => {
-  let className = "cell cell--unopened";
+  if (hasOpenedMinedCell.value) {
+    if (
+      isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
+      !isFlagged.value[props.rowNumber][props.columnNumber] &&
+      !isOpened.value[props.rowNumber][props.columnNumber]
+    ) {
+      return MINED_CELL;
+    }
+    if (
+      !isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
+      isFlagged.value[props.rowNumber][props.columnNumber]
+    ) {
+      return WRONGLY_FLAGGED_CELL;
+    }
+  }
 
   if (isFlagged.value[props.rowNumber][props.columnNumber]) {
-    className = "cell cell--unopened cell--flagged";
+    return FLAGGED_CELL;
   }
 
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
     if (isMineHiddenIn.value[props.rowNumber][props.columnNumber]) {
-      className = "cell cell--exploded";
+      return EXPLODED_CELL;
     } else {
-      className = "cell cell--opened";
       if (adjacentMinesNumber.value > 0) {
-        className += ` count-${adjacentMinesNumber.value}`;
+        return OPENED_CELL + ` count-${adjacentMinesNumber.value}`;
+      } else {
+        return OPENED_CELL;
       }
     }
   }
 
-  return className;
+  return UNOPENED_CELL;
 });
 
 const onCellClicked = () => {
+  if (hasOpenedMinedCell.value) {
+    return;
+  }
+
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
     if (adjacentMinesNumber.value > 0) {
       triggerChording();
@@ -105,6 +138,10 @@ const onCellClicked = () => {
 };
 
 const onCellRightClicked = () => {
+  if (hasOpenedMinedCell.value) {
+    return;
+  }
+
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
     return;
   }
@@ -136,7 +173,6 @@ const triggerChording = () => {
     return;
   }
 
-  let canExecuteChording = true;
   for (const [adjacentRow, adjacentColumn] of adjacentCells) {
     if (
       isCellInsideBoard(
@@ -148,18 +184,16 @@ const triggerChording = () => {
       isFlagged.value[adjacentRow][adjacentColumn] &&
       !isMineHiddenIn.value[adjacentRow][adjacentColumn]
     ) {
-      canExecuteChording = false;
+      hasOpenedMinedCell.value = true;
     }
   }
 
-  if (canExecuteChording) {
-    executeChording(
-      props.rowNumber,
-      props.columnNumber,
-      rowSize.value,
-      columnSize.value
-    );
-  }
+  executeChording(
+    props.rowNumber,
+    props.columnNumber,
+    rowSize.value,
+    columnSize.value
+  );
 };
 </script>
 

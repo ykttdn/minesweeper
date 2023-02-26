@@ -20,9 +20,11 @@ export const useParametersStore = defineStore("parameters", () => {
   const level = ref("easy");
 
   const hasGameStarted = ref(false);
+  const hasOpenedMinedCell = ref(false);
 
   const initializeParameters = () => {
     hasGameStarted.value = false;
+    hasOpenedMinedCell.value = false;
   };
 
   const isFlagModeOn = ref(false);
@@ -50,6 +52,7 @@ export const useParametersStore = defineStore("parameters", () => {
     changeLevel,
     columnSize,
     hasGameStarted,
+    hasOpenedMinedCell,
     initializeParameters,
     isFlagModeOn,
     level,
