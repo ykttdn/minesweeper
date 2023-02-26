@@ -14,7 +14,8 @@ const { initializeMines, openCell, toggleFlag } = cellStore;
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
-const { rowSize, columnSize, mineNumber } = storeToRefs(parameters);
+const { columnSize, hasGameStarted, isFlagModeOn, mineNumber, rowSize } =
+  storeToRefs(parameters);
 
 const cellState = computed(() => {
   if (isFlagged.value[props.rowNumber][props.columnNumber]) {
@@ -31,16 +32,49 @@ const cellState = computed(() => {
 
   return "cell cell--unopened";
 });
+
+const onCellClicked = () => {
+  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+    return;
+  }
+
+  if (isFlagModeOn.value) {
+    toggleFlag(props.rowNumber, props.columnNumber);
+    return;
+  }
+
+  if (isFlagged.value[props.rowNumber][props.columnNumber]) {
+    return;
+  }
+
+  if (!hasGameStarted.value) {
+    initializeMines(
+      rowSize.value,
+      columnSize.value,
+      mineNumber.value,
+      props.rowNumber,
+      props.columnNumber
+    );
+    hasGameStarted.value = true;
+  }
+
+  openCell(props.rowNumber, props.columnNumber);
+};
+
+const onCellRightClicked = () => {
+  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+    return;
+  }
+
+  toggleFlag(props.rowNumber, props.columnNumber);
+};
 </script>
 
 <template>
   <div
     :id="`cell-${rowNumber}-${columnNumber}`"
     :class="cellState"
-    @click="
-      initializeMines(rowSize, columnSize, mineNumber, rowNumber, columnNumber),
-        openCell(rowNumber, columnNumber)
-    "
-    @contextmenu.prevent="toggleFlag(rowNumber, columnNumber)"
+    @click="onCellClicked"
+    @contextmenu.prevent="onCellRightClicked"
   ></div>
 </template>
