@@ -10,21 +10,33 @@ import {
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 export const useParametersStore = defineStore("parameters", () => {
   const rowSize = ref(ROW_SIZE_EASY);
   const columnSize = ref(COLUMN_SIZE_EASY);
   const mineNumber = ref(MINE_NUMBER_EASY);
 
+  const safeCellNumber = ref(
+    rowSize.value * columnSize.value - mineNumber.value
+  );
+
   const level = ref("easy");
 
   const hasGameStarted = ref(false);
+  const hasOpenedAllSafeCells = computed(() => {
+    if (safeCellNumber.value === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  });
   const hasOpenedMinedCell = ref(false);
 
   const initializeParameters = () => {
     hasGameStarted.value = false;
     hasOpenedMinedCell.value = false;
+    safeCellNumber.value = rowSize.value * columnSize.value - mineNumber.value;
   };
 
   const isFlagModeOn = ref(false);
@@ -52,12 +64,14 @@ export const useParametersStore = defineStore("parameters", () => {
     changeLevel,
     columnSize,
     hasGameStarted,
+    hasOpenedAllSafeCells,
     hasOpenedMinedCell,
     initializeParameters,
     isFlagModeOn,
     level,
     mineNumber,
     rowSize,
+    safeCellNumber,
     toggleFlagMode,
   };
 });

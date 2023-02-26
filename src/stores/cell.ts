@@ -9,7 +9,7 @@ import { useParametersStore } from "./parameters";
 
 export const useCellStore = defineStore("cell", () => {
   const parameters = useParametersStore();
-  const { hasOpenedMinedCell } = storeToRefs(parameters);
+  const { hasOpenedMinedCell, safeCellNumber } = storeToRefs(parameters);
 
   const isMineHiddenIn = ref(
     initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
@@ -84,6 +84,12 @@ export const useCellStore = defineStore("cell", () => {
     columnSize: number
   ) => {
     isOpened.value[row][column] = true;
+
+    if (isMineHiddenIn.value[row][column]) {
+      hasOpenedMinedCell.value = true;
+    } else {
+      safeCellNumber.value--;
+    }
 
     if (hasOpenedMinedCell.value) {
       return;

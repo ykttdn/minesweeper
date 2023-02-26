@@ -33,10 +33,11 @@ const parameters = useParametersStore();
 const {
   columnSize,
   hasGameStarted,
+  hasOpenedAllSafeCells,
+  hasOpenedMinedCell,
   isFlagModeOn,
   mineNumber,
   rowSize,
-  hasOpenedMinedCell,
 } = storeToRefs(parameters);
 
 const adjacentMinesNumber = computed(() => {
@@ -62,6 +63,15 @@ const adjacentMinesNumber = computed(() => {
 });
 
 const cellState = computed(() => {
+  if (hasOpenedAllSafeCells.value) {
+    if (
+      isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
+      !isFlagged.value[props.rowNumber][props.columnNumber]
+    ) {
+      return FLAGGED_CELL;
+    }
+  }
+
   if (hasOpenedMinedCell.value) {
     if (
       isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
@@ -98,7 +108,7 @@ const cellState = computed(() => {
 });
 
 const onCellClicked = () => {
-  if (hasOpenedMinedCell.value) {
+  if (hasOpenedAllSafeCells.value || hasOpenedMinedCell.value) {
     return;
   }
 
@@ -138,7 +148,7 @@ const onCellClicked = () => {
 };
 
 const onCellRightClicked = () => {
-  if (hasOpenedMinedCell.value) {
+  if (hasOpenedAllSafeCells.value || hasOpenedMinedCell.value) {
     return;
   }
 
