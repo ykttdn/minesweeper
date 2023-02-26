@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import { initialize2DArray } from "@/utils/Initialize2DArray";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
 import { random } from "@/utils/random";
+import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
+import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 
 export const useCellStore = defineStore("cell", () => {
   const isMineHiddenIn = ref(
@@ -56,8 +58,35 @@ export const useCellStore = defineStore("cell", () => {
     }
   };
 
-  const openCell = (row: number, column: number) => {
+  const openCell = (
+    row: number,
+    column: number,
+    rowSize: number,
+    columnSize: number
+  ) => {
     isOpened.value[row][column] = true;
+
+    let adjacentMinesNumber = 0;
+    const adjacentCells = getAdjacentCellsIndex(row, column);
+    for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+      if (
+        isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
+        isMineHiddenIn.value[adjacentRow][adjacentColumn]
+      ) {
+        adjacentMinesNumber++;
+      }
+    }
+
+    if (adjacentMinesNumber === 0) {
+      for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+        if (
+          isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
+          !isOpened.value[adjacentRow][adjacentColumn]
+        ) {
+          openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
+        }
+      }
+    }
   };
 
   const toggleFlag = (row: number, column: number) => {

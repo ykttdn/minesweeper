@@ -99,7 +99,12 @@ const onCellClicked = () => {
     hasGameStarted.value = true;
   }
 
-  openCell(props.rowNumber, props.columnNumber);
+  openCell(
+    props.rowNumber,
+    props.columnNumber,
+    rowSize.value,
+    columnSize.value
+  );
 };
 
 const onCellRightClicked = () => {
