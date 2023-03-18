@@ -1,4 +1,4 @@
-export const checkIfCellIsInsideBoard = (
+export const isCellInsideBoard = (
   row: number,
   col: number,
   rowSize: number,

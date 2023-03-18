@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
 import BaseCell from "./BaseCell.vue";
+
 defineProps({
-  rowNumber: Number,
+  rowNumber: { type: Number, required: true },
 });
-const columnSize = inject("columnSize");
+
+const parameters = useParametersStore();
+const { columnSize } = storeToRefs(parameters);
 </script>
 
 <template>

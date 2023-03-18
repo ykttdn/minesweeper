@@ -5,4 +5,4 @@ export const initialize2DArray = (
 ) =>
   JSON.parse(
     JSON.stringify(new Array(rowSize).fill(new Array(columnSize).fill(content)))
-  );
+  ) as boolean[][];

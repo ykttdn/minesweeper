@@ -1,13 +1,35 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { useCellStore } from "@/stores/cell";
+import { useParametersStore } from "@/stores/parameters";
+import {
+  FACE_FAILURE,
+  FACE_NORMAL,
+  FACE_SUCCESS,
+} from "@/utils/GameParameters";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
-const currentLevel = inject("level") as string;
-const resetBoard = inject("resetBoard") as (newLevel: string) => void;
+const parameters = useParametersStore();
+const { columnSize, hasOpenedAllSafeCells, hasOpenedMinedCell, rowSize } =
+  storeToRefs(parameters);
+const { initializeParameters } = parameters;
+
+const { initializeCells } = useCellStore();
+
+const buttonState = computed(() => {
+  if (hasOpenedAllSafeCells.value) {
+    return FACE_SUCCESS;
+  } else if (hasOpenedMinedCell.value) {
+    return FACE_FAILURE;
+  } else {
+    return FACE_NORMAL;
+  }
+});
 </script>
 
 <template>
   <button
-    class="reset-button face-normal"
-    @click="resetBoard(currentLevel)"
+    :class="buttonState"
+    @click="initializeCells(rowSize, columnSize), initializeParameters()"
   ></button>
 </template>

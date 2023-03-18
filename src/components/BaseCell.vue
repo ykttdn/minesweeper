@@ -1,47 +1,229 @@
 <script setup lang="ts">
-import { inject } from "vue";
-import { toggleFlag, touchCell } from "../modules/MainAlgorithm";
+import { useCellStore } from "@/stores/cell";
+import { useParametersStore } from "@/stores/parameters";
+import {
+  EXPLODED_CELL,
+  FLAGGED_CELL,
+  MINED_CELL,
+  OPENED_CELL,
+  UNOPENED_CELL,
+  WRONGLY_FLAGGED_CELL,
+} from "@/utils/GameParameters";
+import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
+import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
-defineProps({
-  rowNumber: Number,
-  columnNumber: Number,
+const props = defineProps({
+  rowNumber: { type: Number, required: true },
+  columnNumber: { type: Number, required: true },
 });
-const rowSize = inject("rowSize") as number;
-const columnSize = inject("columnSize") as number;
 
-const startGame = inject("startGame") as (
-  row: number | undefined,
-  column: number | undefined
-) => void;
+const cellStore = useCellStore();
+const {
+  countAdjacentMines,
+  executeChording,
+  initializeMines,
+  openCell,
+  toggleFlag,
+} = cellStore;
+const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
-const onClickCell = (
-  row: number | undefined,
-  column: number | undefined,
-  rowSize: number,
-  columnSize: number
-) => {
-  if (row === undefined || column === undefined) {
+const parameters = useParametersStore();
+const { advanceTimer } = parameters;
+const {
+  columnSize,
+  hasGameStarted,
+  hasOpenedAllSafeCells,
+  hasOpenedMinedCell,
+  isFlagModeOn,
+  mineNumber,
+  rowSize,
+  timerId,
+} = storeToRefs(parameters);
+
+const adjacentMinesNumber = computed(() => {
+  if (
+    !isOpened.value[props.rowNumber][props.columnNumber] ||
+    isMineHiddenIn.value[props.rowNumber][props.columnNumber]
+  ) {
+    return "";
+  }
+
+  const counter = countAdjacentMines(
+    props.rowNumber,
+    props.columnNumber,
+    rowSize.value,
+    columnSize.value
+  );
+
+  if (counter > 0) {
+    return counter;
+  } else {
+    return "";
+  }
+});
+
+const cellState = computed(() => {
+  if (hasOpenedAllSafeCells.value) {
+    if (
+      isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
+      !isFlagged.value[props.rowNumber][props.columnNumber]
+    ) {
+      return FLAGGED_CELL;
+    }
+  }
+
+  if (hasOpenedMinedCell.value) {
+    if (
+      isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
+      !isFlagged.value[props.rowNumber][props.columnNumber] &&
+      !isOpened.value[props.rowNumber][props.columnNumber]
+    ) {
+      return MINED_CELL;
+    }
+    if (
+      !isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
+      isFlagged.value[props.rowNumber][props.columnNumber]
+    ) {
+      return WRONGLY_FLAGGED_CELL;
+    }
+  }
+
+  if (isFlagged.value[props.rowNumber][props.columnNumber]) {
+    return FLAGGED_CELL;
+  }
+
+  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+    if (isMineHiddenIn.value[props.rowNumber][props.columnNumber]) {
+      return EXPLODED_CELL;
+    } else {
+      if (adjacentMinesNumber.value > 0) {
+        return OPENED_CELL + ` count-${adjacentMinesNumber.value}`;
+      } else {
+        return OPENED_CELL;
+      }
+    }
+  }
+
+  return UNOPENED_CELL;
+});
+
+const onCellClicked = () => {
+  if (hasOpenedAllSafeCells.value || hasOpenedMinedCell.value) {
     return;
   }
-  touchCell(row, column, rowSize, columnSize);
+
+  if (timerId.value === 0) {
+    timerId.value = window.setInterval(advanceTimer, 1000);
+  }
+
+  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+    if (adjacentMinesNumber.value > 0) {
+      triggerChording();
+    }
+    return;
+  }
+
+  if (isFlagModeOn.value) {
+    toggleFlag(props.rowNumber, props.columnNumber);
+    return;
+  }
+
+  if (isFlagged.value[props.rowNumber][props.columnNumber]) {
+    return;
+  }
+
+  if (!hasGameStarted.value) {
+    initializeMines(
+      rowSize.value,
+      columnSize.value,
+      mineNumber.value,
+      props.rowNumber,
+      props.columnNumber
+    );
+    hasGameStarted.value = true;
+  }
+
+  openCell(
+    props.rowNumber,
+    props.columnNumber,
+    rowSize.value,
+    columnSize.value
+  );
 };
 
-const onContextMenu = (row: number | undefined, column: number | undefined) => {
-  if (row === undefined || column === undefined) {
+const onCellRightClicked = () => {
+  if (hasOpenedAllSafeCells.value || hasOpenedMinedCell.value) {
     return;
   }
-  toggleFlag(row, column);
+
+  if (timerId.value === 0) {
+    timerId.value = window.setInterval(advanceTimer, 1000);
+  }
+
+  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+    return;
+  }
+
+  toggleFlag(props.rowNumber, props.columnNumber);
+};
+
+const triggerChording = () => {
+  let adjacentFlagsNumber = 0;
+  const adjacentCells = getAdjacentCellsIndex(
+    props.rowNumber,
+    props.columnNumber
+  );
+  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    if (
+      isCellInsideBoard(
+        adjacentRow,
+        adjacentColumn,
+        rowSize.value,
+        columnSize.value
+      ) &&
+      isFlagged.value[adjacentRow][adjacentColumn]
+    ) {
+      adjacentFlagsNumber++;
+    }
+  }
+
+  if (adjacentMinesNumber.value != adjacentFlagsNumber) {
+    return;
+  }
+
+  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    if (
+      isCellInsideBoard(
+        adjacentRow,
+        adjacentColumn,
+        rowSize.value,
+        columnSize.value
+      ) &&
+      isFlagged.value[adjacentRow][adjacentColumn] &&
+      !isMineHiddenIn.value[adjacentRow][adjacentColumn]
+    ) {
+      hasOpenedMinedCell.value = true;
+    }
+  }
+
+  executeChording(
+    props.rowNumber,
+    props.columnNumber,
+    rowSize.value,
+    columnSize.value
+  );
 };
 </script>
 
 <template>
   <div
     :id="`cell-${rowNumber}-${columnNumber}`"
-    class="cell cell--unopened"
-    @click="
-      startGame(rowNumber, columnNumber),
-        onClickCell(rowNumber, columnNumber, rowSize, columnSize)
-    "
-    @contextmenu.prevent="onContextMenu(rowNumber, columnNumber)"
-  ></div>
+    :class="cellState"
+    @click="onCellClicked"
+    @contextmenu.prevent="onCellRightClicked"
+  >
+    {{ adjacentMinesNumber }}
+  </div>
 </template>

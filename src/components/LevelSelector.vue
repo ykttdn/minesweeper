@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { useCellStore } from "@/stores/cell";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
 
-const selectedLevel = inject("level") as string;
-const emit = defineEmits(["changeParameters"]);
-const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
+const parameters = useParametersStore();
+const { columnSize, level, rowSize } = storeToRefs(parameters);
+const { initializeParameters, changeLevel } = parameters;
+
+const { initializeCells } = useCellStore();
 </script>
 
 <template>
@@ -12,8 +16,12 @@ const changeLevel = (newLevel: string) => emit("changeParameters", newLevel);
     <select
       name="level"
       id="level"
-      v-model="selectedLevel"
-      @change="changeLevel(selectedLevel)"
+      v-model="level"
+      @change="
+        changeLevel(),
+          initializeCells(rowSize, columnSize),
+          initializeParameters()
+      "
     >
       <option value="easy">EASY</option>
       <option value="normal">NORMAL</option>

@@ -1,14 +1,24 @@
 <script setup lang="ts">
-import { toggleFlagMode } from "../modules/MainAlgorithm";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
-const onClickToggleButton = () => {
-  toggleFlagMode();
-};
+const parameters = useParametersStore();
+const { isFlagModeOn } = storeToRefs(parameters);
+const { toggleFlagMode } = parameters;
+
+const switchButtonState = computed(() => {
+  if (isFlagModeOn.value) {
+    return "switch switch--on";
+  } else {
+    return "switch";
+  }
+});
 </script>
 
 <template>
   <div class="bottom-area">
-    <div class="switch" @click="onClickToggleButton"></div>
+    <div :class="switchButtonState" @click="toggleFlagMode"></div>
     <i class="fa-solid fa-flag flag-icon"></i>
   </div>
 </template>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { inject } from "vue";
+import { useParametersStore } from "@/stores/parameters";
+import { storeToRefs } from "pinia";
 import BaseRow from "./BaseRow.vue";
 
-const rowSize = inject("rowSize");
+const parameters = useParametersStore();
+const { rowSize } = storeToRefs(parameters);
 </script>
 
 <template>
