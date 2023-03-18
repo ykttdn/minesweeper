@@ -9,7 +9,8 @@ import { useParametersStore } from "./parameters";
 
 export const useCellStore = defineStore("cell", () => {
   const parameters = useParametersStore();
-  const { hasOpenedMinedCell, safeCellNumber } = storeToRefs(parameters);
+  const { hasOpenedMinedCell, remainingMineNumber, safeCellNumber } =
+    storeToRefs(parameters);
 
   const isMineHiddenIn = ref(
     initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
@@ -135,7 +136,13 @@ export const useCellStore = defineStore("cell", () => {
   };
 
   const toggleFlag = (row: number, column: number) => {
-    isFlagged.value[row][column] = !isFlagged.value[row][column];
+    if (isFlagged.value[row][column]) {
+      isFlagged.value[row][column] = false;
+      remainingMineNumber.value++;
+    } else {
+      isFlagged.value[row][column] = true;
+      remainingMineNumber.value--;
+    }
   };
 
   return {

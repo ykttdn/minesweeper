@@ -4,21 +4,21 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 const parameters = useParametersStore();
-const { mineNumber } = storeToRefs(parameters);
+const { remainingMineNumber } = storeToRefs(parameters);
 
 const displayedMineNumber = computed(() => {
-  if (mineNumber.value <= -100) {
+  if (remainingMineNumber.value <= -100) {
     return "-99";
-  } else if (mineNumber.value <= -10) {
-    return `${mineNumber.value}`;
-  } else if (mineNumber.value <= -1) {
-    return `- ${-mineNumber.value}`;
-  } else if (mineNumber.value <= 9) {
-    return `00${mineNumber.value}`;
-  } else if (mineNumber.value <= 99) {
-    return `0${mineNumber.value}`;
-  } else if (mineNumber.value <= 999) {
-    return `${mineNumber.value}`;
+  } else if (remainingMineNumber.value <= -10) {
+    return `${remainingMineNumber.value}`;
+  } else if (remainingMineNumber.value <= -1) {
+    return `- ${-remainingMineNumber.value}`;
+  } else if (remainingMineNumber.value <= 9) {
+    return `00${remainingMineNumber.value}`;
+  } else if (remainingMineNumber.value <= 99) {
+    return `0${remainingMineNumber.value}`;
+  } else if (remainingMineNumber.value <= 999) {
+    return `${remainingMineNumber.value}`;
   } else {
     return "999";
   }

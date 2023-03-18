@@ -17,6 +17,8 @@ export const useParametersStore = defineStore("parameters", () => {
   const columnSize = ref(COLUMN_SIZE_EASY);
   const mineNumber = ref(MINE_NUMBER_EASY);
 
+  const remainingMineNumber = ref(mineNumber.value);
+
   const safeCellNumber = ref(
     rowSize.value * columnSize.value - mineNumber.value
   );
@@ -36,6 +38,7 @@ export const useParametersStore = defineStore("parameters", () => {
   const initializeParameters = () => {
     hasGameStarted.value = false;
     hasOpenedMinedCell.value = false;
+    remainingMineNumber.value = mineNumber.value;
     safeCellNumber.value = rowSize.value * columnSize.value - mineNumber.value;
   };
 
@@ -70,6 +73,7 @@ export const useParametersStore = defineStore("parameters", () => {
     isFlagModeOn,
     level,
     mineNumber,
+    remainingMineNumber,
     rowSize,
     safeCellNumber,
     toggleFlagMode,
