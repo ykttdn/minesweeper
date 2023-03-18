@@ -33,6 +33,12 @@ export const useParametersStore = defineStore("parameters", () => {
       return false;
     }
   });
+  watch(hasOpenedAllSafeCells, () => {
+    if (hasOpenedAllSafeCells.value) {
+      remainingMineNumber.value = 0;
+    }
+  });
+
   const hasOpenedMinedCell = ref(false);
 
   const timerId = ref(0);
