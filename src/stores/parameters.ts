@@ -10,7 +10,7 @@ import {
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 export const useParametersStore = defineStore("parameters", () => {
   const rowSize = ref(ROW_SIZE_EASY);
@@ -35,11 +35,33 @@ export const useParametersStore = defineStore("parameters", () => {
   });
   const hasOpenedMinedCell = ref(false);
 
+  const timerId = ref(0);
+  const elapsedTime = ref(0);
+  const advanceTimer = () => {
+    elapsedTime.value++;
+    if (elapsedTime.value >= 999) {
+      window.clearInterval(timerId.value);
+    }
+  };
+  watch(hasOpenedAllSafeCells, () => {
+    if (hasOpenedAllSafeCells.value) {
+      window.clearInterval(timerId.value);
+    }
+  });
+  watch(hasOpenedMinedCell, () => {
+    if (hasOpenedMinedCell.value) {
+      window.clearInterval(timerId.value);
+    }
+  });
+
   const initializeParameters = () => {
+    elapsedTime.value = 0;
     hasGameStarted.value = false;
     hasOpenedMinedCell.value = false;
     remainingMineNumber.value = mineNumber.value;
     safeCellNumber.value = rowSize.value * columnSize.value - mineNumber.value;
+    window.clearInterval(timerId.value);
+    timerId.value = 0;
   };
 
   const isFlagModeOn = ref(false);
@@ -64,8 +86,10 @@ export const useParametersStore = defineStore("parameters", () => {
   };
 
   return {
+    advanceTimer,
     changeLevel,
     columnSize,
+    elapsedTime,
     hasGameStarted,
     hasOpenedAllSafeCells,
     hasOpenedMinedCell,
@@ -76,6 +100,7 @@ export const useParametersStore = defineStore("parameters", () => {
     remainingMineNumber,
     rowSize,
     safeCellNumber,
+    timerId,
     toggleFlagMode,
   };
 });

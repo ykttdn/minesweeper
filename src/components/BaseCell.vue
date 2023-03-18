@@ -30,6 +30,7 @@ const {
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
+const { advanceTimer } = parameters;
 const {
   columnSize,
   hasGameStarted,
@@ -38,6 +39,7 @@ const {
   isFlagModeOn,
   mineNumber,
   rowSize,
+  timerId,
 } = storeToRefs(parameters);
 
 const adjacentMinesNumber = computed(() => {
@@ -112,6 +114,10 @@ const onCellClicked = () => {
     return;
   }
 
+  if (timerId.value === 0) {
+    timerId.value = window.setInterval(advanceTimer, 1000);
+  }
+
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
     if (adjacentMinesNumber.value > 0) {
       triggerChording();
@@ -150,6 +156,10 @@ const onCellClicked = () => {
 const onCellRightClicked = () => {
   if (hasOpenedAllSafeCells.value || hasOpenedMinedCell.value) {
     return;
+  }
+
+  if (timerId.value === 0) {
+    timerId.value = window.setInterval(advanceTimer, 1000);
   }
 
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
