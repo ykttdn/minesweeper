@@ -16,13 +16,11 @@ const { timer } = storeToRefs(timerStore);
 
 const parameters = useParametersStore();
 const {
-  columnSize,
+  boardParams,
   hasGameStarted,
   hasOpenedAllSafeCells,
   hasOpenedMinedCell,
-  mineNumber,
   remainingMineNumber,
-  rowSize,
   safeCellNumber,
 } = storeToRefs(parameters);
 const { initGameParams } = parameters;
@@ -40,18 +38,14 @@ const buttonState = computed(() => {
 });
 
 const handleClick = () => {
-  initializeCells(rowSize.value, columnSize.value);
+  initializeCells(boardParams.value.rowSize, boardParams.value.columnSize);
 
   ({
     hasGameStarted: hasGameStarted.value,
     hasOpenedMinedCell: hasOpenedMinedCell.value,
     remainingMineNumber: remainingMineNumber.value,
     safeCellNumber: safeCellNumber.value,
-  } = initGameParams({
-    rowSize: rowSize.value,
-    columnSize: columnSize.value,
-    mineNumber: mineNumber.value,
-  }));
+  } = initGameParams(boardParams.value));
 
   timer.value = resetTimer(timer.value);
 };

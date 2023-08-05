@@ -32,13 +32,11 @@ const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
 const {
-  columnSize,
+  boardParams,
   hasGameStarted,
   hasOpenedAllSafeCells,
   hasOpenedMinedCell,
   isFlagModeOn,
-  mineNumber,
-  rowSize,
 } = storeToRefs(parameters);
 
 const timerStore = useTimerStore();
@@ -56,8 +54,8 @@ const adjacentMinesNumber = computed(() => {
   const counter = countAdjacentMines(
     props.rowNumber,
     props.columnNumber,
-    rowSize.value,
-    columnSize.value
+    boardParams.value.rowSize,
+    boardParams.value.columnSize
   );
 
   if (counter > 0) {
@@ -139,9 +137,9 @@ const onCellClicked = () => {
 
   if (!hasGameStarted.value) {
     initializeMines(
-      rowSize.value,
-      columnSize.value,
-      mineNumber.value,
+      boardParams.value.rowSize,
+      boardParams.value.columnSize,
+      boardParams.value.mineNumber,
       props.rowNumber,
       props.columnNumber
     );
@@ -151,8 +149,8 @@ const onCellClicked = () => {
   openCell(
     props.rowNumber,
     props.columnNumber,
-    rowSize.value,
-    columnSize.value
+    boardParams.value.rowSize,
+    boardParams.value.columnSize
   );
 };
 
@@ -183,8 +181,8 @@ const triggerChording = () => {
       isCellInsideBoard(
         adjacentRow,
         adjacentColumn,
-        rowSize.value,
-        columnSize.value
+        boardParams.value.rowSize,
+        boardParams.value.columnSize
       ) &&
       isFlagged.value[adjacentRow][adjacentColumn]
     ) {
@@ -201,8 +199,8 @@ const triggerChording = () => {
       isCellInsideBoard(
         adjacentRow,
         adjacentColumn,
-        rowSize.value,
-        columnSize.value
+        boardParams.value.rowSize,
+        boardParams.value.columnSize
       ) &&
       isFlagged.value[adjacentRow][adjacentColumn] &&
       !isMineHiddenIn.value[adjacentRow][adjacentColumn]
@@ -214,8 +212,8 @@ const triggerChording = () => {
   executeChording(
     props.rowNumber,
     props.columnNumber,
-    rowSize.value,
-    columnSize.value
+    boardParams.value.rowSize,
+    boardParams.value.columnSize
   );
 };
 </script>

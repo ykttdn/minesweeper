@@ -8,13 +8,13 @@ defineProps({
 });
 
 const parameters = useParametersStore();
-const { columnSize } = storeToRefs(parameters);
+const { boardParams } = storeToRefs(parameters);
 </script>
 
 <template>
   <div class="row">
     <BaseCell
-      v-for="columnNumber in columnSize"
+      v-for="columnNumber in boardParams.columnSize"
       :key="columnNumber"
       :row-number="rowNumber"
       :column-number="columnNumber - 1"

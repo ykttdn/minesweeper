@@ -33,14 +33,17 @@ export const useParametersStore = defineStore("parameters", () => {
   const { stopTimer } = timerStore;
   const { timer } = storeToRefs(timerStore);
 
-  const rowSize = ref(ROW_SIZE_EASY);
-  const columnSize = ref(COLUMN_SIZE_EASY);
-  const mineNumber = ref(MINE_NUMBER_EASY);
+  const boardParams = ref<BoardParams>({
+    rowSize: ROW_SIZE_EASY,
+    columnSize: COLUMN_SIZE_EASY,
+    mineNumber: MINE_NUMBER_EASY,
+  });
 
-  const remainingMineNumber = ref(mineNumber.value);
+  const remainingMineNumber = ref(boardParams.value.mineNumber);
 
   const safeCellNumber = ref(
-    rowSize.value * columnSize.value - mineNumber.value
+    boardParams.value.rowSize * boardParams.value.columnSize -
+      boardParams.value.mineNumber
   );
 
   const level = ref<Level>("easy");
@@ -111,16 +114,14 @@ export const useParametersStore = defineStore("parameters", () => {
   };
 
   return {
-    columnSize,
+    boardParams,
     hasGameStarted,
     hasOpenedAllSafeCells,
     hasOpenedMinedCell,
     initGameParams,
     isFlagModeOn,
     level,
-    mineNumber,
     remainingMineNumber,
-    rowSize,
     safeCellNumber,
     setBoardParams,
     toggleFlagMode,
