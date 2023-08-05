@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
+import { useTimerStore } from "@/stores/timer";
 import {
   EXPLODED_CELL,
   FLAGGED_CELL,
@@ -30,7 +31,6 @@ const {
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
-const { advanceTimer } = parameters;
 const {
   columnSize,
   hasGameStarted,
@@ -39,8 +39,11 @@ const {
   isFlagModeOn,
   mineNumber,
   rowSize,
-  timerId,
 } = storeToRefs(parameters);
+
+const timerStore = useTimerStore();
+const { startTimer } = timerStore;
+const { timer } = storeToRefs(timerStore);
 
 const adjacentMinesNumber = computed(() => {
   if (
@@ -114,8 +117,8 @@ const onCellClicked = () => {
     return;
   }
 
-  if (timerId.value === 0) {
-    timerId.value = window.setInterval(advanceTimer, 1000);
+  if (timer.value.id === 0) {
+    timer.value = startTimer(timer.value);
   }
 
   if (isOpened.value[props.rowNumber][props.columnNumber]) {
@@ -158,8 +161,8 @@ const onCellRightClicked = () => {
     return;
   }
 
-  if (timerId.value === 0) {
-    timerId.value = window.setInterval(advanceTimer, 1000);
+  if (timer.value.id === 0) {
+    timer.value = startTimer(timer.value);
   }
 
   if (isOpened.value[props.rowNumber][props.columnNumber]) {

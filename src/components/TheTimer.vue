@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { useParametersStore } from "@/stores/parameters";
+import { useTimerStore } from "@/stores/timer";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-const parameters = useParametersStore();
-const { elapsedTime } = storeToRefs(parameters);
+const timerStore = useTimerStore();
+const { timer } = storeToRefs(timerStore);
 
 const displayedTime = computed(() => {
-  if (elapsedTime.value <= -100) {
+  const elapsedTime = timer.value.current;
+
+  if (elapsedTime <= -100) {
     return "-99";
-  } else if (elapsedTime.value <= -10) {
-    return `${elapsedTime.value}`;
-  } else if (elapsedTime.value <= -1) {
-    return `- ${-elapsedTime.value}`;
-  } else if (elapsedTime.value <= 9) {
-    return `00${elapsedTime.value}`;
-  } else if (elapsedTime.value <= 99) {
-    return `0${elapsedTime.value}`;
-  } else if (elapsedTime.value <= 999) {
-    return `${elapsedTime.value}`;
+  } else if (elapsedTime <= -10) {
+    return `${elapsedTime}`;
+  } else if (elapsedTime <= -1) {
+    return `- ${-elapsedTime}`;
+  } else if (elapsedTime <= 9) {
+    return `00${elapsedTime}`;
+  } else if (elapsedTime <= 99) {
+    return `0${elapsedTime}`;
+  } else if (elapsedTime <= 999) {
+    return `${elapsedTime}`;
   } else {
     return "999";
   }

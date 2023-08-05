@@ -9,10 +9,15 @@ import {
   ROW_SIZE_HARD,
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
+import { useTimerStore } from "./timer";
 
 export const useParametersStore = defineStore("parameters", () => {
+  const timerStore = useTimerStore();
+  const { resetTimer, stopTimer } = timerStore;
+  const { timer } = storeToRefs(timerStore);
+
   const rowSize = ref(ROW_SIZE_EASY);
   const columnSize = ref(COLUMN_SIZE_EASY);
   const mineNumber = ref(MINE_NUMBER_EASY);
@@ -41,33 +46,23 @@ export const useParametersStore = defineStore("parameters", () => {
 
   const hasOpenedMinedCell = ref(false);
 
-  const timerId = ref(0);
-  const elapsedTime = ref(0);
-  const advanceTimer = () => {
-    elapsedTime.value++;
-    if (elapsedTime.value >= 999) {
-      window.clearInterval(timerId.value);
-    }
-  };
   watch(hasOpenedAllSafeCells, () => {
     if (hasOpenedAllSafeCells.value) {
-      window.clearInterval(timerId.value);
+      stopTimer(timer.value);
     }
   });
   watch(hasOpenedMinedCell, () => {
     if (hasOpenedMinedCell.value) {
-      window.clearInterval(timerId.value);
+      stopTimer(timer.value);
     }
   });
 
   const initializeParameters = () => {
-    elapsedTime.value = 0;
     hasGameStarted.value = false;
     hasOpenedMinedCell.value = false;
     remainingMineNumber.value = mineNumber.value;
     safeCellNumber.value = rowSize.value * columnSize.value - mineNumber.value;
-    window.clearInterval(timerId.value);
-    timerId.value = 0;
+    timer.value = resetTimer(timer.value);
   };
 
   const isFlagModeOn = ref(false);
@@ -92,10 +87,8 @@ export const useParametersStore = defineStore("parameters", () => {
   };
 
   return {
-    advanceTimer,
     changeLevel,
     columnSize,
-    elapsedTime,
     hasGameStarted,
     hasOpenedAllSafeCells,
     hasOpenedMinedCell,
@@ -106,7 +99,6 @@ export const useParametersStore = defineStore("parameters", () => {
     remainingMineNumber,
     rowSize,
     safeCellNumber,
-    timerId,
     toggleFlagMode,
   };
 });
