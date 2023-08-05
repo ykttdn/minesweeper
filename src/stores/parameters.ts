@@ -13,6 +13,14 @@ import { defineStore, storeToRefs } from "pinia";
 import { computed, ref, watch } from "vue";
 import { useTimerStore } from "./timer";
 
+type Level = "easy" | "normal" | "hard";
+
+type BoardParams = {
+  rowSize: number;
+  columnSize: number;
+  mineNumber: number;
+};
+
 export const useParametersStore = defineStore("parameters", () => {
   const timerStore = useTimerStore();
   const { resetTimer, stopTimer } = timerStore;
@@ -28,7 +36,7 @@ export const useParametersStore = defineStore("parameters", () => {
     rowSize.value * columnSize.value - mineNumber.value
   );
 
-  const level = ref("easy");
+  const level = ref<Level>("easy");
 
   const hasGameStarted = ref(false);
   const hasOpenedAllSafeCells = computed(() => {
@@ -70,24 +78,27 @@ export const useParametersStore = defineStore("parameters", () => {
     isFlagModeOn.value = !isFlagModeOn.value;
   };
 
-  const changeLevel = () => {
-    if (level.value === "normal") {
-      rowSize.value = ROW_SIZE_NORMAL;
-      columnSize.value = COLUMN_SIZE_NORMAL;
-      mineNumber.value = MINE_NUMBER_NORMAL;
-    } else if (level.value === "hard") {
-      rowSize.value = ROW_SIZE_HARD;
-      columnSize.value = COLUMN_SIZE_HARD;
-      mineNumber.value = MINE_NUMBER_HARD;
+  const setBoardParams = (level: Level): BoardParams => {
+    let rowSize: number, columnSize: number, mineNumber: number;
+
+    if (level === "normal") {
+      rowSize = ROW_SIZE_NORMAL;
+      columnSize = COLUMN_SIZE_NORMAL;
+      mineNumber = MINE_NUMBER_NORMAL;
+    } else if (level === "hard") {
+      rowSize = ROW_SIZE_HARD;
+      columnSize = COLUMN_SIZE_HARD;
+      mineNumber = MINE_NUMBER_HARD;
     } else {
-      rowSize.value = ROW_SIZE_EASY;
-      columnSize.value = COLUMN_SIZE_EASY;
-      mineNumber.value = MINE_NUMBER_EASY;
+      rowSize = ROW_SIZE_EASY;
+      columnSize = COLUMN_SIZE_EASY;
+      mineNumber = MINE_NUMBER_EASY;
     }
+
+    return { rowSize, columnSize, mineNumber };
   };
 
   return {
-    changeLevel,
     columnSize,
     hasGameStarted,
     hasOpenedAllSafeCells,
@@ -99,6 +110,7 @@ export const useParametersStore = defineStore("parameters", () => {
     remainingMineNumber,
     rowSize,
     safeCellNumber,
+    setBoardParams,
     toggleFlagMode,
   };
 });
