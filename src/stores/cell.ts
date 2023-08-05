@@ -9,8 +9,7 @@ import { useParametersStore } from "./parameters";
 
 export const useCellStore = defineStore("cell", () => {
   const parameters = useParametersStore();
-  const { hasOpenedMinedCell, remainingMineNumber, safeCellNumber } =
-    storeToRefs(parameters);
+  const { gameParams } = storeToRefs(parameters);
 
   const isMineHiddenIn = ref(
     initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
@@ -87,12 +86,12 @@ export const useCellStore = defineStore("cell", () => {
     isOpened.value[row][column] = true;
 
     if (isMineHiddenIn.value[row][column]) {
-      hasOpenedMinedCell.value = true;
+      gameParams.value.hasOpenedMinedCell = true;
     } else {
-      safeCellNumber.value--;
+      gameParams.value.safeCellNumber--;
     }
 
-    if (hasOpenedMinedCell.value) {
+    if (gameParams.value.hasOpenedMinedCell) {
       return;
     }
 
@@ -138,10 +137,10 @@ export const useCellStore = defineStore("cell", () => {
   const toggleFlag = (row: number, column: number) => {
     if (isFlagged.value[row][column]) {
       isFlagged.value[row][column] = false;
-      remainingMineNumber.value++;
+      gameParams.value.remainingMineNumber++;
     } else {
       isFlagged.value[row][column] = true;
-      remainingMineNumber.value--;
+      gameParams.value.remainingMineNumber--;
     }
   };
 

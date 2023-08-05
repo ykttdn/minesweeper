@@ -15,14 +15,8 @@ const { resetTimer } = timerStore;
 const { timer } = storeToRefs(timerStore);
 
 const parameters = useParametersStore();
-const {
-  boardParams,
-  hasGameStarted,
-  hasOpenedAllSafeCells,
-  hasOpenedMinedCell,
-  remainingMineNumber,
-  safeCellNumber,
-} = storeToRefs(parameters);
+const { boardParams, gameParams, hasOpenedAllSafeCells } =
+  storeToRefs(parameters);
 const { initGameParams } = parameters;
 
 const { initializeCells } = useCellStore();
@@ -30,7 +24,7 @@ const { initializeCells } = useCellStore();
 const buttonState = computed(() => {
   if (hasOpenedAllSafeCells.value) {
     return FACE_SUCCESS;
-  } else if (hasOpenedMinedCell.value) {
+  } else if (gameParams.value.hasOpenedMinedCell) {
     return FACE_FAILURE;
   } else {
     return FACE_NORMAL;
@@ -40,12 +34,7 @@ const buttonState = computed(() => {
 const handleClick = () => {
   initializeCells(boardParams.value.rowSize, boardParams.value.columnSize);
 
-  ({
-    hasGameStarted: hasGameStarted.value,
-    hasOpenedMinedCell: hasOpenedMinedCell.value,
-    remainingMineNumber: remainingMineNumber.value,
-    safeCellNumber: safeCellNumber.value,
-  } = initGameParams(boardParams.value));
+  gameParams.value = initGameParams(boardParams.value);
 
   timer.value = resetTimer(timer.value);
 };

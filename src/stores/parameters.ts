@@ -10,7 +10,7 @@ import {
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
 import { defineStore, storeToRefs } from "pinia";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import { useTimerStore } from "./timer";
 
 type Level = "easy" | "normal" | "hard";
@@ -39,18 +39,17 @@ export const useParametersStore = defineStore("parameters", () => {
     mineNumber: MINE_NUMBER_EASY,
   });
 
-  const remainingMineNumber = ref(boardParams.value.mineNumber);
-
-  const safeCellNumber = ref(
-    boardParams.value.rowSize * boardParams.value.columnSize -
-      boardParams.value.mineNumber
-  );
+  const gameParams = ref<GameParams>({
+    hasGameStarted: false,
+    hasOpenedMinedCell: false,
+    remainingMineNumber: MINE_NUMBER_EASY,
+    safeCellNumber: ROW_SIZE_EASY * COLUMN_SIZE_EASY - MINE_NUMBER_EASY,
+  });
 
   const level = ref<Level>("easy");
 
-  const hasGameStarted = ref(false);
   const hasOpenedAllSafeCells = computed(() => {
-    if (safeCellNumber.value === 0) {
+    if (gameParams.value.safeCellNumber === 0) {
       return true;
     } else {
       return false;
@@ -58,19 +57,17 @@ export const useParametersStore = defineStore("parameters", () => {
   });
   watch(hasOpenedAllSafeCells, () => {
     if (hasOpenedAllSafeCells.value) {
-      remainingMineNumber.value = 0;
+      gameParams.value.remainingMineNumber = 0;
     }
   });
-
-  const hasOpenedMinedCell = ref(false);
 
   watch(hasOpenedAllSafeCells, () => {
     if (hasOpenedAllSafeCells.value) {
       stopTimer(timer.value);
     }
   });
-  watch(hasOpenedMinedCell, () => {
-    if (hasOpenedMinedCell.value) {
+  watchEffect(() => {
+    if (gameParams.value.hasOpenedMinedCell) {
       stopTimer(timer.value);
     }
   });
@@ -115,14 +112,11 @@ export const useParametersStore = defineStore("parameters", () => {
 
   return {
     boardParams,
-    hasGameStarted,
+    gameParams,
     hasOpenedAllSafeCells,
-    hasOpenedMinedCell,
     initGameParams,
     isFlagModeOn,
     level,
-    remainingMineNumber,
-    safeCellNumber,
     setBoardParams,
     toggleFlagMode,
   };
