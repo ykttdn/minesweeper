@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
+import { useTimerStore } from "@/stores/timer";
 import { storeToRefs } from "pinia";
 
+const timerStore = useTimerStore();
+const { resetTimer } = timerStore;
+const { timer } = storeToRefs(timerStore);
+
 const parameters = useParametersStore();
-const { columnSize, level, mineNumber, rowSize } = storeToRefs(parameters);
-const { initializeParameters, setBoardParams } = parameters;
+const {
+  columnSize,
+  hasGameStarted,
+  hasOpenedMinedCell,
+  level,
+  mineNumber,
+  remainingMineNumber,
+  rowSize,
+  safeCellNumber,
+} = storeToRefs(parameters);
+const { initGameParams, setBoardParams } = parameters;
 
 const { initializeCells } = useCellStore();
 
@@ -16,7 +30,19 @@ const handleChange = () => {
     mineNumber: mineNumber.value,
   } = setBoardParams(level.value));
   initializeCells(rowSize.value, columnSize.value);
-  initializeParameters();
+
+  ({
+    hasGameStarted: hasGameStarted.value,
+    hasOpenedMinedCell: hasOpenedMinedCell.value,
+    remainingMineNumber: remainingMineNumber.value,
+    safeCellNumber: safeCellNumber.value,
+  } = initGameParams({
+    rowSize: rowSize.value,
+    columnSize: columnSize.value,
+    mineNumber: mineNumber.value,
+  }));
+
+  timer.value = resetTimer(timer.value);
 };
 </script>
 

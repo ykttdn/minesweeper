@@ -21,9 +21,16 @@ type BoardParams = {
   mineNumber: number;
 };
 
+type GameParams = {
+  hasGameStarted: boolean;
+  hasOpenedMinedCell: boolean;
+  remainingMineNumber: number;
+  safeCellNumber: number;
+};
+
 export const useParametersStore = defineStore("parameters", () => {
   const timerStore = useTimerStore();
-  const { resetTimer, stopTimer } = timerStore;
+  const { stopTimer } = timerStore;
   const { timer } = storeToRefs(timerStore);
 
   const rowSize = ref(ROW_SIZE_EASY);
@@ -65,12 +72,17 @@ export const useParametersStore = defineStore("parameters", () => {
     }
   });
 
-  const initializeParameters = () => {
-    hasGameStarted.value = false;
-    hasOpenedMinedCell.value = false;
-    remainingMineNumber.value = mineNumber.value;
-    safeCellNumber.value = rowSize.value * columnSize.value - mineNumber.value;
-    timer.value = resetTimer(timer.value);
+  const initGameParams = ({
+    rowSize,
+    columnSize,
+    mineNumber,
+  }: BoardParams): GameParams => {
+    return {
+      hasGameStarted: false,
+      hasOpenedMinedCell: false,
+      remainingMineNumber: mineNumber,
+      safeCellNumber: rowSize * columnSize - mineNumber,
+    };
   };
 
   const isFlagModeOn = ref(false);
@@ -103,7 +115,7 @@ export const useParametersStore = defineStore("parameters", () => {
     hasGameStarted,
     hasOpenedAllSafeCells,
     hasOpenedMinedCell,
-    initializeParameters,
+    initGameParams,
     isFlagModeOn,
     level,
     mineNumber,
