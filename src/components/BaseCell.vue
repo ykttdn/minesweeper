@@ -28,7 +28,7 @@ const {
   openCell,
   toggleFlag,
 } = cellStore;
-const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
+const { cells } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
 const { boardParams, gameParams, isFlagModeOn } = storeToRefs(parameters);
@@ -39,8 +39,8 @@ const { timer } = storeToRefs(timerStore);
 
 const adjacentMinesNumber = computed(() => {
   if (
-    !isOpened.value[props.rowNumber][props.columnNumber] ||
-    isMineHiddenIn.value[props.rowNumber][props.columnNumber]
+    !cells.value[props.rowNumber][props.columnNumber].isOpened ||
+    cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn
   ) {
     return "";
   }
@@ -62,8 +62,8 @@ const adjacentMinesNumber = computed(() => {
 const cellState = computed(() => {
   if (gameParams.value.hasOpenedAllSafeCells) {
     if (
-      isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
-      !isFlagged.value[props.rowNumber][props.columnNumber]
+      cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn &&
+      !cells.value[props.rowNumber][props.columnNumber].isFlagged
     ) {
       return FLAGGED_CELL;
     }
@@ -71,26 +71,26 @@ const cellState = computed(() => {
 
   if (gameParams.value.hasOpenedMinedCell) {
     if (
-      isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
-      !isFlagged.value[props.rowNumber][props.columnNumber] &&
-      !isOpened.value[props.rowNumber][props.columnNumber]
+      cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn &&
+      !cells.value[props.rowNumber][props.columnNumber].isFlagged &&
+      !cells.value[props.rowNumber][props.columnNumber].isOpened
     ) {
       return MINED_CELL;
     }
     if (
-      !isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
-      isFlagged.value[props.rowNumber][props.columnNumber]
+      !cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn &&
+      cells.value[props.rowNumber][props.columnNumber].isFlagged
     ) {
       return WRONGLY_FLAGGED_CELL;
     }
   }
 
-  if (isFlagged.value[props.rowNumber][props.columnNumber]) {
+  if (cells.value[props.rowNumber][props.columnNumber].isFlagged) {
     return FLAGGED_CELL;
   }
 
-  if (isOpened.value[props.rowNumber][props.columnNumber]) {
-    if (isMineHiddenIn.value[props.rowNumber][props.columnNumber]) {
+  if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
+    if (cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn) {
       return EXPLODED_CELL;
     } else {
       if (adjacentMinesNumber.value > 0) {
@@ -116,7 +116,7 @@ const onCellClicked = () => {
     timer.value = startTimer(timer.value);
   }
 
-  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+  if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
     if (adjacentMinesNumber.value > 0) {
       triggerChording();
     }
@@ -128,7 +128,7 @@ const onCellClicked = () => {
     return;
   }
 
-  if (isFlagged.value[props.rowNumber][props.columnNumber]) {
+  if (cells.value[props.rowNumber][props.columnNumber].isFlagged) {
     return;
   }
 
@@ -163,7 +163,7 @@ const onCellRightClicked = () => {
     timer.value = startTimer(timer.value);
   }
 
-  if (isOpened.value[props.rowNumber][props.columnNumber]) {
+  if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
     return;
   }
 
@@ -184,7 +184,7 @@ const triggerChording = () => {
         boardParams.value.rowSize,
         boardParams.value.columnSize
       ) &&
-      isFlagged.value[adjacentRow][adjacentColumn]
+      cells.value[adjacentRow][adjacentColumn].isFlagged
     ) {
       adjacentFlagsNumber++;
     }
@@ -202,8 +202,8 @@ const triggerChording = () => {
         boardParams.value.rowSize,
         boardParams.value.columnSize
       ) &&
-      isFlagged.value[adjacentRow][adjacentColumn] &&
-      !isMineHiddenIn.value[adjacentRow][adjacentColumn]
+      cells.value[adjacentRow][adjacentColumn].isFlagged &&
+      !cells.value[adjacentRow][adjacentColumn].isMineHiddenIn
     ) {
       gameParams.value.hasOpenedMinedCell = true;
     }

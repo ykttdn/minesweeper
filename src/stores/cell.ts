@@ -1,32 +1,24 @@
 import { ref } from "vue";
 import { defineStore, storeToRefs } from "pinia";
-import { initialize2DArray } from "@/utils/Initialize2DArray";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
 import { random } from "@/utils/random";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { useParametersStore } from "./parameters";
+import { init2dCellArray } from "@/utils/Init2dCellArray";
 
 export const useCellStore = defineStore("cell", () => {
   const parameters = useParametersStore();
   const { gameParams } = storeToRefs(parameters);
 
-  const isMineHiddenIn = ref(
-    initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
-  );
-  const isOpened = ref(
-    initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
-  );
-  const isFlagged = ref(
-    initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
-  );
+  const cells = ref(init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD));
 
   const initializeCells = (rowSize: number, columnSize: number) => {
     for (let row = 0; row < rowSize; row++) {
       for (let column = 0; column < columnSize; column++) {
-        isMineHiddenIn.value[row][column] = false;
-        isOpened.value[row][column] = false;
-        isFlagged.value[row][column] = false;
+        cells.value[row][column].isMineHiddenIn = false;
+        cells.value[row][column].isOpened = false;
+        cells.value[row][column].isFlagged = false;
       }
     }
   };
@@ -44,13 +36,15 @@ export const useCellStore = defineStore("cell", () => {
         const rowPickedRandomly = random(rowSize);
         const columnPickedRandomly = random(columnSize);
         if (
-          !isMineHiddenIn.value[rowPickedRandomly][columnPickedRandomly] &&
+          !cells.value[rowPickedRandomly][columnPickedRandomly]
+            .isMineHiddenIn &&
           !(
             rowClickedFirst === rowPickedRandomly &&
             columnClickedFirst === columnPickedRandomly
           )
         ) {
-          isMineHiddenIn.value[rowPickedRandomly][columnPickedRandomly] = true;
+          cells.value[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn =
+            true;
           break;
         }
       }
@@ -68,7 +62,7 @@ export const useCellStore = defineStore("cell", () => {
     for (const [adjacentRow, adjacentColumn] of adjacentCells) {
       if (
         isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-        isMineHiddenIn.value[adjacentRow][adjacentColumn]
+        cells.value[adjacentRow][adjacentColumn].isMineHiddenIn
       ) {
         adjacentMinesNumber++;
       }
@@ -83,9 +77,9 @@ export const useCellStore = defineStore("cell", () => {
     rowSize: number,
     columnSize: number
   ) => {
-    isOpened.value[row][column] = true;
+    cells.value[row][column].isOpened = true;
 
-    if (isMineHiddenIn.value[row][column]) {
+    if (cells.value[row][column].isMineHiddenIn) {
       gameParams.value.hasOpenedMinedCell = true;
     } else {
       gameParams.value.safeCellNumber--;
@@ -107,9 +101,9 @@ export const useCellStore = defineStore("cell", () => {
       for (const [adjacentRow, adjacentColumn] of adjacentCells) {
         if (
           isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-          !isOpened.value[adjacentRow][adjacentColumn]
+          !cells.value[adjacentRow][adjacentColumn].isOpened
         ) {
-          isFlagged.value[adjacentRow][adjacentColumn] = false;
+          cells.value[adjacentRow][adjacentColumn].isFlagged = false;
           openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
         }
       }
@@ -126,8 +120,8 @@ export const useCellStore = defineStore("cell", () => {
     for (const [adjacentRow, adjacentColumn] of adjacentCells) {
       if (
         isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-        !isOpened.value[adjacentRow][adjacentColumn] &&
-        !isFlagged.value[adjacentRow][adjacentColumn]
+        !cells.value[adjacentRow][adjacentColumn].isOpened &&
+        !cells.value[adjacentRow][adjacentColumn].isFlagged
       ) {
         openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
       }
@@ -135,23 +129,21 @@ export const useCellStore = defineStore("cell", () => {
   };
 
   const toggleFlag = (row: number, column: number) => {
-    if (isFlagged.value[row][column]) {
-      isFlagged.value[row][column] = false;
+    if (cells.value[row][column].isFlagged) {
+      cells.value[row][column].isFlagged = false;
       gameParams.value.remainingMineNumber++;
     } else {
-      isFlagged.value[row][column] = true;
+      cells.value[row][column].isFlagged = true;
       gameParams.value.remainingMineNumber--;
     }
   };
 
   return {
+    cells,
     countAdjacentMines,
     executeChording,
     initializeCells,
     initializeMines,
-    isFlagged,
-    isMineHiddenIn,
-    isOpened,
     openCell,
     toggleFlag,
   };
