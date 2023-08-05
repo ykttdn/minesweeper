@@ -31,8 +31,7 @@ const {
 const { isFlagged, isMineHiddenIn, isOpened } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
-const { boardParams, gameParams, hasOpenedAllSafeCells, isFlagModeOn } =
-  storeToRefs(parameters);
+const { boardParams, gameParams, isFlagModeOn } = storeToRefs(parameters);
 
 const timerStore = useTimerStore();
 const { startTimer } = timerStore;
@@ -61,7 +60,7 @@ const adjacentMinesNumber = computed(() => {
 });
 
 const cellState = computed(() => {
-  if (hasOpenedAllSafeCells.value) {
+  if (gameParams.value.hasOpenedAllSafeCells) {
     if (
       isMineHiddenIn.value[props.rowNumber][props.columnNumber] &&
       !isFlagged.value[props.rowNumber][props.columnNumber]
@@ -106,7 +105,10 @@ const cellState = computed(() => {
 });
 
 const onCellClicked = () => {
-  if (hasOpenedAllSafeCells.value || gameParams.value.hasOpenedMinedCell) {
+  if (
+    gameParams.value.hasOpenedAllSafeCells ||
+    gameParams.value.hasOpenedMinedCell
+  ) {
     return;
   }
 
@@ -150,7 +152,10 @@ const onCellClicked = () => {
 };
 
 const onCellRightClicked = () => {
-  if (hasOpenedAllSafeCells.value || gameParams.value.hasOpenedMinedCell) {
+  if (
+    gameParams.value.hasOpenedAllSafeCells ||
+    gameParams.value.hasOpenedMinedCell
+  ) {
     return;
   }
 

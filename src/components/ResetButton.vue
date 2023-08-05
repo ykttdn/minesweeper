@@ -15,14 +15,13 @@ const { resetTimer } = timerStore;
 const { timer } = storeToRefs(timerStore);
 
 const parameters = useParametersStore();
-const { boardParams, gameParams, hasOpenedAllSafeCells } =
-  storeToRefs(parameters);
+const { boardParams, gameParams } = storeToRefs(parameters);
 const { initGameParams } = parameters;
 
 const { initializeCells } = useCellStore();
 
 const buttonState = computed(() => {
-  if (hasOpenedAllSafeCells.value) {
+  if (gameParams.value.hasOpenedAllSafeCells) {
     return FACE_SUCCESS;
   } else if (gameParams.value.hasOpenedMinedCell) {
     return FACE_FAILURE;

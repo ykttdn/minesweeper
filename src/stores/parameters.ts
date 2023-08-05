@@ -10,7 +10,7 @@ import {
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
 import { defineStore, storeToRefs } from "pinia";
-import { computed, ref, watch, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useTimerStore } from "./timer";
 
 type Level = "easy" | "normal" | "hard";
@@ -23,6 +23,7 @@ type BoardParams = {
 
 type GameParams = {
   hasGameStarted: boolean;
+  hasOpenedAllSafeCells: boolean;
   hasOpenedMinedCell: boolean;
   remainingMineNumber: number;
   safeCellNumber: number;
@@ -41,6 +42,7 @@ export const useParametersStore = defineStore("parameters", () => {
 
   const gameParams = ref<GameParams>({
     hasGameStarted: false,
+    hasOpenedAllSafeCells: false,
     hasOpenedMinedCell: false,
     remainingMineNumber: MINE_NUMBER_EASY,
     safeCellNumber: ROW_SIZE_EASY * COLUMN_SIZE_EASY - MINE_NUMBER_EASY,
@@ -48,24 +50,14 @@ export const useParametersStore = defineStore("parameters", () => {
 
   const level = ref<Level>("easy");
 
-  const hasOpenedAllSafeCells = computed(() => {
+  watchEffect(() => {
     if (gameParams.value.safeCellNumber === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-  watch(hasOpenedAllSafeCells, () => {
-    if (hasOpenedAllSafeCells.value) {
+      gameParams.value.hasOpenedAllSafeCells = true;
       gameParams.value.remainingMineNumber = 0;
-    }
-  });
-
-  watch(hasOpenedAllSafeCells, () => {
-    if (hasOpenedAllSafeCells.value) {
       stopTimer(timer.value);
     }
   });
+
   watchEffect(() => {
     if (gameParams.value.hasOpenedMinedCell) {
       stopTimer(timer.value);
@@ -79,6 +71,7 @@ export const useParametersStore = defineStore("parameters", () => {
   }: BoardParams): GameParams => {
     return {
       hasGameStarted: false,
+      hasOpenedAllSafeCells: false,
       hasOpenedMinedCell: false,
       remainingMineNumber: mineNumber,
       safeCellNumber: rowSize * columnSize - mineNumber,
@@ -113,7 +106,6 @@ export const useParametersStore = defineStore("parameters", () => {
   return {
     boardParams,
     gameParams,
-    hasOpenedAllSafeCells,
     initGameParams,
     isFlagModeOn,
     level,
