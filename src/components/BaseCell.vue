@@ -2,6 +2,9 @@
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
 import { useTimerStore } from "@/stores/timer";
+import type { BoardParams } from "@/types/boardParams";
+import type { Cell } from "@/types/cell";
+import type { GameParams } from "@/types/gameParams";
 import {
   EXPLODED_CELL,
   FLAGGED_CELL,
@@ -111,7 +114,15 @@ const onCellClicked = () => {
 
   if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
     if (adjacentMinesNumber.value > 0) {
-      triggerChording();
+      ({ newCells: cells.value, newGameParams: gameParams.value } =
+        triggerChording(
+          props.rowNumber,
+          props.columnNumber,
+          cells.value,
+          boardParams.value,
+          gameParams.value,
+          adjacentMinesNumber.value
+        ));
     }
     return;
   }
@@ -163,40 +174,52 @@ const onCellRightClicked = () => {
   toggleFlag(props.rowNumber, props.columnNumber);
 };
 
-const triggerChording = () => {
+const triggerChording = (
+  rowNumber: number,
+  columnNumber: number,
+  cells: Cell[][],
+  boardParams: BoardParams,
+  gameParams: GameParams,
+  adjacentMinesNumber: number
+) => {
+  let newCells = [...cells];
+  let newGameParams = { ...gameParams };
+
   let adjacentFlagsNumber = 0;
   const adjacentCells = getAdjacentCellsIndex(
-    props.rowNumber,
-    props.columnNumber,
-    boardParams.value.rowSize,
-    boardParams.value.columnSize
+    rowNumber,
+    columnNumber,
+    boardParams.rowSize,
+    boardParams.columnSize
   );
-  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-    if (cells.value[adjacentRow][adjacentColumn].isFlagged) {
+  adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
+    if (newCells[adjacentRow][adjacentColumn].isFlagged) {
       adjacentFlagsNumber++;
     }
+  });
+
+  if (adjacentMinesNumber != adjacentFlagsNumber) {
+    return { newCells, newGameParams };
   }
 
-  if (adjacentMinesNumber.value != adjacentFlagsNumber) {
-    return;
-  }
-
-  for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+  adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
     if (
-      cells.value[adjacentRow][adjacentColumn].isFlagged &&
-      !cells.value[adjacentRow][adjacentColumn].isMineHiddenIn
+      newCells[adjacentRow][adjacentColumn].isFlagged &&
+      !newCells[adjacentRow][adjacentColumn].isMineHiddenIn
     ) {
-      gameParams.value.hasOpenedMinedCell = true;
+      newGameParams.hasOpenedMinedCell = true;
     }
-  }
+  });
 
-  ({ newCells: cells.value, newGameParams: gameParams.value } = executeChording(
-    props.rowNumber,
-    props.columnNumber,
-    boardParams.value,
-    gameParams.value,
-    cells.value
+  ({ newCells: newCells, newGameParams: newGameParams } = executeChording(
+    rowNumber,
+    columnNumber,
+    boardParams,
+    newGameParams,
+    newCells
   ));
+
+  return { newCells, newGameParams };
 };
 </script>
 
