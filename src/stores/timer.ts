@@ -9,12 +9,13 @@ export const useTimerStore = defineStore("timer", () => {
   });
 
   const startTimer = (timer: Timer): Timer => {
-    if (timer.id === 0) {
-      timer.id = window.setInterval(() => {
-        timer.current++;
+    const newTimer = { ...timer };
+    if (newTimer.id === 0) {
+      newTimer.id = window.setInterval(() => {
+        newTimer.current++;
       }, 1000);
     }
-    return timer;
+    return newTimer;
   };
 
   const stopTimer = (timer: Timer): void => {
@@ -23,9 +24,7 @@ export const useTimerStore = defineStore("timer", () => {
 
   const resetTimer = (timer: Timer): Timer => {
     stopTimer(timer);
-    timer.id = 0;
-    timer.current = 0;
-    return timer;
+    return { id: 0, current: 0 };
   };
 
   return { resetTimer, startTimer, stopTimer, timer };
