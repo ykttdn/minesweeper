@@ -18,7 +18,9 @@ const parameters = useParametersStore();
 const { boardParams, gameParams } = storeToRefs(parameters);
 const { initGameParams } = parameters;
 
-const { initializeCells } = useCellStore();
+const cellStore = useCellStore();
+const { newCells } = cellStore;
+const { cells } = storeToRefs(cellStore);
 
 const buttonState = computed(() => {
   if (gameParams.value.hasOpenedAllSafeCells) {
@@ -31,7 +33,11 @@ const buttonState = computed(() => {
 });
 
 const handleClick = () => {
-  initializeCells(boardParams.value.rowSize, boardParams.value.columnSize);
+  cells.value = newCells(
+    cells.value,
+    boardParams.value.rowSize,
+    boardParams.value.columnSize
+  );
 
   gameParams.value = initGameParams(boardParams.value);
 

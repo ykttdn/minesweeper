@@ -6,6 +6,7 @@ import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { useParametersStore } from "./parameters";
 import { init2dCellArray } from "@/utils/Init2dCellArray";
+import type { Cell } from "@/types/cell";
 
 export const useCellStore = defineStore("cell", () => {
   const parameters = useParametersStore();
@@ -13,14 +14,22 @@ export const useCellStore = defineStore("cell", () => {
 
   const cells = ref(init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD));
 
-  const initializeCells = (rowSize: number, columnSize: number) => {
+  const newCells = (
+    oldCells: Cell[][],
+    rowSize: number,
+    columnSize: number
+  ) => {
+    const newCells = [...oldCells];
     for (let row = 0; row < rowSize; row++) {
       for (let column = 0; column < columnSize; column++) {
-        cells.value[row][column].isMineHiddenIn = false;
-        cells.value[row][column].isOpened = false;
-        cells.value[row][column].isFlagged = false;
+        newCells[row][column] = {
+          isMineHiddenIn: false,
+          isOpened: false,
+          isFlagged: false,
+        };
       }
     }
+    return newCells;
   };
 
   const initializeMines = (
@@ -142,8 +151,8 @@ export const useCellStore = defineStore("cell", () => {
     cells,
     countAdjacentMines,
     executeChording,
-    initializeCells,
     initializeMines,
+    newCells,
     openCell,
     toggleFlag,
   };
