@@ -128,7 +128,13 @@ const onCellClicked = () => {
   }
 
   if (isFlagModeOn.value) {
-    toggleFlag(props.rowNumber, props.columnNumber);
+    ({ newCells: cells.value, newGameParams: gameParams.value } = toggleFlag(
+      props.rowNumber,
+      props.columnNumber,
+      cells.value,
+      gameParams.value
+    ));
+
     return;
   }
 
@@ -171,7 +177,12 @@ const onCellRightClicked = () => {
     return;
   }
 
-  toggleFlag(props.rowNumber, props.columnNumber);
+  ({ newCells: cells.value, newGameParams: gameParams.value } = toggleFlag(
+    props.rowNumber,
+    props.columnNumber,
+    cells.value,
+    gameParams.value
+  ));
 };
 
 const triggerChording = (

@@ -1,18 +1,14 @@
 import { ref } from "vue";
-import { defineStore, storeToRefs } from "pinia";
+import { defineStore } from "pinia";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
 import { random } from "@/utils/random";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
-import { useParametersStore } from "./parameters";
 import { init2dCellArray } from "@/utils/Init2dCellArray";
 import type { Cell } from "@/types/cell";
 import type { BoardParams } from "@/types/boardParams";
 import type { GameParams } from "@/types/gameParams";
 
 export const useCellStore = defineStore("cell", () => {
-  const parameters = useParametersStore();
-  const { gameParams } = storeToRefs(parameters);
-
   const cells = ref(init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD));
 
   const newCells = (
@@ -171,14 +167,24 @@ export const useCellStore = defineStore("cell", () => {
     return { newCells, newGameParams };
   };
 
-  const toggleFlag = (row: number, column: number) => {
-    if (cells.value[row][column].isFlagged) {
-      cells.value[row][column].isFlagged = false;
-      gameParams.value.remainingMineNumber++;
+  const toggleFlag = (
+    row: number,
+    column: number,
+    cells: Cell[][],
+    gameParams: GameParams
+  ) => {
+    const newCells = [...cells];
+    const newGameParams = { ...gameParams };
+
+    if (newCells[row][column].isFlagged) {
+      newCells[row][column].isFlagged = false;
+      newGameParams.remainingMineNumber++;
     } else {
-      cells.value[row][column].isFlagged = true;
-      gameParams.value.remainingMineNumber--;
+      newCells[row][column].isFlagged = true;
+      newGameParams.remainingMineNumber--;
     }
+
+    return { newCells, newGameParams };
   };
 
   return {
