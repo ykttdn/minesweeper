@@ -9,6 +9,9 @@ module.exports = {
     "@vue/eslint-config-typescript/recommended",
     "@vue/eslint-config-prettier/skip-formatting",
   ],
+  rules: {
+    "no-param-reassign": ["error", { props: true }],
+  },
   parserOptions: {
     ecmaVersion: "latest",
   },
