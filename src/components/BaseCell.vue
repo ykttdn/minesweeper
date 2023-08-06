@@ -135,12 +135,13 @@ const onCellClicked = () => {
     gameParams.value.hasGameStarted = true;
   }
 
-  openCell(
+  ({ newCells: cells.value, newGameParams: gameParams.value } = openCell(
     props.rowNumber,
     props.columnNumber,
-    boardParams.value.rowSize,
-    boardParams.value.columnSize
-  );
+    boardParams.value,
+    gameParams.value,
+    cells.value
+  ));
 };
 
 const onCellRightClicked = () => {
@@ -189,12 +190,13 @@ const triggerChording = () => {
     }
   }
 
-  executeChording(
+  ({ newCells: cells.value, newGameParams: gameParams.value } = executeChording(
     props.rowNumber,
     props.columnNumber,
-    boardParams.value.rowSize,
-    boardParams.value.columnSize
-  );
+    boardParams.value,
+    gameParams.value,
+    cells.value
+  ));
 };
 </script>
 

@@ -7,6 +7,7 @@ import { useParametersStore } from "./parameters";
 import { init2dCellArray } from "@/utils/Init2dCellArray";
 import type { Cell } from "@/types/cell";
 import type { BoardParams } from "@/types/boardParams";
+import type { GameParams } from "@/types/gameParams";
 
 export const useCellStore = defineStore("cell", () => {
   const parameters = useParametersStore();
@@ -88,65 +89,86 @@ export const useCellStore = defineStore("cell", () => {
   const openCell = (
     row: number,
     column: number,
-    rowSize: number,
-    columnSize: number
+    boardParams: BoardParams,
+    gameParams: GameParams,
+    cells: Cell[][]
   ) => {
-    cells.value[row][column].isOpened = true;
+    let newCells: Cell[][] = [...cells];
+    let newGameParams: GameParams = { ...gameParams };
 
-    if (cells.value[row][column].isMineHiddenIn) {
-      gameParams.value.hasOpenedMinedCell = true;
+    newCells[row][column].isOpened = true;
+
+    if (newCells[row][column].isMineHiddenIn) {
+      newGameParams.hasOpenedMinedCell = true;
+      return { newCells, newGameParams };
     } else {
-      gameParams.value.safeCellNumber--;
-    }
-
-    if (gameParams.value.hasOpenedMinedCell) {
-      return;
+      newGameParams.safeCellNumber--;
     }
 
     const adjacentMinesNumber = countAdjacentMines(
       row,
       column,
-      rowSize,
-      columnSize,
-      cells.value
+      boardParams.rowSize,
+      boardParams.columnSize,
+      newCells
     );
 
     if (adjacentMinesNumber === 0) {
       const adjacentCells = getAdjacentCellsIndex(
         row,
         column,
-        rowSize,
-        columnSize
+        boardParams.rowSize,
+        boardParams.columnSize
       );
-      for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-        if (!cells.value[adjacentRow][adjacentColumn].isOpened) {
-          cells.value[adjacentRow][adjacentColumn].isFlagged = false;
-          openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
+      adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
+        if (!newCells[adjacentRow][adjacentColumn].isOpened) {
+          newCells[adjacentRow][adjacentColumn].isFlagged = false;
+          ({ newCells, newGameParams } = openCell(
+            adjacentRow,
+            adjacentColumn,
+            boardParams,
+            newGameParams,
+            newCells
+          ));
         }
-      }
+      });
     }
+
+    return { newCells, newGameParams };
   };
 
   const executeChording = (
     row: number,
     column: number,
-    rowSize: number,
-    columnSize: number
+    boardParams: BoardParams,
+    gameParams: GameParams,
+    cells: Cell[][]
   ) => {
+    let newCells = [...cells];
+    let newGameParams = { ...gameParams };
+
     const adjacentCells = getAdjacentCellsIndex(
       row,
       column,
-      rowSize,
-      columnSize
+      boardParams.rowSize,
+      boardParams.columnSize
     );
-    for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
       if (
-        !cells.value[adjacentRow][adjacentColumn].isOpened &&
-        !cells.value[adjacentRow][adjacentColumn].isFlagged
+        !newCells[adjacentRow][adjacentColumn].isOpened &&
+        !newCells[adjacentRow][adjacentColumn].isFlagged
       ) {
-        openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
+        ({ newCells: newCells, newGameParams: newGameParams } = openCell(
+          adjacentRow,
+          adjacentColumn,
+          boardParams,
+          newGameParams,
+          newCells
+        ));
       }
-    }
+    });
+
+    return { newCells, newGameParams };
   };
 
   const toggleFlag = (row: number, column: number) => {
