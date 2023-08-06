@@ -42,7 +42,7 @@ const adjacentMinesNumber = computed(() => {
     !cells.value[props.rowNumber][props.columnNumber].isOpened ||
     cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn
   ) {
-    return "";
+    return 0;
   }
 
   const counter = countAdjacentMines(
@@ -55,7 +55,7 @@ const adjacentMinesNumber = computed(() => {
   if (counter > 0) {
     return counter;
   } else {
-    return "";
+    return 0;
   }
 });
 
@@ -225,6 +225,6 @@ const triggerChording = () => {
     @click="onCellClicked"
     @contextmenu.prevent="onCellRightClicked"
   >
-    {{ adjacentMinesNumber }}
+    {{ adjacentMinesNumber === 0 ? "" : adjacentMinesNumber }}
   </div>
 </template>
