@@ -12,22 +12,9 @@ import {
 import { defineStore, storeToRefs } from "pinia";
 import { ref, watchEffect } from "vue";
 import { useTimerStore } from "./timer";
-
-type Level = "easy" | "normal" | "hard";
-
-type BoardParams = {
-  rowSize: number;
-  columnSize: number;
-  mineNumber: number;
-};
-
-type GameParams = {
-  hasGameStarted: boolean;
-  hasOpenedAllSafeCells: boolean;
-  hasOpenedMinedCell: boolean;
-  remainingMineNumber: number;
-  safeCellNumber: number;
-};
+import type { Level } from "@/types/level";
+import type { BoardParams } from "@/types/boardParams";
+import type { GameParams } from "@/types/gameParams";
 
 export const useParametersStore = defineStore("parameters", () => {
   const timerStore = useTimerStore();
