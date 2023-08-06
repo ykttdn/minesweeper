@@ -60,37 +60,30 @@ const adjacentMinesNumber = computed(() => {
 });
 
 const cellState = computed(() => {
+  const { isMineHiddenIn, isOpened, isFlagged } =
+    cells.value[props.rowNumber][props.columnNumber];
+
   if (gameParams.value.hasOpenedAllSafeCells) {
-    if (
-      cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn &&
-      !cells.value[props.rowNumber][props.columnNumber].isFlagged
-    ) {
+    if (isMineHiddenIn && !isFlagged) {
       return FLAGGED_CELL;
     }
   }
 
   if (gameParams.value.hasOpenedMinedCell) {
-    if (
-      cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn &&
-      !cells.value[props.rowNumber][props.columnNumber].isFlagged &&
-      !cells.value[props.rowNumber][props.columnNumber].isOpened
-    ) {
+    if (isMineHiddenIn && !isFlagged && !isOpened) {
       return MINED_CELL;
     }
-    if (
-      !cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn &&
-      cells.value[props.rowNumber][props.columnNumber].isFlagged
-    ) {
+    if (!isMineHiddenIn && isFlagged) {
       return WRONGLY_FLAGGED_CELL;
     }
   }
 
-  if (cells.value[props.rowNumber][props.columnNumber].isFlagged) {
+  if (isFlagged) {
     return FLAGGED_CELL;
   }
 
-  if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
-    if (cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn) {
+  if (isOpened) {
+    if (isMineHiddenIn) {
       return EXPLODED_CELL;
     } else {
       if (adjacentMinesNumber.value > 0) {
