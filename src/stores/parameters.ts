@@ -66,9 +66,7 @@ export const useParametersStore = defineStore("parameters", () => {
   };
 
   const isFlagModeOn = ref(false);
-  const toggleFlagMode = () => {
-    isFlagModeOn.value = !isFlagModeOn.value;
-  };
+  const toggleFlagMode = (flagMode: boolean): boolean => !flagMode;
 
   const setBoardParams = (level: Level): BoardParams => {
     let rowSize: number, columnSize: number, mineNumber: number;
