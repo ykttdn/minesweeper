@@ -48,7 +48,8 @@ const adjacentMinesNumber = computed(() => {
     props.rowNumber,
     props.columnNumber,
     boardParams.value.rowSize,
-    boardParams.value.columnSize
+    boardParams.value.columnSize,
+    cells.value
   );
 
   if (counter > 0) {

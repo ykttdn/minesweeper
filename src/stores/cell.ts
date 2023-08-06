@@ -63,7 +63,8 @@ export const useCellStore = defineStore("cell", () => {
     row: number,
     column: number,
     rowSize: number,
-    columnSize: number
+    columnSize: number,
+    cells: Cell[][]
   ): number => {
     let adjacentMinesNumber = 0;
     const adjacentCells = getAdjacentCellsIndex(
@@ -72,11 +73,11 @@ export const useCellStore = defineStore("cell", () => {
       rowSize,
       columnSize
     );
-    for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-      if (cells.value[adjacentRow][adjacentColumn].isMineHiddenIn) {
+    adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
+      if (cells[adjacentRow][adjacentColumn].isMineHiddenIn) {
         adjacentMinesNumber++;
       }
-    }
+    });
 
     return adjacentMinesNumber;
   };
@@ -103,7 +104,8 @@ export const useCellStore = defineStore("cell", () => {
       row,
       column,
       rowSize,
-      columnSize
+      columnSize,
+      cells.value
     );
 
     if (adjacentMinesNumber === 0) {
