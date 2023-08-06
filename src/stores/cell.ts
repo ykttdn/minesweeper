@@ -1,79 +1,83 @@
 import { ref } from "vue";
-import { defineStore, storeToRefs } from "pinia";
-import { initialize2DArray } from "@/utils/Initialize2DArray";
+import { defineStore } from "pinia";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
 import { random } from "@/utils/random";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
-import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
-import { useParametersStore } from "./parameters";
+import { init2dCellArray } from "@/utils/Init2dCellArray";
+import type { Cell } from "@/types/cell";
+import type { BoardParams } from "@/types/boardParams";
+import type { GameParams } from "@/types/gameParams";
 
 export const useCellStore = defineStore("cell", () => {
-  const parameters = useParametersStore();
-  const { hasOpenedMinedCell, remainingMineNumber, safeCellNumber } =
-    storeToRefs(parameters);
+  const cells = ref(init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD));
 
-  const isMineHiddenIn = ref(
-    initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
-  );
-  const isOpened = ref(
-    initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
-  );
-  const isFlagged = ref(
-    initialize2DArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD, false)
-  );
-
-  const initializeCells = (rowSize: number, columnSize: number) => {
+  const newCells = (
+    oldCells: Cell[][],
+    rowSize: number,
+    columnSize: number
+  ) => {
+    const newCells = [...oldCells];
     for (let row = 0; row < rowSize; row++) {
       for (let column = 0; column < columnSize; column++) {
-        isMineHiddenIn.value[row][column] = false;
-        isOpened.value[row][column] = false;
-        isFlagged.value[row][column] = false;
+        newCells[row][column] = {
+          isMineHiddenIn: false,
+          isOpened: false,
+          isFlagged: false,
+        };
       }
     }
+    return newCells;
   };
 
   const initializeMines = (
-    rowSize: number,
-    columnSize: number,
-    mineNumber: number,
+    { rowSize, columnSize, mineNumber }: BoardParams,
     rowClickedFirst: number,
-    columnClickedFirst: number
-  ) => {
+    columnClickedFirst: number,
+    cells: Cell[][]
+  ): Cell[][] => {
+    const newCells = [...cells];
+
     for (let i = 0; i < mineNumber; i++) {
       // eslint-disable-next-line no-constant-condition
       while (true) {
         const rowPickedRandomly = random(rowSize);
         const columnPickedRandomly = random(columnSize);
         if (
-          !isMineHiddenIn.value[rowPickedRandomly][columnPickedRandomly] &&
+          !newCells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn &&
           !(
             rowClickedFirst === rowPickedRandomly &&
             columnClickedFirst === columnPickedRandomly
           )
         ) {
-          isMineHiddenIn.value[rowPickedRandomly][columnPickedRandomly] = true;
+          newCells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn =
+            true;
           break;
         }
       }
     }
+
+    return newCells;
   };
 
   const countAdjacentMines = (
     row: number,
     column: number,
     rowSize: number,
-    columnSize: number
+    columnSize: number,
+    cells: Cell[][]
   ): number => {
     let adjacentMinesNumber = 0;
-    const adjacentCells = getAdjacentCellsIndex(row, column);
-    for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-      if (
-        isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-        isMineHiddenIn.value[adjacentRow][adjacentColumn]
-      ) {
+    const adjacentCells = getAdjacentCellsIndex(
+      row,
+      column,
+      rowSize,
+      columnSize
+    );
+    adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
+      if (cells[adjacentRow][adjacentColumn].isMineHiddenIn) {
         adjacentMinesNumber++;
       }
-    }
+    });
 
     return adjacentMinesNumber;
   };
@@ -81,78 +85,114 @@ export const useCellStore = defineStore("cell", () => {
   const openCell = (
     row: number,
     column: number,
-    rowSize: number,
-    columnSize: number
+    boardParams: BoardParams,
+    gameParams: GameParams,
+    cells: Cell[][]
   ) => {
-    isOpened.value[row][column] = true;
+    let newCells: Cell[][] = [...cells];
+    let newGameParams: GameParams = { ...gameParams };
 
-    if (isMineHiddenIn.value[row][column]) {
-      hasOpenedMinedCell.value = true;
+    newCells[row][column].isOpened = true;
+
+    if (newCells[row][column].isMineHiddenIn) {
+      newGameParams.hasOpenedMinedCell = true;
+      return { newCells, newGameParams };
     } else {
-      safeCellNumber.value--;
-    }
-
-    if (hasOpenedMinedCell.value) {
-      return;
+      newGameParams.safeCellNumber--;
     }
 
     const adjacentMinesNumber = countAdjacentMines(
       row,
       column,
-      rowSize,
-      columnSize
+      boardParams.rowSize,
+      boardParams.columnSize,
+      newCells
     );
 
     if (adjacentMinesNumber === 0) {
-      const adjacentCells = getAdjacentCellsIndex(row, column);
-      for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-        if (
-          isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-          !isOpened.value[adjacentRow][adjacentColumn]
-        ) {
-          isFlagged.value[adjacentRow][adjacentColumn] = false;
-          openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
+      const adjacentCells = getAdjacentCellsIndex(
+        row,
+        column,
+        boardParams.rowSize,
+        boardParams.columnSize
+      );
+      adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
+        if (!newCells[adjacentRow][adjacentColumn].isOpened) {
+          newCells[adjacentRow][adjacentColumn].isFlagged = false;
+          ({ newCells, newGameParams } = openCell(
+            adjacentRow,
+            adjacentColumn,
+            boardParams,
+            newGameParams,
+            newCells
+          ));
         }
-      }
+      });
     }
+
+    return { newCells, newGameParams };
   };
 
   const executeChording = (
     row: number,
     column: number,
-    rowSize: number,
-    columnSize: number
+    boardParams: BoardParams,
+    gameParams: GameParams,
+    cells: Cell[][]
   ) => {
-    const adjacentCells = getAdjacentCellsIndex(row, column);
-    for (const [adjacentRow, adjacentColumn] of adjacentCells) {
+    let newCells = [...cells];
+    let newGameParams = { ...gameParams };
+
+    const adjacentCells = getAdjacentCellsIndex(
+      row,
+      column,
+      boardParams.rowSize,
+      boardParams.columnSize
+    );
+    adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
       if (
-        isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-        !isOpened.value[adjacentRow][adjacentColumn] &&
-        !isFlagged.value[adjacentRow][adjacentColumn]
+        !newCells[adjacentRow][adjacentColumn].isOpened &&
+        !newCells[adjacentRow][adjacentColumn].isFlagged
       ) {
-        openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
+        ({ newCells: newCells, newGameParams: newGameParams } = openCell(
+          adjacentRow,
+          adjacentColumn,
+          boardParams,
+          newGameParams,
+          newCells
+        ));
       }
-    }
+    });
+
+    return { newCells, newGameParams };
   };
 
-  const toggleFlag = (row: number, column: number) => {
-    if (isFlagged.value[row][column]) {
-      isFlagged.value[row][column] = false;
-      remainingMineNumber.value++;
+  const toggleFlag = (
+    row: number,
+    column: number,
+    cells: Cell[][],
+    gameParams: GameParams
+  ) => {
+    const newCells = [...cells];
+    const newGameParams = { ...gameParams };
+
+    if (newCells[row][column].isFlagged) {
+      newCells[row][column].isFlagged = false;
+      newGameParams.remainingMineNumber++;
     } else {
-      isFlagged.value[row][column] = true;
-      remainingMineNumber.value--;
+      newCells[row][column].isFlagged = true;
+      newGameParams.remainingMineNumber--;
     }
+
+    return { newCells, newGameParams };
   };
 
   return {
+    cells,
     countAdjacentMines,
     executeChording,
-    initializeCells,
     initializeMines,
-    isFlagged,
-    isMineHiddenIn,
-    isOpened,
+    newCells,
     openCell,
     toggleFlag,
   };

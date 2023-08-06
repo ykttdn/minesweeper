@@ -14,11 +14,15 @@ const switchButtonState = computed(() => {
     return "switch";
   }
 });
+
+const handleClick = () => {
+  isFlagModeOn.value = toggleFlagMode(isFlagModeOn.value);
+};
 </script>
 
 <template>
   <div class="bottom-area">
-    <div :class="switchButtonState" @click="toggleFlagMode"></div>
+    <div :class="switchButtonState" @click="handleClick"></div>
     <i class="fa-solid fa-flag flag-icon"></i>
   </div>
 </template>

@@ -4,21 +4,23 @@ import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
 const parameters = useParametersStore();
-const { remainingMineNumber } = storeToRefs(parameters);
+const { gameParams } = storeToRefs(parameters);
 
 const displayedMineNumber = computed(() => {
-  if (remainingMineNumber.value <= -100) {
+  const { remainingMineNumber } = gameParams.value;
+
+  if (remainingMineNumber <= -100) {
     return "-99";
-  } else if (remainingMineNumber.value <= -10) {
-    return `${remainingMineNumber.value}`;
-  } else if (remainingMineNumber.value <= -1) {
-    return `- ${-remainingMineNumber.value}`;
-  } else if (remainingMineNumber.value <= 9) {
-    return `00${remainingMineNumber.value}`;
-  } else if (remainingMineNumber.value <= 99) {
-    return `0${remainingMineNumber.value}`;
-  } else if (remainingMineNumber.value <= 999) {
-    return `${remainingMineNumber.value}`;
+  } else if (remainingMineNumber <= -10) {
+    return `${remainingMineNumber}`;
+  } else if (remainingMineNumber <= -1) {
+    return `- ${-remainingMineNumber}`;
+  } else if (remainingMineNumber <= 9) {
+    return `00${remainingMineNumber}`;
+  } else if (remainingMineNumber <= 99) {
+    return `0${remainingMineNumber}`;
+  } else if (remainingMineNumber <= 999) {
+    return `${remainingMineNumber}`;
   } else {
     return "999";
   }

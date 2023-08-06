@@ -9,104 +9,92 @@ import {
   ROW_SIZE_HARD,
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
-import { defineStore } from "pinia";
-import { computed, ref, watch } from "vue";
+import { defineStore, storeToRefs } from "pinia";
+import { ref, watchEffect } from "vue";
+import { useTimerStore } from "./timer";
+import type { Level } from "@/types/level";
+import type { BoardParams } from "@/types/boardParams";
+import type { GameParams } from "@/types/gameParams";
 
 export const useParametersStore = defineStore("parameters", () => {
-  const rowSize = ref(ROW_SIZE_EASY);
-  const columnSize = ref(COLUMN_SIZE_EASY);
-  const mineNumber = ref(MINE_NUMBER_EASY);
+  const timerStore = useTimerStore();
+  const { stopTimer } = timerStore;
+  const { timer } = storeToRefs(timerStore);
 
-  const remainingMineNumber = ref(mineNumber.value);
-
-  const safeCellNumber = ref(
-    rowSize.value * columnSize.value - mineNumber.value
-  );
-
-  const level = ref("easy");
-
-  const hasGameStarted = ref(false);
-  const hasOpenedAllSafeCells = computed(() => {
-    if (safeCellNumber.value === 0) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-  watch(hasOpenedAllSafeCells, () => {
-    if (hasOpenedAllSafeCells.value) {
-      remainingMineNumber.value = 0;
-    }
+  const boardParams = ref<BoardParams>({
+    rowSize: ROW_SIZE_EASY,
+    columnSize: COLUMN_SIZE_EASY,
+    mineNumber: MINE_NUMBER_EASY,
   });
 
-  const hasOpenedMinedCell = ref(false);
-
-  const timerId = ref(0);
-  const elapsedTime = ref(0);
-  const advanceTimer = () => {
-    elapsedTime.value++;
-    if (elapsedTime.value >= 999) {
-      window.clearInterval(timerId.value);
-    }
-  };
-  watch(hasOpenedAllSafeCells, () => {
-    if (hasOpenedAllSafeCells.value) {
-      window.clearInterval(timerId.value);
-    }
+  const gameParams = ref<GameParams>({
+    hasGameStarted: false,
+    hasOpenedAllSafeCells: false,
+    hasOpenedMinedCell: false,
+    remainingMineNumber: MINE_NUMBER_EASY,
+    safeCellNumber: ROW_SIZE_EASY * COLUMN_SIZE_EASY - MINE_NUMBER_EASY,
   });
-  watch(hasOpenedMinedCell, () => {
-    if (hasOpenedMinedCell.value) {
-      window.clearInterval(timerId.value);
+
+  const level = ref<Level>("easy");
+
+  watchEffect(() => {
+    if (gameParams.value.safeCellNumber === 0) {
+      gameParams.value.hasOpenedAllSafeCells = true;
+      gameParams.value.remainingMineNumber = 0;
+      stopTimer(timer.value);
     }
   });
 
-  const initializeParameters = () => {
-    elapsedTime.value = 0;
-    hasGameStarted.value = false;
-    hasOpenedMinedCell.value = false;
-    remainingMineNumber.value = mineNumber.value;
-    safeCellNumber.value = rowSize.value * columnSize.value - mineNumber.value;
-    window.clearInterval(timerId.value);
-    timerId.value = 0;
+  watchEffect(() => {
+    if (gameParams.value.hasOpenedMinedCell) {
+      stopTimer(timer.value);
+    }
+  });
+
+  const initGameParams = ({
+    rowSize,
+    columnSize,
+    mineNumber,
+  }: BoardParams): GameParams => {
+    return {
+      hasGameStarted: false,
+      hasOpenedAllSafeCells: false,
+      hasOpenedMinedCell: false,
+      remainingMineNumber: mineNumber,
+      safeCellNumber: rowSize * columnSize - mineNumber,
+    };
   };
 
   const isFlagModeOn = ref(false);
-  const toggleFlagMode = () => {
-    isFlagModeOn.value = !isFlagModeOn.value;
-  };
+  const toggleFlagMode = (flagMode: boolean): boolean => !flagMode;
 
-  const changeLevel = () => {
-    if (level.value === "normal") {
-      rowSize.value = ROW_SIZE_NORMAL;
-      columnSize.value = COLUMN_SIZE_NORMAL;
-      mineNumber.value = MINE_NUMBER_NORMAL;
-    } else if (level.value === "hard") {
-      rowSize.value = ROW_SIZE_HARD;
-      columnSize.value = COLUMN_SIZE_HARD;
-      mineNumber.value = MINE_NUMBER_HARD;
+  const setBoardParams = (level: Level): BoardParams => {
+    let rowSize: number, columnSize: number, mineNumber: number;
+
+    if (level === "normal") {
+      rowSize = ROW_SIZE_NORMAL;
+      columnSize = COLUMN_SIZE_NORMAL;
+      mineNumber = MINE_NUMBER_NORMAL;
+    } else if (level === "hard") {
+      rowSize = ROW_SIZE_HARD;
+      columnSize = COLUMN_SIZE_HARD;
+      mineNumber = MINE_NUMBER_HARD;
     } else {
-      rowSize.value = ROW_SIZE_EASY;
-      columnSize.value = COLUMN_SIZE_EASY;
-      mineNumber.value = MINE_NUMBER_EASY;
+      rowSize = ROW_SIZE_EASY;
+      columnSize = COLUMN_SIZE_EASY;
+      mineNumber = MINE_NUMBER_EASY;
     }
+
+    return { rowSize, columnSize, mineNumber };
   };
 
   return {
-    advanceTimer,
-    changeLevel,
-    columnSize,
-    elapsedTime,
-    hasGameStarted,
-    hasOpenedAllSafeCells,
-    hasOpenedMinedCell,
-    initializeParameters,
+    boardParams,
+    gameParams,
+    initGameParams,
     isFlagModeOn,
     level,
-    mineNumber,
-    remainingMineNumber,
-    rowSize,
-    safeCellNumber,
-    timerId,
+    setBoardParams,
     toggleFlagMode,
   };
 });

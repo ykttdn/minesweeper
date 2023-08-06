@@ -7,8 +7,11 @@ module.exports = {
     "plugin:vue/vue3-essential",
     "eslint:recommended",
     "@vue/eslint-config-typescript/recommended",
-    "@vue/eslint-config-prettier",
+    "@vue/eslint-config-prettier/skip-formatting",
   ],
+  rules: {
+    "no-param-reassign": ["error", { props: true }],
+  },
   parserOptions: {
     ecmaVersion: "latest",
   },
