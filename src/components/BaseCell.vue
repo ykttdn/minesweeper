@@ -126,12 +126,11 @@ const onCellClicked = () => {
   }
 
   if (!gameParams.value.hasGameStarted) {
-    initializeMines(
-      boardParams.value.rowSize,
-      boardParams.value.columnSize,
-      boardParams.value.mineNumber,
+    cells.value = initializeMines(
+      boardParams.value,
       props.rowNumber,
-      props.columnNumber
+      props.columnNumber,
+      cells.value
     );
     gameParams.value.hasGameStarted = true;
   }

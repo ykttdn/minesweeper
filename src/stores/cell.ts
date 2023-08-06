@@ -6,6 +6,7 @@ import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 import { useParametersStore } from "./parameters";
 import { init2dCellArray } from "@/utils/Init2dCellArray";
 import type { Cell } from "@/types/cell";
+import type { BoardParams } from "@/types/boardParams";
 
 export const useCellStore = defineStore("cell", () => {
   const parameters = useParametersStore();
@@ -32,31 +33,33 @@ export const useCellStore = defineStore("cell", () => {
   };
 
   const initializeMines = (
-    rowSize: number,
-    columnSize: number,
-    mineNumber: number,
+    { rowSize, columnSize, mineNumber }: BoardParams,
     rowClickedFirst: number,
-    columnClickedFirst: number
-  ) => {
+    columnClickedFirst: number,
+    cells: Cell[][]
+  ): Cell[][] => {
+    const newCells = [...cells];
+
     for (let i = 0; i < mineNumber; i++) {
       // eslint-disable-next-line no-constant-condition
       while (true) {
         const rowPickedRandomly = random(rowSize);
         const columnPickedRandomly = random(columnSize);
         if (
-          !cells.value[rowPickedRandomly][columnPickedRandomly]
-            .isMineHiddenIn &&
+          !newCells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn &&
           !(
             rowClickedFirst === rowPickedRandomly &&
             columnClickedFirst === columnPickedRandomly
           )
         ) {
-          cells.value[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn =
+          newCells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn =
             true;
           break;
         }
       }
     }
+
+    return newCells;
   };
 
   const countAdjacentMines = (
