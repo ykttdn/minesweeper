@@ -3,7 +3,6 @@ import { defineStore, storeToRefs } from "pinia";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
 import { random } from "@/utils/random";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
-import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { useParametersStore } from "./parameters";
 import { init2dCellArray } from "@/utils/Init2dCellArray";
 import type { Cell } from "@/types/cell";
@@ -67,12 +66,14 @@ export const useCellStore = defineStore("cell", () => {
     columnSize: number
   ): number => {
     let adjacentMinesNumber = 0;
-    const adjacentCells = getAdjacentCellsIndex(row, column);
+    const adjacentCells = getAdjacentCellsIndex(
+      row,
+      column,
+      rowSize,
+      columnSize
+    );
     for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-      if (
-        isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-        cells.value[adjacentRow][adjacentColumn].isMineHiddenIn
-      ) {
+      if (cells.value[adjacentRow][adjacentColumn].isMineHiddenIn) {
         adjacentMinesNumber++;
       }
     }
@@ -106,12 +107,14 @@ export const useCellStore = defineStore("cell", () => {
     );
 
     if (adjacentMinesNumber === 0) {
-      const adjacentCells = getAdjacentCellsIndex(row, column);
+      const adjacentCells = getAdjacentCellsIndex(
+        row,
+        column,
+        rowSize,
+        columnSize
+      );
       for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-        if (
-          isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
-          !cells.value[adjacentRow][adjacentColumn].isOpened
-        ) {
+        if (!cells.value[adjacentRow][adjacentColumn].isOpened) {
           cells.value[adjacentRow][adjacentColumn].isFlagged = false;
           openCell(adjacentRow, adjacentColumn, rowSize, columnSize);
         }
@@ -125,10 +128,14 @@ export const useCellStore = defineStore("cell", () => {
     rowSize: number,
     columnSize: number
   ) => {
-    const adjacentCells = getAdjacentCellsIndex(row, column);
+    const adjacentCells = getAdjacentCellsIndex(
+      row,
+      column,
+      rowSize,
+      columnSize
+    );
     for (const [adjacentRow, adjacentColumn] of adjacentCells) {
       if (
-        isCellInsideBoard(adjacentRow, adjacentColumn, rowSize, columnSize) &&
         !cells.value[adjacentRow][adjacentColumn].isOpened &&
         !cells.value[adjacentRow][adjacentColumn].isFlagged
       ) {

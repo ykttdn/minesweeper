@@ -11,7 +11,6 @@ import {
   WRONGLY_FLAGGED_CELL,
 } from "@/utils/GameParameters";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
-import { isCellInsideBoard } from "@/utils/IsCellInsideBoard";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
@@ -174,18 +173,12 @@ const triggerChording = () => {
   let adjacentFlagsNumber = 0;
   const adjacentCells = getAdjacentCellsIndex(
     props.rowNumber,
-    props.columnNumber
+    props.columnNumber,
+    boardParams.value.rowSize,
+    boardParams.value.columnSize
   );
   for (const [adjacentRow, adjacentColumn] of adjacentCells) {
-    if (
-      isCellInsideBoard(
-        adjacentRow,
-        adjacentColumn,
-        boardParams.value.rowSize,
-        boardParams.value.columnSize
-      ) &&
-      cells.value[adjacentRow][adjacentColumn].isFlagged
-    ) {
+    if (cells.value[adjacentRow][adjacentColumn].isFlagged) {
       adjacentFlagsNumber++;
     }
   }
@@ -196,12 +189,6 @@ const triggerChording = () => {
 
   for (const [adjacentRow, adjacentColumn] of adjacentCells) {
     if (
-      isCellInsideBoard(
-        adjacentRow,
-        adjacentColumn,
-        boardParams.value.rowSize,
-        boardParams.value.columnSize
-      ) &&
       cells.value[adjacentRow][adjacentColumn].isFlagged &&
       !cells.value[adjacentRow][adjacentColumn].isMineHiddenIn
     ) {
