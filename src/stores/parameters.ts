@@ -15,6 +15,7 @@ import { useTimerStore } from "./timer";
 import type { Level } from "@/types/level";
 import type { BoardParams } from "@/types/boardParams";
 import type { GameParams } from "@/types/gameParams";
+import { toggleFlagMode } from "@/stores/paramsModules/toggleFlagMode";
 
 export const useParametersStore = defineStore("parameters", () => {
   const timerStore = useTimerStore();
@@ -66,7 +67,6 @@ export const useParametersStore = defineStore("parameters", () => {
   };
 
   const isFlagModeOn = ref(false);
-  const toggleFlagMode = (flagMode: boolean): boolean => !flagMode;
 
   const setBoardParams = (level: Level): BoardParams => {
     let rowSize: number, columnSize: number, mineNumber: number;
