@@ -11,9 +11,39 @@ import {
   ROW_SIZE_NORMAL,
 } from "../../src/utils/GameParameters";
 import { initGameParams } from "../../src/stores/paramsModules/initGameParams";
+import { setBoardParams } from "../../src/stores/paramsModules/setBoardParams";
 import { toggleFlagMode } from "../../src/stores/paramsModules/toggleFlagMode";
 
 describe("Params modules", () => {
+  test("Set board params (Level: EASY)", () => {
+    expect(setBoardParams("easy")).toStrictEqual({
+      rowSize: ROW_SIZE_EASY,
+      columnSize: COLUMN_SIZE_EASY,
+      mineNumber: MINE_NUMBER_EASY,
+    });
+  });
+  test("Set board params (Level: NORMAL)", () => {
+    expect(setBoardParams("normal")).toStrictEqual({
+      rowSize: ROW_SIZE_NORMAL,
+      columnSize: COLUMN_SIZE_NORMAL,
+      mineNumber: MINE_NUMBER_NORMAL,
+    });
+  });
+  test("Set board params (Level: HARD)", () => {
+    expect(setBoardParams("hard")).toStrictEqual({
+      rowSize: ROW_SIZE_HARD,
+      columnSize: COLUMN_SIZE_HARD,
+      mineNumber: MINE_NUMBER_HARD,
+    });
+  });
+  test("Set board params (Level: other than NORMAL or HARD)", () => {
+    expect(setBoardParams("random")).toStrictEqual({
+      rowSize: ROW_SIZE_EASY,
+      columnSize: COLUMN_SIZE_EASY,
+      mineNumber: MINE_NUMBER_EASY,
+    });
+  });
+
   test("Initialize game params (Level: EASY)", () => {
     expect(
       initGameParams({
