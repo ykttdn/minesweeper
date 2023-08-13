@@ -15,7 +15,8 @@ import { useTimerStore } from "./timer";
 import type { Level } from "@/types/level";
 import type { BoardParams } from "@/types/boardParams";
 import type { GameParams } from "@/types/gameParams";
-import { toggleFlagMode } from "@/stores/paramsModules/toggleFlagMode";
+import { toggleFlagMode } from "./paramsModules/toggleFlagMode";
+import { initGameParams } from "./paramsModules/initGameParams";
 
 export const useParametersStore = defineStore("parameters", () => {
   const timerStore = useTimerStore();
@@ -51,20 +52,6 @@ export const useParametersStore = defineStore("parameters", () => {
       stopTimer(timer.value);
     }
   });
-
-  const initGameParams = ({
-    rowSize,
-    columnSize,
-    mineNumber,
-  }: BoardParams): GameParams => {
-    return {
-      hasGameStarted: false,
-      hasOpenedAllSafeCells: false,
-      hasOpenedMinedCell: false,
-      remainingMineNumber: mineNumber,
-      safeCellNumber: rowSize * columnSize - mineNumber,
-    };
-  };
 
   const isFlagModeOn = ref(false);
 
