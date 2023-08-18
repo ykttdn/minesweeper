@@ -6,52 +6,49 @@ import { init2dCellArray } from "../../src/utils/Init2dCellArray";
 import {
   ROW_SIZE_HARD,
   COLUMN_SIZE_HARD,
-  ROW_SIZE_NORMAL,
-  COLUMN_SIZE_NORMAL,
-  MINE_NUMBER_NORMAL,
 } from "../../src/utils/GameParameters";
 import { random } from "../../src/utils/random";
+import { setBoardParams } from "../../src/stores/paramsModules/setBoardParams";
 
 describe("Cell modules", () => {
-  const cells: Cell[][] = init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD);
-
   test("should initialize cells", () => {
+    const cells: Cell[][] = init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD);
+
     // row size of cell array
-    expect(cells.length).toBe(ROW_SIZE_HARD);
+    expect(cells).toHaveLength(ROW_SIZE_HARD);
 
-    for (const cellRow of cells) {
+    cells.forEach((cellRow) => {
       // column size of cell array
-      expect(cellRow.length).toBe(COLUMN_SIZE_HARD);
+      expect(cellRow).toHaveLength(COLUMN_SIZE_HARD);
 
-      for (const cell of cellRow) {
+      cellRow.forEach((cell) => {
         expect(cell).toStrictEqual({
           isMineHiddenIn: false,
           isOpened: false,
           isFlagged: false,
         });
-      }
-    }
+      });
+    });
   });
 
-  const boardParams: BoardParams = {
-    rowSize: ROW_SIZE_NORMAL,
-    columnSize: COLUMN_SIZE_NORMAL,
-    mineNumber: MINE_NUMBER_NORMAL,
-  };
-
-  const rowClickedFirst = random(boardParams.rowSize);
-  const columnClickedFirst = random(boardParams.columnSize);
-
-  const minedCells: Cell[][] = initializeMines(
-    boardParams,
-    rowClickedFirst,
-    columnClickedFirst,
-    cells
-  );
-
   test("should initialize mines", () => {
-    expect(minedCells[rowClickedFirst][columnClickedFirst].isMineHiddenIn)
-      .toBeFalsy;
+    const cells: Cell[][] = init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD);
+
+    const boardParams: BoardParams = setBoardParams("normal");
+
+    const rowClickedFirst = random(boardParams.rowSize);
+    const columnClickedFirst = random(boardParams.columnSize);
+
+    const minedCells: Cell[][] = initializeMines(
+      boardParams,
+      rowClickedFirst,
+      columnClickedFirst,
+      cells
+    );
+
+    expect(minedCells[rowClickedFirst][columnClickedFirst].isMineHiddenIn).toBe(
+      false
+    );
 
     let count = 0;
     minedCells.forEach((cellRow, row) => {
