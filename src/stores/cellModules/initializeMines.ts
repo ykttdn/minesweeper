@@ -8,7 +8,7 @@ export const initializeMines = (
   columnClickedFirst: number,
   cells: Cell[][]
 ): Cell[][] => {
-  const newCells = structuredClone(cells);
+  const newCells = JSON.parse(JSON.stringify(cells)) as Cell[][];
 
   for (let i = 0; i < mineNumber; i++) {
     // eslint-disable-next-line no-constant-condition
