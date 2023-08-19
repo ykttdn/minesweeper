@@ -6,6 +6,7 @@ import type { GameParams } from "../../src/types/gameParams";
 import { countAdjacentMines } from "../../src/stores/cellModules/countAdjacentMines";
 import { initializeMines } from "../../src/stores/cellModules/initializeMines";
 import { openCell } from "../../src/stores/cellModules/openCell";
+import { toggleFlag } from "../../src/stores/cellModules/toggleFlag";
 import { init2dCellArray } from "../../src/utils/Init2dCellArray";
 import {
   ROW_SIZE_HARD,
@@ -303,5 +304,67 @@ describe("Cell modules", () => {
       newCells: expectedCells,
       newGameParams: expectedGameParams,
     });
+  });
+
+  test("should toggle flag", () => {
+    // . : blank cell (not opened)
+    // F : flagged cell
+    // O : opened cell
+    //
+    //   0 1 2
+    // 0 F . .
+    // 1 . O .
+    // 2 . . .
+    const rowSize = 3;
+    const columnSize = 3;
+    const mineNumber = 2;
+
+    const cells: Cell[][] = init2dCellArray(rowSize, columnSize);
+    cells[0][0].isFlagged = true;
+    cells[1][1].isOpened = true;
+
+    const gameParams: GameParams = initGameParams({
+      rowSize: rowSize,
+      columnSize: columnSize,
+      mineNumber: mineNumber,
+    });
+
+    // should add a flag
+    //   0 1 2
+    // 0 F . .
+    // 1 . O F
+    // 2 . . .
+    const targetCell1: CellIndex = [1, 2];
+
+    const expectedCells1 = JSON.parse(JSON.stringify(cells)) as Cell[][];
+    expectedCells1[targetCell1[0]][targetCell1[1]].isFlagged = true;
+
+    const expectedGameParams1 = { ...gameParams };
+    expectedGameParams1.remainingMineNumber--;
+
+    expect(toggleFlag(...targetCell1, cells, gameParams)).toStrictEqual({
+      newCells: expectedCells1,
+      newGameParams: expectedGameParams1,
+    });
+
+    // should remove a flag
+    //   0 1 2
+    // 0 . . .
+    // 1 . O F
+    // 2 . . .
+    const expectedCells2 = JSON.parse(
+      JSON.stringify(expectedCells1)
+    ) as Cell[][];
+    expectedCells2[0][0].isFlagged = false;
+
+    const expectedGameParams2 = { ...expectedGameParams1 };
+    expectedGameParams2.remainingMineNumber++;
+
+    expect(toggleFlag(0, 0, expectedCells1, expectedGameParams1)).toStrictEqual(
+      {
+        newCells: expectedCells2,
+        newGameParams: expectedGameParams2,
+      }
+    );
   });
 });
