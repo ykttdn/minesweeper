@@ -2,8 +2,10 @@ import { describe, expect, test } from "vitest";
 import type { BoardParams } from "../../src/types/boardParams";
 import type { Cell } from "../../src/types/cell";
 import type { CellIndex } from "../../src/types/cellIndex";
+import type { GameParams } from "../../src/types/gameParams";
 import { countAdjacentMines } from "../../src/stores/cellModules/countAdjacentMines";
 import { initializeMines } from "../../src/stores/cellModules/initializeMines";
+import { openCell } from "../../src/stores/cellModules/openCell";
 import { init2dCellArray } from "../../src/utils/Init2dCellArray";
 import {
   ROW_SIZE_HARD,
@@ -11,6 +13,7 @@ import {
 } from "../../src/utils/GameParameters";
 import { random } from "../../src/utils/random";
 import { getAdjacentCellsIndex } from "../../src/utils/GetAdjacentCellsIndex";
+import { initGameParams } from "../../src/stores/paramsModules/initGameParams";
 import { setBoardParams } from "../../src/stores/paramsModules/setBoardParams";
 
 describe("Cell modules", () => {
@@ -207,6 +210,98 @@ describe("Cell modules", () => {
       expect(
         countAdjacentMines(...targetCell.index, rowSize, columnSize, minedCells)
       ).toBe(targetCell.adjacentMineNumber);
+    });
+  });
+
+  test("should open cells", () => {
+    // . : blank cell (unopened => opened)
+    // M : mined cell
+    // F : flagged cell (mined)
+    // f : flagged cell (not mined)
+    // 1-2 : opened cell (represents adjacent mines' number)
+    // x : cell remaining unopened
+    // t : target cell (not mined)
+    //
+    // original                 expected
+    //   0 1 2 3 4 5 6 7 8        0 1 2 3 4 5 6 7 8
+    // 0 . . . . . . . . F      0 . . . 1 x 1 . 1 F
+    // 1 . . . . M . . . .      1 . . . 1 M 1 . 1 1
+    // 2 . . . . . f . . .      2 1 1 . 1 1 1 . . .
+    // 3 M . . . . . . t .      3 M 2 1 . . . . t .
+    // 4 . M . . f . . . .  =>  4 x M 1 . . . . . .
+    // 5 . . . . . . . . .      5 x 1 1 . . 1 1 1 .
+    // 6 . . . . . . M . .      6 x 1 . . . 1 M 1 .
+    // 7 M . . . . . . . .      7 M 1 . . . 1 1 1 .
+    // 8 . . . . . . . . .      8 x 1 . . . . . . .
+
+    const mineIndices: CellIndex[] = [
+      [0, 8],
+      [1, 4],
+      [3, 0],
+      [4, 1],
+      [6, 6],
+      [7, 0],
+    ];
+    const flagIndices: CellIndex[] = [
+      [0, 8],
+      [2, 5],
+      [4, 4],
+    ];
+
+    const rowSize = 9;
+    const columnSize = 9;
+    const mineNumber = mineIndices.length;
+    const boardParams: BoardParams = {
+      rowSize: rowSize,
+      columnSize: columnSize,
+      mineNumber: mineNumber,
+    };
+
+    const minedCells: Cell[][] = init2dCellArray(rowSize, columnSize);
+    mineIndices.forEach(([row, column]) => {
+      minedCells[row][column].isMineHiddenIn = true;
+    });
+    flagIndices.forEach(([row, column]) => {
+      minedCells[row][column].isFlagged = true;
+    });
+
+    const gameParams: GameParams = initGameParams(boardParams);
+
+    const expectedCells = JSON.parse(JSON.stringify(minedCells)) as Cell[][];
+    expectedCells.forEach((cellRow, row) => {
+      cellRow.forEach((cell, column) => {
+        if (
+          // if cell at [row, column] is not mined
+          !mineIndices.some(
+            (mineIndex) => mineIndex[0] === row && mineIndex[1] === column
+          )
+        ) {
+          // eslint-disable-next-line no-param-reassign
+          cell.isOpened = true;
+        }
+      });
+    });
+    // cells which are marked with "x"
+    expectedCells[0][4].isOpened = false;
+    expectedCells[4][0].isOpened = false;
+    expectedCells[5][0].isOpened = false;
+    expectedCells[6][0].isOpened = false;
+    expectedCells[8][0].isOpened = false;
+
+    // cells which are marked with "f"
+    expectedCells[2][5].isFlagged = false;
+    expectedCells[4][4].isFlagged = false;
+
+    const expectedGameParams: GameParams = { ...gameParams };
+    expectedGameParams.safeCellNumber = 5; // number of "x"
+
+    const targetCell: CellIndex = [3, 7];
+
+    expect(
+      openCell(...targetCell, boardParams, gameParams, minedCells)
+    ).toStrictEqual({
+      newCells: expectedCells,
+      newGameParams: expectedGameParams,
     });
   });
 });
