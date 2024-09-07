@@ -16,12 +16,12 @@ export const useTimerStore = defineStore("timer", () => {
     }
   };
 
-  const stopTimer = (timer: Timer): void => {
-    window.clearInterval(timer.id);
+  const stopTimer = (): void => {
+    window.clearInterval(timer.value.id);
   };
 
-  const resetTimer = (timer: Timer): Timer => {
-    stopTimer(timer);
+  const resetTimer = (): Timer => {
+    stopTimer();
     return { id: 0, current: 0 };
   };
 

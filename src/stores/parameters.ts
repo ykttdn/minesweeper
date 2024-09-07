@@ -9,7 +9,7 @@ import {
   ROW_SIZE_HARD,
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
-import { defineStore, storeToRefs } from "pinia";
+import { defineStore } from "pinia";
 import { ref, watchEffect } from "vue";
 import { useTimerStore } from "./timer";
 import type { Level } from "@/types/level";
@@ -19,7 +19,6 @@ import type { GameParams } from "@/types/gameParams";
 export const useParametersStore = defineStore("parameters", () => {
   const timerStore = useTimerStore();
   const { stopTimer } = timerStore;
-  const { timer } = storeToRefs(timerStore);
 
   const boardParams = ref<BoardParams>({
     rowSize: ROW_SIZE_EASY,
@@ -41,13 +40,13 @@ export const useParametersStore = defineStore("parameters", () => {
     if (gameParams.value.safeCellNumber === 0) {
       gameParams.value.hasOpenedAllSafeCells = true;
       gameParams.value.remainingMineNumber = 0;
-      stopTimer(timer.value);
+      stopTimer();
     }
   });
 
   watchEffect(() => {
     if (gameParams.value.hasOpenedMinedCell) {
-      stopTimer(timer.value);
+      stopTimer();
     }
   });
 

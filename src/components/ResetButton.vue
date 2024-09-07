@@ -41,7 +41,7 @@ const handleClick = () => {
 
   gameParams.value = initGameParams(boardParams.value);
 
-  timer.value = resetTimer(timer.value);
+  timer.value = resetTimer();
 };
 </script>
 
