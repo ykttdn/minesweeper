@@ -4,9 +4,7 @@ import { useParametersStore } from "@/stores/parameters";
 import { useTimerStore } from "@/stores/timer";
 import { storeToRefs } from "pinia";
 
-const timerStore = useTimerStore();
-const { resetTimer } = timerStore;
-const { timer } = storeToRefs(timerStore);
+const { resetTimer } = useTimerStore();
 
 const parameters = useParametersStore();
 const { boardParams, gameParams, level } = storeToRefs(parameters);
@@ -27,7 +25,7 @@ const handleChange = () => {
 
   gameParams.value = initGameParams(boardParams.value);
 
-  timer.value = resetTimer();
+  resetTimer();
 };
 </script>
 

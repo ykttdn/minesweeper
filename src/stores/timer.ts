@@ -20,9 +20,10 @@ export const useTimerStore = defineStore("timer", () => {
     window.clearInterval(timer.value.id);
   };
 
-  const resetTimer = (): Timer => {
+  const resetTimer = (): void => {
     stopTimer();
-    return { id: 0, current: 0 };
+    timer.value.id = 0;
+    timer.value.current = 0;
   };
 
   return { resetTimer, startTimer, stopTimer, timer };

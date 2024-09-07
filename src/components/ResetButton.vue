@@ -10,9 +10,7 @@ import {
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-const timerStore = useTimerStore();
-const { resetTimer } = timerStore;
-const { timer } = storeToRefs(timerStore);
+const { resetTimer } = useTimerStore();
 
 const parameters = useParametersStore();
 const { boardParams, gameParams } = storeToRefs(parameters);
@@ -41,7 +39,7 @@ const handleClick = () => {
 
   gameParams.value = initGameParams(boardParams.value);
 
-  timer.value = resetTimer();
+  resetTimer();
 };
 </script>
 
