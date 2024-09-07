@@ -109,7 +109,7 @@ const onCellClicked = () => {
   }
 
   if (timer.value.id === 0) {
-    timer.value = startTimer(timer.value);
+    startTimer();
   }
 
   if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
@@ -170,7 +170,7 @@ const onCellRightClicked = () => {
   }
 
   if (timer.value.id === 0) {
-    timer.value = startTimer(timer.value);
+    startTimer();
   }
 
   if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
