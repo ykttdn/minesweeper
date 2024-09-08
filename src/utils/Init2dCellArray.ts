@@ -1,9 +1,6 @@
 import type { Cell } from "@/types/cell";
 
-export const init2dCellArray = (
-  rowSize: number,
-  columnSize: number
-): Cell[][] => {
+export const init2dCellArray = (rowSize: number, columnSize: number): Cell[][] => {
   const initialCell: Cell = {
     isMineHiddenIn: false,
     isOpened: false,
@@ -11,8 +8,6 @@ export const init2dCellArray = (
   };
 
   return JSON.parse(
-    JSON.stringify(
-      new Array(rowSize).fill(new Array(columnSize).fill(initialCell))
-    )
+    JSON.stringify(new Array(rowSize).fill(new Array(columnSize).fill(initialCell)))
   );
 };

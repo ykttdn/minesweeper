@@ -23,13 +23,7 @@ const props = defineProps({
 });
 
 const cellStore = useCellStore();
-const {
-  countAdjacentMines,
-  executeChording,
-  initializeMines,
-  openCell,
-  toggleFlag,
-} = cellStore;
+const { countAdjacentMines, executeChording, initializeMines, openCell, toggleFlag } = cellStore;
 const { cells } = storeToRefs(cellStore);
 
 const parameters = useParametersStore();
@@ -61,8 +55,7 @@ const adjacentMinesNumber = computed(() => {
 });
 
 const cellState = computed(() => {
-  const { isMineHiddenIn, isOpened, isFlagged } =
-    cells.value[props.rowNumber][props.columnNumber];
+  const { isMineHiddenIn, isOpened, isFlagged } = cells.value[props.rowNumber][props.columnNumber];
 
   if (gameParams.value.hasOpenedAllSafeCells) {
     if (isMineHiddenIn && !isFlagged) {
@@ -99,10 +92,7 @@ const cellState = computed(() => {
 });
 
 const onCellClicked = () => {
-  if (
-    gameParams.value.hasOpenedAllSafeCells ||
-    gameParams.value.hasOpenedMinedCell
-  ) {
+  if (gameParams.value.hasOpenedAllSafeCells || gameParams.value.hasOpenedMinedCell) {
     return;
   }
 
@@ -110,15 +100,14 @@ const onCellClicked = () => {
 
   if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
     if (adjacentMinesNumber.value > 0) {
-      ({ newCells: cells.value, newGameParams: gameParams.value } =
-        triggerChording(
-          props.rowNumber,
-          props.columnNumber,
-          cells.value,
-          boardParams.value,
-          gameParams.value,
-          adjacentMinesNumber.value
-        ));
+      ({ newCells: cells.value, newGameParams: gameParams.value } = triggerChording(
+        props.rowNumber,
+        props.columnNumber,
+        cells.value,
+        boardParams.value,
+        gameParams.value,
+        adjacentMinesNumber.value
+      ));
     }
     return;
   }
@@ -158,10 +147,7 @@ const onCellClicked = () => {
 };
 
 const onCellRightClicked = () => {
-  if (
-    gameParams.value.hasOpenedAllSafeCells ||
-    gameParams.value.hasOpenedMinedCell
-  ) {
+  if (gameParams.value.hasOpenedAllSafeCells || gameParams.value.hasOpenedMinedCell) {
     return;
   }
 
