@@ -11,8 +11,7 @@ export const MINE_NUMBER_HARD = 99;
 export const UNOPENED_CELL = "cell cell--unopened";
 export const OPENED_CELL = "cell cell--opened";
 export const FLAGGED_CELL = "cell cell--unopened cell--flagged";
-export const WRONGLY_FLAGGED_CELL =
-  "cell cell--unopened cell--flagged cell--flagged-wrongly";
+export const WRONGLY_FLAGGED_CELL = "cell cell--unopened cell--flagged cell--flagged-wrongly";
 export const MINED_CELL = "cell cell--unopened cell--mined";
 export const EXPLODED_CELL = "cell cell--exploded";
 

@@ -2,11 +2,7 @@
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
 import { useTimerStore } from "@/stores/timer";
-import {
-  FACE_FAILURE,
-  FACE_NORMAL,
-  FACE_SUCCESS,
-} from "@/utils/GameParameters";
+import { FACE_FAILURE, FACE_NORMAL, FACE_SUCCESS } from "@/utils/GameParameters";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
@@ -31,11 +27,7 @@ const buttonState = computed(() => {
 });
 
 const handleClick = () => {
-  cells.value = newCells(
-    cells.value,
-    boardParams.value.rowSize,
-    boardParams.value.columnSize
-  );
+  cells.value = newCells(cells.value, boardParams.value.rowSize, boardParams.value.columnSize);
 
   gameParams.value = initGameParams(boardParams.value);
 

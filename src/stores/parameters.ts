@@ -50,11 +50,7 @@ export const useParametersStore = defineStore("parameters", () => {
     }
   });
 
-  const initGameParams = ({
-    rowSize,
-    columnSize,
-    mineNumber,
-  }: BoardParams): GameParams => {
+  const initGameParams = ({ rowSize, columnSize, mineNumber }: BoardParams): GameParams => {
     return {
       hasGameStarted: false,
       hasOpenedAllSafeCells: false,

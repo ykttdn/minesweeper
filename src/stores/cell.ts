@@ -11,11 +11,7 @@ import type { GameParams } from "@/types/gameParams";
 export const useCellStore = defineStore("cell", () => {
   const cells = ref(init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD));
 
-  const newCells = (
-    oldCells: Cell[][],
-    rowSize: number,
-    columnSize: number
-  ) => {
+  const newCells = (oldCells: Cell[][], rowSize: number, columnSize: number) => {
     const newCells = [...oldCells];
     for (let row = 0; row < rowSize; row++) {
       for (let column = 0; column < columnSize; column++) {
@@ -44,13 +40,9 @@ export const useCellStore = defineStore("cell", () => {
         const columnPickedRandomly = random(columnSize);
         if (
           !newCells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn &&
-          !(
-            rowClickedFirst === rowPickedRandomly &&
-            columnClickedFirst === columnPickedRandomly
-          )
+          !(rowClickedFirst === rowPickedRandomly && columnClickedFirst === columnPickedRandomly)
         ) {
-          newCells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn =
-            true;
+          newCells[rowPickedRandomly][columnPickedRandomly].isMineHiddenIn = true;
           break;
         }
       }
@@ -67,12 +59,7 @@ export const useCellStore = defineStore("cell", () => {
     cells: Cell[][]
   ): number => {
     let adjacentMinesNumber = 0;
-    const adjacentCells = getAdjacentCellsIndex(
-      row,
-      column,
-      rowSize,
-      columnSize
-    );
+    const adjacentCells = getAdjacentCellsIndex(row, column, rowSize, columnSize);
     adjacentCells.forEach(([adjacentRow, adjacentColumn]) => {
       if (cells[adjacentRow][adjacentColumn].isMineHiddenIn) {
         adjacentMinesNumber++;
@@ -167,12 +154,7 @@ export const useCellStore = defineStore("cell", () => {
     return { newCells, newGameParams };
   };
 
-  const toggleFlag = (
-    row: number,
-    column: number,
-    cells: Cell[][],
-    gameParams: GameParams
-  ) => {
+  const toggleFlag = (row: number, column: number, cells: Cell[][], gameParams: GameParams) => {
     const newCells = [...cells];
     const newGameParams = { ...gameParams };
 

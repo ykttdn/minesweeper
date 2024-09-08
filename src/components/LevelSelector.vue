@@ -17,11 +17,7 @@ const { cells } = storeToRefs(cellStore);
 const handleChange = () => {
   boardParams.value = setBoardParams(level.value);
 
-  cells.value = newCells(
-    cells.value,
-    boardParams.value.rowSize,
-    boardParams.value.columnSize
-  );
+  cells.value = newCells(cells.value, boardParams.value.rowSize, boardParams.value.columnSize);
 
   gameParams.value = initGameParams(boardParams.value);
 
