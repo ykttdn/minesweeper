@@ -35,9 +35,7 @@ const { cells } = storeToRefs(cellStore);
 const parameters = useParametersStore();
 const { boardParams, gameParams, isFlagModeOn } = storeToRefs(parameters);
 
-const timerStore = useTimerStore();
-const { startTimerIfStopped } = timerStore;
-const { timer } = storeToRefs(timerStore);
+const { startTimerIfStopped } = useTimerStore();
 
 const adjacentMinesNumber = computed(() => {
   if (
@@ -108,9 +106,7 @@ const onCellClicked = () => {
     return;
   }
 
-  if (timer.value.id === 0) {
-    startTimerIfStopped();
-  }
+  startTimerIfStopped();
 
   if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
     if (adjacentMinesNumber.value > 0) {
@@ -169,9 +165,7 @@ const onCellRightClicked = () => {
     return;
   }
 
-  if (timer.value.id === 0) {
-    startTimerIfStopped();
-  }
+  startTimerIfStopped();
 
   if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
     return;
