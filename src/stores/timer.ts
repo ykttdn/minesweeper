@@ -8,7 +8,7 @@ export const useTimerStore = defineStore("timer", () => {
     current: 0,
   });
 
-  const startTimerIfStopped = () => {
+  const startTimerIfStopped = (): void => {
     if (timer.value.id === 0) {
       timer.value.id = window.setInterval(() => {
         timer.value.current++;
