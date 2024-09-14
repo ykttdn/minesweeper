@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import MainHeader from "./components/MainHeader.vue";
-import LevelSelector from "./components/LevelSelector.vue";
-import PlaySection from "./components/PlaySection.vue";
-import BottomSection from "./components/BottomSection.vue";
+import BottomSection from "@/components/BottomSection.vue";
+import LevelSelector from "@/components/LevelSelector.vue";
+import MainHeader from "@/components/MainHeader.vue";
+import PlaySection from "@/components/PlaySection.vue";
 </script>
 
 <template>
-  <MainHeader></MainHeader>
+  <MainHeader />
   <main class="wrapper">
-    <LevelSelector></LevelSelector>
-    <PlaySection></PlaySection>
-    <BottomSection></BottomSection>
+    <LevelSelector />
+    <PlaySection />
+    <BottomSection />
   </main>
 </template>

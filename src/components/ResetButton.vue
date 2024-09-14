@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
+
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
 import { useTimerStore } from "@/stores/timer";
 import { FACE_FAILURE, FACE_NORMAL, FACE_SUCCESS } from "@/utils/GameParameters";
-import { storeToRefs } from "pinia";
-import { computed } from "vue";
 
 const { resetTimer } = useTimerStore();
 
@@ -36,5 +37,5 @@ const handleClick = () => {
 </script>
 
 <template>
-  <button :class="buttonState" @click="handleClick"></button>
+  <button :class="buttonState" @click="handleClick" />
 </template>

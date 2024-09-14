@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
+
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
 import { useTimerStore } from "@/stores/timer";
@@ -14,8 +17,6 @@ import {
   WRONGLY_FLAGGED_CELL,
 } from "@/utils/GameParameters";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
-import { storeToRefs } from "pinia";
-import { computed } from "vue";
 
 const props = defineProps({
   rowNumber: { type: Number, required: true },

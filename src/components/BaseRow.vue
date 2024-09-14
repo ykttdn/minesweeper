@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useParametersStore } from "@/stores/parameters";
 import { storeToRefs } from "pinia";
-import BaseCell from "./BaseCell.vue";
+
+import BaseCell from "@/components/BaseCell.vue";
+import { useParametersStore } from "@/stores/parameters";
 
 defineProps({
   rowNumber: { type: Number, required: true },
@@ -18,6 +19,6 @@ const { boardParams } = storeToRefs(parameters);
       :key="columnNumber"
       :row-number="rowNumber"
       :column-number="columnNumber - 1"
-    ></BaseCell>
+    />
   </div>
 </template>
