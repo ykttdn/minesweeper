@@ -1,12 +1,13 @@
-import { ref } from "vue";
 import { defineStore } from "pinia";
+import { ref } from "vue";
+
+import type { BoardParams } from "@/types/boardParams";
+import type { Cell } from "@/types/cell";
+import type { GameParams } from "@/types/gameParams";
 import { COLUMN_SIZE_HARD, ROW_SIZE_HARD } from "@/utils/GameParameters";
-import { random } from "@/utils/random";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 import { init2dCellArray } from "@/utils/Init2dCellArray";
-import type { Cell } from "@/types/cell";
-import type { BoardParams } from "@/types/boardParams";
-import type { GameParams } from "@/types/gameParams";
+import { random } from "@/utils/random";
 
 export const useCellStore = defineStore("cell", () => {
   const cells = ref(init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD));
@@ -34,7 +35,6 @@ export const useCellStore = defineStore("cell", () => {
     const newCells = [...cells];
 
     for (let i = 0; i < mineNumber; i++) {
-      // eslint-disable-next-line no-constant-condition
       while (true) {
         const rowPickedRandomly = random(rowSize);
         const columnPickedRandomly = random(columnSize);

@@ -1,6 +1,7 @@
-import type { Timer } from "@/types/timer";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+
+import type { Timer } from "@/types/timer";
 
 export const useTimerStore = defineStore("timer", () => {
   const timer = ref<Timer>({

@@ -1,3 +1,10 @@
+import { defineStore } from "pinia";
+import { ref, watchEffect } from "vue";
+
+import { useTimerStore } from "@/stores/timer";
+import type { BoardParams } from "@/types/boardParams";
+import type { GameParams } from "@/types/gameParams";
+import type { Level } from "@/types/level";
 import {
   COLUMN_SIZE_EASY,
   COLUMN_SIZE_HARD,
@@ -9,12 +16,6 @@ import {
   ROW_SIZE_HARD,
   ROW_SIZE_NORMAL,
 } from "@/utils/GameParameters";
-import { defineStore } from "pinia";
-import { ref, watchEffect } from "vue";
-import { useTimerStore } from "./timer";
-import type { Level } from "@/types/level";
-import type { BoardParams } from "@/types/boardParams";
-import type { GameParams } from "@/types/gameParams";
 
 export const useParametersStore = defineStore("parameters", () => {
   const timerStore = useTimerStore();

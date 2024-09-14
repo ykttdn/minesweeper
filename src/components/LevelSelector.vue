@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+
 import { useCellStore } from "@/stores/cell";
 import { useParametersStore } from "@/stores/parameters";
 import { useTimerStore } from "@/stores/timer";
-import { storeToRefs } from "pinia";
 
 const { resetTimer } = useTimerStore();
 
@@ -28,7 +29,7 @@ const handleChange = () => {
 <template>
   <div class="level-selection">
     <label for="level">Level:</label>
-    <select name="level" id="level" v-model="level" @change="handleChange">
+    <select id="level" v-model="level" name="level" @change="handleChange">
       <option value="easy">EASY</option>
       <option value="normal">NORMAL</option>
       <option value="hard">HARD</option>

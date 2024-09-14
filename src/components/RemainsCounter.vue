@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { useParametersStore } from "@/stores/parameters";
 import { storeToRefs } from "pinia";
-import DigitalDisplay from "./DigitalDisplay.vue";
+
+import DigitalDisplay from "@/components/DigitalDisplay.vue";
+import { useParametersStore } from "@/stores/parameters";
 
 const parametersStore = useParametersStore();
 const { gameParams } = storeToRefs(parametersStore);
 </script>
 
 <template>
-  <DigitalDisplay :number="gameParams.remainingMineNumber"></DigitalDisplay>
+  <DigitalDisplay :number="gameParams.remainingMineNumber" />
 </template>

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useParametersStore } from "@/stores/parameters";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
+
+import { useParametersStore } from "@/stores/parameters";
 
 const parameters = useParametersStore();
 const { isFlagModeOn } = storeToRefs(parameters);
@@ -22,7 +23,7 @@ const handleClick = () => {
 
 <template>
   <div class="bottom-area">
-    <div :class="switchButtonState" @click="handleClick"></div>
-    <i class="fa-solid fa-flag flag-icon"></i>
+    <div :class="switchButtonState" @click="handleClick" />
+    <i class="fa-solid fa-flag flag-icon" />
   </div>
 </template>
