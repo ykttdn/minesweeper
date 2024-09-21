@@ -18,7 +18,7 @@ import {
 } from "@/utils/GameParameters";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 
-const props = defineProps<{
+const { rowNumber, columnNumber } = defineProps<{
   rowNumber: number;
   columnNumber: number;
 }>();
@@ -34,15 +34,15 @@ const { startTimerIfStopped } = useTimerStore();
 
 const adjacentMinesNumber = computed(() => {
   if (
-    !cells.value[props.rowNumber][props.columnNumber].isOpened ||
-    cells.value[props.rowNumber][props.columnNumber].isMineHiddenIn
+    !cells.value[rowNumber][columnNumber].isOpened ||
+    cells.value[rowNumber][columnNumber].isMineHiddenIn
   ) {
     return 0;
   }
 
   const counter = countAdjacentMines(
-    props.rowNumber,
-    props.columnNumber,
+    rowNumber,
+    columnNumber,
     boardParams.value.rowSize,
     boardParams.value.columnSize,
     cells.value
@@ -56,7 +56,7 @@ const adjacentMinesNumber = computed(() => {
 });
 
 const cellState = computed(() => {
-  const { isMineHiddenIn, isOpened, isFlagged } = cells.value[props.rowNumber][props.columnNumber];
+  const { isMineHiddenIn, isOpened, isFlagged } = cells.value[rowNumber][columnNumber];
 
   if (gameParams.value.hasOpenedAllSafeCells) {
     if (isMineHiddenIn && !isFlagged) {
@@ -99,11 +99,11 @@ const onCellClicked = () => {
 
   startTimerIfStopped();
 
-  if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
+  if (cells.value[rowNumber][columnNumber].isOpened) {
     if (adjacentMinesNumber.value > 0) {
       ({ newCells: cells.value, newGameParams: gameParams.value } = triggerChording(
-        props.rowNumber,
-        props.columnNumber,
+        rowNumber,
+        columnNumber,
         cells.value,
         boardParams.value,
         gameParams.value,
@@ -115,8 +115,8 @@ const onCellClicked = () => {
 
   if (isFlagModeOn.value) {
     ({ newCells: cells.value, newGameParams: gameParams.value } = toggleFlag(
-      props.rowNumber,
-      props.columnNumber,
+      rowNumber,
+      columnNumber,
       cells.value,
       gameParams.value
     ));
@@ -124,23 +124,18 @@ const onCellClicked = () => {
     return;
   }
 
-  if (cells.value[props.rowNumber][props.columnNumber].isFlagged) {
+  if (cells.value[rowNumber][columnNumber].isFlagged) {
     return;
   }
 
   if (!gameParams.value.hasGameStarted) {
-    cells.value = initializeMines(
-      boardParams.value,
-      props.rowNumber,
-      props.columnNumber,
-      cells.value
-    );
+    cells.value = initializeMines(boardParams.value, rowNumber, columnNumber, cells.value);
     gameParams.value.hasGameStarted = true;
   }
 
   ({ newCells: cells.value, newGameParams: gameParams.value } = openCell(
-    props.rowNumber,
-    props.columnNumber,
+    rowNumber,
+    columnNumber,
     boardParams.value,
     gameParams.value,
     cells.value
@@ -154,13 +149,13 @@ const onCellRightClicked = () => {
 
   startTimerIfStopped();
 
-  if (cells.value[props.rowNumber][props.columnNumber].isOpened) {
+  if (cells.value[rowNumber][columnNumber].isOpened) {
     return;
   }
 
   ({ newCells: cells.value, newGameParams: gameParams.value } = toggleFlag(
-    props.rowNumber,
-    props.columnNumber,
+    rowNumber,
+    columnNumber,
     cells.value,
     gameParams.value
   ));
