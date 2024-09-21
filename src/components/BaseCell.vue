@@ -18,10 +18,10 @@ import {
 } from "@/utils/GameParameters";
 import { getAdjacentCellsIndex } from "@/utils/GetAdjacentCellsIndex";
 
-const props = defineProps({
-  rowNumber: { type: Number, required: true },
-  columnNumber: { type: Number, required: true },
-});
+const props = defineProps<{
+  rowNumber: number;
+  columnNumber: number;
+}>();
 
 const cellStore = useCellStore();
 const { countAdjacentMines, executeChording, initializeMines, openCell, toggleFlag } = cellStore;
