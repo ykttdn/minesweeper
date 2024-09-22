@@ -1,8 +1,14 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+
 import RemainsCounter from "@/components/RemainsCounter.vue";
 import ResetButton from "@/components/ResetButton.vue";
 import TheBoard from "@/components/TheBoard.vue";
 import TheTimer from "@/components/TheTimer.vue";
+import { useCellStore } from "@/stores/cell";
+
+const cellStore = useCellStore();
+const { cells } = storeToRefs(cellStore);
 </script>
 
 <template>
@@ -12,6 +18,6 @@ import TheTimer from "@/components/TheTimer.vue";
       <ResetButton />
       <TheTimer />
     </div>
-    <TheBoard />
+    <TheBoard :cells="cells" />
   </div>
 </template>
