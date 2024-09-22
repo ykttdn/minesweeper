@@ -4,9 +4,9 @@ import { storeToRefs } from "pinia";
 import BaseCell from "@/components/BaseCell.vue";
 import { useParametersStore } from "@/stores/parameters";
 
-defineProps({
-  rowNumber: { type: Number, required: true },
-});
+defineProps<{
+  rowNumber: number;
+}>();
 
 const parameters = useParametersStore();
 const { boardParams } = storeToRefs(parameters);

@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-const props = defineProps<{
+const { number } = defineProps<{
   number: number;
 }>();
 
 const displayedNumber = computed(() => {
-  if (props.number <= -100) {
+  if (number <= -100) {
     return "-99";
-  } else if (props.number <= -10) {
-    return `${props.number}`;
-  } else if (props.number <= -1) {
-    return `- ${-props.number}`;
-  } else if (props.number <= 9) {
-    return `00${props.number}`;
-  } else if (props.number <= 99) {
-    return `0${props.number}`;
-  } else if (props.number <= 999) {
-    return `${props.number}`;
+  } else if (number <= -10) {
+    return `${number}`;
+  } else if (number <= -1) {
+    return `- ${-number}`;
+  } else if (number <= 9) {
+    return `00${number}`;
+  } else if (number <= 99) {
+    return `0${number}`;
+  } else if (number <= 999) {
+    return `${number}`;
   } else {
     return "999";
   }
