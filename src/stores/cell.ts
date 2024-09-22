@@ -12,18 +12,8 @@ import { random } from "@/utils/random";
 export const useCellStore = defineStore("cell", () => {
   const cells = ref(init2dCellArray(ROW_SIZE_HARD, COLUMN_SIZE_HARD));
 
-  const newCells = (oldCells: Cell[][], rowSize: number, columnSize: number) => {
-    const newCells = [...oldCells];
-    for (let row = 0; row < rowSize; row++) {
-      for (let column = 0; column < columnSize; column++) {
-        newCells[row][column] = {
-          isMineHiddenIn: false,
-          isOpened: false,
-          isFlagged: false,
-        };
-      }
-    }
-    return newCells;
+  const initializeCells = (rowSize: number, columnSize: number): void => {
+    cells.value = init2dCellArray(rowSize, columnSize);
   };
 
   const initializeMines = (
@@ -173,8 +163,8 @@ export const useCellStore = defineStore("cell", () => {
     cells,
     countAdjacentMines,
     executeChording,
+    initializeCells,
     initializeMines,
-    newCells,
     openCell,
     toggleFlag,
   };

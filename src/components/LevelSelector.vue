@@ -12,13 +12,12 @@ const { boardParams, gameParams, level } = storeToRefs(parameters);
 const { initGameParams, setBoardParams } = parameters;
 
 const cellStore = useCellStore();
-const { newCells } = cellStore;
-const { cells } = storeToRefs(cellStore);
+const { initializeCells } = cellStore;
 
 const handleChange = () => {
   boardParams.value = setBoardParams(level.value);
 
-  cells.value = newCells(cells.value, boardParams.value.rowSize, boardParams.value.columnSize);
+  initializeCells(boardParams.value.rowSize, boardParams.value.columnSize);
 
   gameParams.value = initGameParams(boardParams.value);
 
