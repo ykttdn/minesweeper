@@ -32,6 +32,7 @@ export default [
   },
   {
     files: ["tests/**"],
+    ignores: ["tests/helpers/**"],
     plugins: {
       vitest,
     },
