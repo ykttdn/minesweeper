@@ -1,6 +1,6 @@
 # Minesweeper
 
-You can play [here](https://dapper-cassata-601cf2.netlify.app/).
+You can play [here](https://ykttdn-minesweeper.netlify.app/).
 
 ## Project Setup
 
