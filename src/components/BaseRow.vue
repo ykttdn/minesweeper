@@ -1,24 +1,20 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-
 import BaseCell from "@/components/BaseCell.vue";
-import { useParametersStore } from "@/stores/parameters";
+import type { Cell } from "@/types/cell";
 
 defineProps<{
+  cellRow: Cell[];
   rowNumber: number;
 }>();
-
-const parameters = useParametersStore();
-const { boardParams } = storeToRefs(parameters);
 </script>
 
 <template>
   <div class="row">
     <BaseCell
-      v-for="columnNumber in boardParams.columnSize"
-      :key="columnNumber"
+      v-for="(_cell, col_i) in cellRow"
+      :key="col_i"
       :row-number="rowNumber"
-      :column-number="columnNumber - 1"
+      :column-number="col_i"
     />
   </div>
 </template>
