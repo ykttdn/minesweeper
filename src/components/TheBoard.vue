@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { useParametersStore } from "@/stores/parameters";
-import { storeToRefs } from "pinia";
-import BaseRow from "./BaseRow.vue";
+import BaseRow from "@/components/BaseRow.vue";
+import type { Cell } from "@/types/cell";
 
-const parameters = useParametersStore();
-const { rowSize } = storeToRefs(parameters);
+defineProps<{
+  cells: Cell[][];
+}>();
 </script>
 
 <template>
   <div class="board">
     <BaseRow
-      v-for="rowNumber in rowSize"
-      :key="rowNumber"
-      :row-number="rowNumber - 1"
-    ></BaseRow>
+      v-for="(cellRow, row_i) in cells"
+      :key="row_i"
+      :cell-row="cellRow"
+      :row-number="row_i"
+    />
   </div>
 </template>

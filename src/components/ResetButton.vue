@@ -1,35 +1,40 @@
 <script setup lang="ts">
-import { useCellStore } from "@/stores/cell";
-import { useParametersStore } from "@/stores/parameters";
-import {
-  FACE_FAILURE,
-  FACE_NORMAL,
-  FACE_SUCCESS,
-} from "@/utils/GameParameters";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 
-const parameters = useParametersStore();
-const { columnSize, hasOpenedAllSafeCells, hasOpenedMinedCell, rowSize } =
-  storeToRefs(parameters);
-const { initializeParameters } = parameters;
+import { useCellStore } from "@/stores/cell";
+import { useParametersStore } from "@/stores/parameters";
+import { useTimerStore } from "@/stores/timer";
+import { FACE_FAILURE, FACE_NORMAL, FACE_SUCCESS } from "@/utils/GameParameters";
 
-const { initializeCells } = useCellStore();
+const { resetTimer } = useTimerStore();
+
+const parameters = useParametersStore();
+const { boardParams, gameParams } = storeToRefs(parameters);
+const { initGameParams } = parameters;
+
+const cellStore = useCellStore();
+const { initializeCells } = cellStore;
 
 const buttonState = computed(() => {
-  if (hasOpenedAllSafeCells.value) {
+  if (gameParams.value.hasOpenedAllSafeCells) {
     return FACE_SUCCESS;
-  } else if (hasOpenedMinedCell.value) {
+  } else if (gameParams.value.hasOpenedMinedCell) {
     return FACE_FAILURE;
   } else {
     return FACE_NORMAL;
   }
 });
+
+const handleClick = () => {
+  initializeCells(boardParams.value.rowSize, boardParams.value.columnSize);
+
+  gameParams.value = initGameParams(boardParams.value);
+
+  resetTimer();
+};
 </script>
 
 <template>
-  <button
-    :class="buttonState"
-    @click="initializeCells(rowSize, columnSize), initializeParameters()"
-  ></button>
+  <button :class="buttonState" @click="handleClick" />
 </template>
